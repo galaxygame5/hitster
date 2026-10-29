@@ -167,7 +167,7 @@
                 <div id="gamePlayerStatusList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
             </div>
 
-            <!-- 個人専用オーディオプレイヤー (独立操作) -->
+            <!-- 個人用オーディオプレイヤー & 復元したエラー救済パネル -->
             <div class="glass-panel rounded-3xl p-6 text-center shadow-2xl border border-purple-500/30 bg-slate-950/80 space-y-4">
                 <div class="flex justify-between items-center text-xs text-purple-400 font-bold uppercase tracking-wider">
                     <span>NOW PLAYING (個人用プレイヤー)</span>
@@ -193,15 +193,16 @@
                 
                 <audio id="audioPlayer" preload="auto" loop></audio>
 
-                <div id="audioErrorControls" class="hidden mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-4 rounded-2xl border border-rose-500/20">
-                    <p class="text-xs font-bold text-rose-300">⚠️ 試聴音源の読み込みが制限されています</p>
-                    <p class="text-[11px] text-rose-200/80 font-medium">※ブラウザの制限等で音声が鳴らない場合は、下のボタンから曲名を確認するか次の曲へスキップしてください。</p>
+                <!-- 復元されたエラー救済用パネル（スキップボタン・曲名確認ボタン） -->
+                <div id="audioErrorControls" class="mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-4 rounded-2xl border border-rose-500/20">
+                    <p class="text-xs font-bold text-rose-300">⚠️ 音声の読み込みに失敗した場合の救済メニュー</p>
+                    <p class="text-[11px] text-rose-200/80 font-medium">※音声が鳴らない場合は下のボタンから曲名を確認するか、次の曲へスキップしてください。</p>
                     <div class="flex justify-center gap-3 flex-wrap">
                         <button onclick="revealErrorSongTitle()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition">
-                            曲名を確認する
+                            【エラー時用】曲名を確認する
                         </button>
                         <button onclick="skipErrorSong()" class="bg-rose-800 hover:bg-rose-700 text-white border border-rose-400/40 text-xs font-bold px-4 py-2.5 rounded-xl transition">
-                            次の曲へ進む (スキップ)
+                            【エラー時用】次の曲へスキップする
                         </button>
                     </div>
                     <div id="errorSongTitleDisplay" class="hidden text-sm font-bold text-yellow-300 bg-slate-900 p-3 rounded-xl border border-yellow-500/30 mt-2"></div>
@@ -263,7 +264,7 @@
     </div>
 
     <script>
-        const PREFIX = "anison-hitster-online-v11-";
+        const PREFIX = "anison-hitster-online-v12-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -808,7 +809,6 @@
                 const playText = document.getElementById('audioPlayText');
 
                 if (errorTitleDisplay) errorTitleDisplay.classList.add('hidden');
-                if (errorControls) errorControls.classList.add('hidden');
 
                 if (roomData.currentSong && roomData.currentSong.previewUrl) {
                     if (lastPlayedSongUrl !== roomData.currentSong.previewUrl) {
@@ -822,14 +822,13 @@
                             playText.innerText = "自分の端末で曲を再生する";
                         }
                     }
+                    if (errorControls) errorControls.classList.remove('hidden'); // 常時表示していつでもスキップや確認ができるように変更
                 } else {
                     if (errorControls) errorControls.classList.remove('hidden');
                 }
 
                 audioPlayer.onerror = function() {
-                    if (roomData.currentSong) {
-                        if (errorControls) errorControls.classList.remove('hidden');
-                    }
+                    if (errorControls) errorControls.classList.remove('hidden');
                 };
 
                 const timelineContainer = document.getElementById('timelineContainer');
@@ -958,7 +957,6 @@
             }
         }
 
-        // 個人用オーディオトグル（他プレイヤーと同期せず、自分の端末だけで再生・停止）
         window.toggleAudio = function() {
             playSound('tap');
             const audio = document.getElementById('audioPlayer');
