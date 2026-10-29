@@ -167,9 +167,10 @@
                 <div id="gamePlayerStatusList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
             </div>
 
+            <!-- 個人専用オーディオプレイヤー (独立操作) -->
             <div class="glass-panel rounded-3xl p-6 text-center shadow-2xl border border-purple-500/30 bg-slate-950/80 space-y-4">
                 <div class="flex justify-between items-center text-xs text-purple-400 font-bold uppercase tracking-wider">
-                    <span>NOW PLAYING</span>
+                    <span>NOW PLAYING (個人用プレイヤー)</span>
                     <span id="turnIndicatorBadge" class="bg-purple-500/20 px-4 py-1.5 rounded-full border border-purple-400/40 text-yellow-300 font-black text-sm">--の手番</span>
                 </div>
 
@@ -186,16 +187,15 @@
                 <div class="flex justify-center items-center gap-4">
                     <button id="btnPlayAudio" onclick="toggleAudio()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg border border-purple-300/30 flex items-center gap-3 text-lg transition">
                         <i class="fa-solid fa-play" id="audioPlayIcon"></i>
-                        <span id="audioPlayText">試聴音源を再生する</span>
+                        <span id="audioPlayText">自分の端末で曲を再生する</span>
                     </button>
                 </div>
                 
                 <audio id="audioPlayer" preload="auto" loop></audio>
 
-                <!-- 自動フェイルセーフ搭載のエラー救済パネル -->
                 <div id="audioErrorControls" class="hidden mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-4 rounded-2xl border border-rose-500/20">
-                    <p class="text-xs font-bold text-rose-300">⚠️ 試聴音源の読み込みが制限されています（自動スキップ対応済み）</p>
-                    <p class="text-[11px] text-rose-200/80 font-medium">※ブラウザのセキュリティまたはAPI制限により音声が取得できない場合があります。「曲名を確認」するか「自動スキップ」をご利用ください。</p>
+                    <p class="text-xs font-bold text-rose-300">⚠️ 試聴音源の読み込みが制限されています</p>
+                    <p class="text-[11px] text-rose-200/80 font-medium">※ブラウザの制限等で音声が鳴らない場合は、下のボタンから曲名を確認するか次の曲へスキップしてください。</p>
                     <div class="flex justify-center gap-3 flex-wrap">
                         <button onclick="revealErrorSongTitle()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition">
                             曲名を確認する
@@ -263,7 +263,7 @@
     </div>
 
     <script>
-        const PREFIX = "anison-hitster-online-v10-";
+        const PREFIX = "anison-hitster-online-v11-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -703,7 +703,7 @@
         };
 
         async function processSkipErrorSong() {
-            addLog(`⚠️ 音声制限のため曲がスキップされました。`);
+            addLog(`⚠️ 曲がスキップされました。`);
             await prepareNextSong();
             broadcastState();
         }
@@ -819,11 +819,10 @@
 
                         if (playIcon && playText) {
                             playIcon.className = "fa-solid fa-play";
-                            playText.innerText = "試聴音源を再生する";
+                            playText.innerText = "自分の端末で曲を再生する";
                         }
                     }
                 } else {
-                    // プレビューURLが取得できない場合は自動で救済パネルを表示（ゲーム停止を防止）
                     if (errorControls) errorControls.classList.remove('hidden');
                 }
 
@@ -959,6 +958,7 @@
             }
         }
 
+        // 個人用オーディオトグル（他プレイヤーと同期せず、自分の端末だけで再生・停止）
         window.toggleAudio = function() {
             playSound('tap');
             const audio = document.getElementById('audioPlayer');
@@ -966,13 +966,16 @@
             const text = document.getElementById('audioPlayText');
 
             if (audio.paused) {
-                audio.play();
+                audio.play().catch(err => {
+                    console.warn("Audio play blocked/error:", err);
+                    document.getElementById('audioErrorControls').classList.remove('hidden');
+                });
                 icon.className = "fa-solid fa-pause";
                 text.innerText = "一時停止";
             } else {
                 audio.pause();
                 icon.className = "fa-solid fa-play";
-                text.innerText = "試聴音源を再生する";
+                text.innerText = "自分の端末で曲を再生する";
             }
         };
 
