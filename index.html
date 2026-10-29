@@ -229,12 +229,17 @@
             </div>
         </div>
 
-        <!-- VIEW 4: GAME OVER -->
+        <!-- VIEW 4: GAME OVER (順位表対応) -->
         <div id="viewGameOver" class="hidden glass-panel rounded-3xl p-8 shadow-2xl text-center space-y-6 max-w-xl mx-auto w-full border border-purple-500/30">
             <div class="py-2 space-y-2">
                 <div class="text-5xl mb-2">🏆</div>
                 <h2 class="text-3xl font-black text-amber-300">ゲーム終了！</h2>
-                <p id="winnerAnnounceText" class="text-xl font-bold text-white"></p>
+            </div>
+
+            <!-- 順位ランキング一覧 -->
+            <div class="space-y-3 text-left">
+                <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider text-center">最終結果ランキング</h3>
+                <div id="finalRankingList" class="space-y-2"></div>
             </div>
 
             <div id="gameOverHostControls" class="hidden space-y-2 pt-2">
@@ -256,7 +261,68 @@
     </div>
 
     <script>
-        const PREFIX = "anison-hitster-online-v2-";
+        const PREFIX = "anison-hitster-online-v3-";
+
+        // Web Audio API による SE 再生エンジン
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new AudioCtx();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'tap') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    [523.25, 659.25, 783.99].forEach((freq, i) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, now + i * 0.08);
+                        g.gain.setValueAtTime(0.12, now + i * 0.08);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
+                        o.start(now + i * 0.08);
+                        o.stop(now + i * 0.08 + 0.2);
+                    });
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(240, now);
+                    osc.frequency.linearRampToValueAtTime(120, now + 0.25);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'victory') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.frequency.setValueAtTime(freq, now + i * 0.1);
+                        g.gain.setValueAtTime(0.15, now + i * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.25);
+                        o.start(now + i * 0.1);
+                        o.stop(now + i * 0.1 + 0.25);
+                    });
+                }
+            } catch (e) {
+                console.warn("Audio exception:", e);
+            }
+        }
 
         const ANISON_DATABASE = [
             { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン" },
@@ -331,13 +397,15 @@
         let isHost = false;
         let connections = {};
         let hostConn = null;
+        let lastPlayedSongUrl = ""; // 音声切り替え判定用
 
         let roomData = {
             hostId: "",
             status: 'LOBBY',
             initialLife: 2,
             currentTurnIndex: 0,
-            players: {},
+            players: {}, // { id: { id, name, life, isAlive, rank } }
+            eliminatedOrder: [], // 脱落順
             timeline: [],
             currentSong: null,
             deck: [],
@@ -387,6 +455,7 @@
         }
 
         function handleCreateRoom() {
+            playSound('tap');
             myName = getPlayerName();
             const input = document.getElementById('joinRoomCodeInput');
             roomCode = input ? input.value.trim().toLowerCase() : '';
@@ -399,7 +468,7 @@
             peer.on('open', (id) => {
                 myId = id;
                 roomData.hostId = myId;
-                roomData.players = { [myId]: { id: myId, name: myName, life: 2, isAlive: true } };
+                roomData.players = { [myId]: { id: myId, name: myName, life: 2, isAlive: true, rank: 0 } };
                 setupLobbyUI();
                 renderRoomState();
             });
@@ -421,6 +490,7 @@
         }
 
         function handleJoinRoom() {
+            playSound('tap');
             myName = getPlayerName();
             const input = document.getElementById('joinRoomCodeInput');
             roomCode = input ? input.value.trim().toLowerCase() : '';
@@ -461,6 +531,7 @@
         }
 
         window.updateLifeSetting = function(val) {
+            playSound('tap');
             if (!isHost) return;
             roomData.initialLife = parseInt(val, 10);
             broadcastState();
@@ -470,7 +541,7 @@
             if (data.type === 'JOIN') {
                 if (roomData.status !== 'LOBBY') return;
                 connections[conn.peer] = conn;
-                roomData.players[data.id] = { id: data.id, name: data.name, life: roomData.initialLife, isAlive: true };
+                roomData.players[data.id] = { id: data.id, name: data.name, life: roomData.initialLife, isAlive: true, rank: 0 };
                 broadcastState();
             } else if (data.type === 'PLACE_CARD') {
                 processPlaceCard(data.insertIndex);
@@ -489,13 +560,16 @@
         }
 
         window.startGame = async function() {
+            playSound('tap');
             if (!isHost) return;
 
             Object.values(roomData.players).forEach(p => {
                 p.life = roomData.initialLife;
                 p.isAlive = true;
+                p.rank = 0;
             });
 
+            roomData.eliminatedOrder = [];
             roomData.deck = [...ANISON_DATABASE].sort(() => Math.random() - 0.5);
             roomData.timeline = [];
             roomData.currentTurnIndex = 0;
@@ -539,14 +613,17 @@
             const player = roomData.players[currentPlayerId];
 
             if (isCorrect) {
+                playSound('correct');
                 timeline.splice(insertIndex, 0, song);
                 addLog(`🎯 ${player.name} 正解！ [${song.title} (${song.year}年)]`);
                 roomData.lastResult = { isCorrect: true, song: song, playerName: player.name };
             } else {
+                playSound('wrong');
                 player.life -= 1;
                 addLog(`❌ ${player.name} 不正解... [${song.title} (${song.year}年)] 残りライフ: ${player.life}`);
                 if (player.life <= 0) {
                     player.isAlive = false;
+                    roomData.eliminatedOrder.unshift(player.id); // 脱落順（後から脱落した人が上位）
                     addLog(`💀 ${player.name} が脱落しました。`);
                 }
                 roomData.lastResult = { isCorrect: false, song: song, playerName: player.name };
@@ -554,6 +631,9 @@
 
             const alivePlayers = Object.values(roomData.players).filter(p => p.isAlive);
             if (alivePlayers.length <= 1 && Object.keys(roomData.players).length > 1) {
+                if (alivePlayers.length === 1) {
+                    roomData.eliminatedOrder.unshift(alivePlayers[0].id); // 勝者を1位に設定
+                }
                 roomData.status = 'GAMEOVER';
                 broadcastState();
                 return;
@@ -564,6 +644,7 @@
         }
 
         window.proceedToNextTurn = function() {
+            playSound('tap');
             if (!isHost) {
                 hostConn.send({ type: 'NEXT_TURN' });
                 return;
@@ -580,8 +661,8 @@
             broadcastState();
         }
 
-        // 音声エラー時の処理関数
         window.revealErrorSongTitle = function() {
+            playSound('tap');
             const display = document.getElementById('errorSongTitleDisplay');
             if (display && roomData.currentSong) {
                 display.innerText = `曲名: ${roomData.currentSong.title} (${roomData.currentSong.anime})`;
@@ -590,6 +671,7 @@
         };
 
         window.skipErrorSong = function() {
+            playSound('tap');
             if (isHost) {
                 processSkipErrorSong();
             } else {
@@ -650,20 +732,31 @@
 
                 document.getElementById('turnIndicatorBadge').innerText = `${roomData.players[currentTurnPlayerId]?.name} の手番`;
 
-                // 音声再生およびエラー判定制御
+                // 【曲切り替えの厳格な初期化処理】
                 const audioPlayer = document.getElementById('audioPlayer');
                 const errorControls = document.getElementById('audioErrorControls');
                 const errorTitleDisplay = document.getElementById('errorSongTitleDisplay');
+                const playIcon = document.getElementById('audioPlayIcon');
+                const playText = document.getElementById('audioPlayText');
 
                 if (errorTitleDisplay) errorTitleDisplay.classList.add('hidden');
 
                 if (roomData.currentSong && roomData.currentSong.previewUrl) {
                     if (errorControls) errorControls.classList.add('hidden');
-                    if (audioPlayer.src !== roomData.currentSong.previewUrl) {
+                    
+                    // 新しい曲へ更新されたか判定してリセット
+                    if (lastPlayedSongUrl !== roomData.currentSong.previewUrl) {
+                        audioPlayer.pause();
                         audioPlayer.src = roomData.currentSong.previewUrl;
+                        audioPlayer.load(); // 明示的にリロード
+                        lastPlayedSongUrl = roomData.currentSong.previewUrl;
+
+                        if (playIcon && playText) {
+                            playIcon.className = "fa-solid fa-play";
+                            playText.innerText = "曲を再生する";
+                        }
                     }
                 } else {
-                    // 音声が取得できていない場合エラー制御表示
                     if (errorControls) errorControls.classList.remove('hidden');
                 }
 
@@ -680,7 +773,7 @@
                     btnInsert.className = `flex-shrink-0 px-3 py-6 rounded-xl border border-dashed transition flex flex-col items-center justify-center font-bold text-xs ${isMyTurn ? 'bg-purple-500/20 border-purple-400 hover:bg-purple-500/40 text-purple-200' : 'bg-slate-900/40 border-slate-700 text-slate-600 cursor-not-allowed'}`;
                     btnInsert.innerText = 'ここに\n挟む';
                     btnInsert.disabled = !isMyTurn;
-                    btnInsert.onclick = () => submitCardPlacement(idx);
+                    btnInsert.onclick = () => { playSound('tap'); submitCardPlacement(idx); };
                     timelineContainer.appendChild(btnInsert);
 
                     const card = document.createElement('div');
@@ -699,7 +792,7 @@
                 btnLastInsert.className = `flex-shrink-0 px-3 py-6 rounded-xl border border-dashed transition flex flex-col items-center justify-center font-bold text-xs ${isMyTurn ? 'bg-purple-500/20 border-purple-400 hover:bg-purple-500/40 text-purple-200' : 'bg-slate-900/40 border-slate-700 text-slate-600 cursor-not-allowed'}`;
                 btnLastInsert.innerText = 'ここに\n挟む';
                 btnLastInsert.disabled = !isMyTurn;
-                btnLastInsert.onclick = () => submitCardPlacement(roomData.timeline.length);
+                btnLastInsert.onclick = () => { playSound('tap'); submitCardPlacement(roomData.timeline.length); };
                 timelineContainer.appendChild(btnLastInsert);
 
                 const resultBox = document.getElementById('turnResultBox');
@@ -734,9 +827,38 @@
 
             } else if (roomData.status === 'GAMEOVER') {
                 showView('viewGameOver');
-                const alive = Object.values(roomData.players).filter(p => p.isAlive);
-                const winnerText = alive.length === 1 ? `勝者：${alive[0].name} さん` : "全員脱落";
-                document.getElementById('winnerAnnounceText').innerText = winnerText;
+                playSound('victory');
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+                }
+
+                // 順位付けランキング生成
+                const rankingList = document.getElementById('finalRankingList');
+                if (rankingList) {
+                    rankingList.innerHTML = '';
+                    const order = roomData.eliminatedOrder || [];
+                    
+                    // まだ脱落していない人がいれば先頭に追加
+                    Object.keys(roomData.players).forEach(pId => {
+                        if (!order.includes(pId)) order.unshift(pId);
+                    });
+
+                    order.forEach((pId, idx) => {
+                        const player = roomData.players[pId];
+                        if (!player) return;
+
+                        const item = document.createElement('div');
+                        item.className = `flex justify-between items-center p-4 rounded-2xl border ${idx === 0 ? 'bg-amber-500/20 border-amber-400/60 font-black' : 'bg-slate-900 border-purple-500/20'}`;
+                        item.innerHTML = `
+                            <div class="flex items-center space-x-3">
+                                <span class="font-black text-lg ${idx === 0 ? 'text-amber-300' : 'text-purple-300'}">#${idx + 1}</span>
+                                <span class="font-bold text-white">${escapeHtml(player.name)}</span>
+                            </div>
+                            <span class="text-xs font-bold ${idx === 0 ? 'text-amber-300' : 'text-purple-300/60'}">${idx === 0 ? '👑 勝者' : '💀 脱落'}</span>
+                        `;
+                        rankingList.appendChild(item);
+                    });
+                }
 
                 const hostCtrl = document.getElementById('gameOverHostControls');
                 if (isHost) hostCtrl.classList.remove('hidden');
@@ -764,6 +886,7 @@
         }
 
         window.toggleAudio = function() {
+            playSound('tap');
             const audio = document.getElementById('audioPlayer');
             const icon = document.getElementById('audioPlayIcon');
             const text = document.getElementById('audioPlayText');
@@ -780,6 +903,7 @@
         };
 
         window.restartGame = function() {
+            playSound('tap');
             if (!isHost) return;
             startGame();
         };
