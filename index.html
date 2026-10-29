@@ -167,7 +167,7 @@
                 <div id="gamePlayerStatusList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
             </div>
 
-            <!-- 個人用オーディオプレイヤー & 復元したエラー救済パネル -->
+            <!-- 音量調整バー付き個人用オーディオプレイヤー -->
             <div class="glass-panel rounded-3xl p-6 text-center shadow-2xl border border-purple-500/30 bg-slate-950/80 space-y-4">
                 <div class="flex justify-between items-center text-xs text-purple-400 font-bold uppercase tracking-wider">
                     <span>NOW PLAYING (個人用プレイヤー)</span>
@@ -184,16 +184,22 @@
                     <div class="wave-bar w-1.5 bg-purple-500 rounded-full" style="animation-duration: 1.2s;"></div>
                 </div>
 
-                <div class="flex justify-center items-center gap-4">
+                <!-- 再生ボタン & 音量調整スライダー -->
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
                     <button id="btnPlayAudio" onclick="toggleAudio()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg border border-purple-300/30 flex items-center gap-3 text-lg transition">
                         <i class="fa-solid fa-play" id="audioPlayIcon"></i>
                         <span id="audioPlayText">自分の端末で曲を再生する</span>
                     </button>
+
+                    <div class="flex items-center gap-2 bg-slate-900 px-4 py-3 rounded-2xl border border-purple-500/30">
+                        <i class="fa-solid fa-volume-high text-purple-300 text-sm"></i>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)" class="w-28 accent-purple-400 cursor-pointer">
+                        <span id="volumePercent" class="text-xs font-mono font-bold text-purple-300 w-9 text-right">100%</span>
+                    </div>
                 </div>
                 
                 <audio id="audioPlayer" preload="auto" loop></audio>
 
-                <!-- 復元されたエラー救済用パネル（スキップボタン・曲名確認ボタン） -->
                 <div id="audioErrorControls" class="mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-4 rounded-2xl border border-rose-500/20">
                     <p class="text-xs font-bold text-rose-300">⚠️ 音声の読み込みに失敗した場合の救済メニュー</p>
                     <p class="text-[11px] text-rose-200/80 font-medium">※音声が鳴らない場合は下のボタンから曲名を確認するか、次の曲へスキップしてください。</p>
@@ -217,9 +223,10 @@
                 <div id="timelineContainer" class="flex items-center gap-2 overflow-x-auto py-4 px-2 scrollbar-thin"></div>
             </div>
 
+            <!-- 正解不正解後の次へ進むボタン（全員押下可能） -->
             <div id="turnResultBox" class="hidden glass-panel p-5 rounded-3xl border-2 text-center space-y-3">
                 <div id="turnResultContent"></div>
-                <button id="btnNextTurn" onclick="proceedToNextTurn()" class="hidden bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-black px-8 py-3 rounded-2xl shadow-lg transition">
+                <button id="btnNextTurn" onclick="proceedToNextTurn()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black px-8 py-3 rounded-2xl shadow-lg transition">
                     次の手番へ進む ➔
                 </button>
             </div>
@@ -264,7 +271,7 @@
     </div>
 
     <script>
-        const PREFIX = "anison-hitster-online-v12-";
+        const PREFIX = "anison-hitster-online-v13-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -413,7 +420,8 @@
             currentSong: null,
             deck: [],
             lastResult: null,
-            logs: []
+            logs: [],
+            pendingGameOver: false // 最後の1人になったあと、次へ進むボタンでリザルトへ送るためのフラグ
         };
 
         async function fetchAudioPreview(song) {
@@ -596,6 +604,7 @@
             roomData.timeline = [];
             roomData.currentTurnIndex = 0;
             roomData.logs = [];
+            roomData.pendingGameOver = false;
 
             const startSong = roomData.deck.pop();
             startSong.previewUrl = await fetchAudioPreview(startSong);
@@ -653,20 +662,20 @@
                 roomData.lastResult = { isCorrect: false, song: song, playerName: player.name };
             }
 
+            // 最後の1人になったかチェック（ただしすぐにはリザルトに行かず、次へ進むボタン押下時に移行するようにフラグを立てる）
             const alivePlayers = Object.values(roomData.players).filter(p => p.isAlive);
             if (alivePlayers.length <= 1 && Object.keys(roomData.players).length > 1) {
-                if (alivePlayers.length === 1) {
+                if (alivePlayers.length === 1 && !roomData.eliminatedOrder.includes(alivePlayers[0].id)) {
                     roomData.eliminatedOrder.unshift(alivePlayers[0].id);
                 }
-                roomData.status = 'GAMEOVER';
-                broadcastState();
-                return;
+                roomData.pendingGameOver = true;
             }
 
             await prepareNextSong();
             broadcastState();
         }
 
+        // 全員誰でも押せる次へ進むボタン
         window.proceedToNextTurn = function() {
             playSound('tap');
             if (!isHost) {
@@ -677,6 +686,13 @@
         };
 
         function processNextTurn() {
+            // もし最後の1人が決まっていて「次へ進む」が押されたらここで初めてGAMEOVERへ移行
+            if (roomData.pendingGameOver) {
+                roomData.status = 'GAMEOVER';
+                broadcastState();
+                return;
+            }
+
             const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
             if (activePlayerIds.length > 0) {
                 roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % activePlayerIds.length;
@@ -726,6 +742,7 @@
             roomData.logs = [];
             roomData.turnOrder = [];
             roomData.currentSong = null;
+            roomData.pendingGameOver = false;
             lastPlayedSongUrl = "";
 
             Object.values(roomData.players).forEach(p => {
@@ -822,7 +839,7 @@
                             playText.innerText = "自分の端末で曲を再生する";
                         }
                     }
-                    if (errorControls) errorControls.classList.remove('hidden'); // 常時表示していつでもスキップや確認ができるように変更
+                    if (errorControls) errorControls.classList.remove('hidden');
                 } else {
                     if (errorControls) errorControls.classList.remove('hidden');
                 }
@@ -884,8 +901,11 @@
                             <p class="text-xs text-rose-200">正解のリリース年: <strong class="text-amber-300 text-base font-mono">${res.song.year}年</strong></p>
                         `;
                     }
-                    if (isHost) btnNextTurn.classList.remove('hidden');
-                    else btnNextTurn.classList.add('hidden');
+                    // 誰でも押せるため、常に表示
+                    if (btnNextTurn) {
+                        btnNextTurn.classList.remove('hidden');
+                        btnNextTurn.innerText = roomData.pendingGameOver ? "リザルト画面へ進む 🏆" : "次の手番へ進む ➔";
+                    }
                 } else {
                     resultBox.classList.add('hidden');
                 }
@@ -974,6 +994,18 @@
                 audio.pause();
                 icon.className = "fa-solid fa-play";
                 text.innerText = "自分の端末で曲を再生する";
+            }
+        };
+
+        // 音量調整機能
+        window.changeVolume = function(val) {
+            const audio = document.getElementById('audioPlayer');
+            if (audio) {
+                audio.volume = parseFloat(val);
+            }
+            const percentEl = document.getElementById('volumePercent');
+            if (percentEl) {
+                percentEl.innerText = `${Math.round(val * 100)}%`;
             }
         };
 
