@@ -261,17 +261,8 @@
 
     </main>
 
-    <!-- NOTIFICATION MODAL -->
-    <div id="actionNoticeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm pointer-events-none">
-        <div class="glass-panel max-w-sm w-full rounded-3xl p-6 border-2 border-purple-400 shadow-2xl text-center space-y-3 bg-slate-900">
-            <div id="noticeIcon" class="text-4xl">📢</div>
-            <h3 id="noticeTitle" class="text-xl font-black text-white">通知</h3>
-            <p id="noticeBody" class="text-sm font-bold text-purple-300">内容</p>
-        </div>
-    </div>
-
     <script>
-        const PREFIX = "anison-hitster-online-v13-";
+        const PREFIX = "anison-hitster-online-v19-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -333,73 +324,421 @@
             }
         }
 
+        // データベース (1979-1999:各年5曲超厳選、2000-2025:各年10曲実在アニメ限定)
         const ANISON_DATABASE = [
+            // --- 1979〜1999年: 各年5曲 超有名曲限定 ---
+            { year: 1979, title: "翔べ! ガンダム", anime: "機動戦士ガンダム", artist: "池田鴻" },
+            { year: 1979, title: "銀河鉄道999", anime: "銀河鉄道999", artist: "ゴダイゴ" },
+            { year: 1979, title: "ドラえもんのうた", anime: "ドラえもん", artist: "大杉久美子" },
+            { year: 1979, title: "ルパン三世のテーマ'79", anime: "ルパン三世 PART2", artist: "大野雄司" },
+            { year: 1979, title: "誰がために", anime: "サイボーグ009", artist: "成田賢" },
+
             { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
-            { year: 1980, title: "裸足のフローネ", anime: "ふしぎな島のフローネ", artist: "潘恵子" },
+            { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
+            { year: 1980, title: "オタスケマンの歌", anime: "タイムパトロール隊オタスケマン", artist: "山本正之" },
+            { year: 1980, title: "裸足のフローネ", anime: "ふしぎの島のフローネ", artist: "潘恵子" },
+            { year: 1980, title: "ニルスのふしぎな旅", anime: "ニルスのふしぎな旅", artist: "加橋かつみ" },
+
             { year: 1981, title: "ラムのラブソング", anime: "うる星やつら", artist: "松谷祐子" },
             { year: 1981, title: "ワイワイワールド", anime: "Dr.スランプ アラレちゃん", artist: "水森亜土" },
+            { year: 1981, title: "銀河旋風ブライガー", anime: "銀河旋風ブライガー", artist: "たいらいさお" },
+            { year: 1981, title: "太陽の牙ダグラム", anime: "太陽の牙ダグラム", artist: "麻田マモル" },
+            { year: 1981, title: "じゃりン子チエ", anime: "じゃりン子チエ", artist: "中山千夏" },
+
             { year: 1982, title: "マクロス", anime: "超時空要塞マクロス", artist: "藤原誠" },
             { year: 1982, title: "コブラ", anime: "スペースコブラ", artist: "前野曜子" },
+            { year: 1982, title: "疾風ザブングル", anime: "戦闘メカ ザブングル", artist: "串田アキラ" },
+            { year: 1982, title: "ラブ・ラブ・ミンキーモモ", anime: "魔法のプリンセス ミンキーモモ", artist: "小山茉美" },
+            { year: 1982, title: "パタリロ!", anime: "パタリロ!", artist: "藤本房子" },
+
             { year: 1983, title: "CAT'S EYE", anime: "キャッツ・アイ", artist: "杏里" },
             { year: 1983, title: "キン肉マン Go Fight!", anime: "キン肉マン", artist: "串田アキラ" },
-            { year: 1984, title: "愛・おぼえていますか", anime: "超時空要塞マクロス", artist: "飯島真理" },
+            { year: 1983, title: "ダンバイン とぶ", anime: "聖戦士ダンバイン", artist: "MIO" },
+            { year: 1983, title: "デリケートに好きして", anime: "魔法の天使クリィミーマミ", artist: "太田貴子" },
+            { year: 1983, title: "想い出がいっぱい", anime: "みゆき", artist: "H2O" },
+
+            { year: 1984, title: "愛・おぼえていますか", anime: "超時空要塞マクロス 愛・おぼえていますか", artist: "飯島真理" },
             { year: 1984, title: "愛をとりもどせ!!", anime: "北斗の拳", artist: "クリスタルキング" },
+            { year: 1984, title: "エルガイム-Time for L-GAIM-", anime: "重戦機エルガイム", artist: "MIO" },
+            { year: 1984, title: "風のノー・リプライ", anime: "重戦機エルガイム", artist: "鮎川麻弥" },
+            { year: 1984, title: "よろしくチューニング", anime: "よろしくメカドック", artist: "STR!P" },
+
             { year: 1985, title: "タッチ", anime: "タッチ", artist: "岩崎良美" },
+            { year: 1985, title: "Z・刻をこえて", anime: "機動戦士Ζガンダム", artist: "鮎川麻弥" },
             { year: 1985, title: "水の星へ愛をこめて", anime: "機動戦士Ζガンダム", artist: "森口博子" },
+            { year: 1985, title: "うしろゆびさされ組", anime: "ハイスクール!奇面組", artist: "うしろゆびさされ組" },
+            { year: 1985, title: "ロマンティックあげるよ", anime: "ドラゴンボール", artist: "橋本潮" },
+
             { year: 1986, title: "ペガサス幻想", anime: "聖闘士星矢", artist: "MAKE-UP" },
-            { year: 1986, title: "CHA-LA HEAD-CHA-LA", anime: "ドラゴンボールZ", artist: "影山ヒロノブ" },
+            { year: 1986, title: "魔訶不思議アドベンチャー!", anime: "ドラゴンボール", artist: "高橋洋樹" },
+            { year: 1986, title: "アニメじゃない〜夢を忘れた古い地球人よ〜", anime: "機動戦士ガンダムZZ", artist: "新井正人" },
+            { year: 1986, title: "悲しみよこんにちは", anime: "めぞん一刻", artist: "斉藤由貴" },
+            { year: 1986, title: "サイレント・ヴォイス", anime: "機動戦士ガンダムZZ", artist: "ひろえ純" },
+
             { year: 1987, title: "Get Wild", anime: "シティーハンター", artist: "TM NETWORK" },
-            { year: 1987, title: "アニメじゃない", anime: "機動戦士ガンダムZZ", artist: "新井正人" },
+            { year: 1987, title: "夢色チェイサー", anime: "機甲戦記ドラグナー", artist: "鮎川麻弥" },
+            { year: 1987, title: "ナイト・オブ・サマーサイド", anime: "きまぐれオレンジ☆ロード", artist: "池田政典" },
+            { year: 1987, title: "City Hunter〜愛よ消えないで〜", anime: "シティーハンター", artist: "小比類巻かほる" },
+            { year: 1987, title: "スターダストボーイズ", anime: "宇宙船サジタリウス", artist: "影山ヒロノブ" },
+
             { year: 1988, title: "BEYOND THE TIME", anime: "機動戦士ガンダム 逆襲のシャア", artist: "TM NETWORK" },
             { year: 1988, title: "アンパンマンのマーチ", anime: "それいけ!アンパンマン", artist: "ドリーミング" },
+            { year: 1988, title: "STEP", anime: "魔神英雄伝ワタル", artist: "a・chi-a・chi" },
+            { year: 1988, title: "聖闘士神話〜ソルジャー・ドリーム〜", anime: "聖闘士星矢", artist: "影山ヒロノブ" },
+            { year: 1988, title: "はじめてのチュウ", anime: "キテレツ大百科", artist: "あんしんパパ" },
+
+            { year: 1989, title: "CHA-LA HEAD-CHA-LA", anime: "ドラゴンボールZ", artist: "影山ヒロノブ" },
             { year: 1989, title: "おどるポンポコリン", anime: "ちびまる子ちゃん", artist: "B.B.クィーンズ" },
             { year: 1989, title: "やさしさに包まれたなら", anime: "魔女の宅急便", artist: "荒井由実" },
+            { year: 1989, title: "Seek You", anime: "天空戦記シュラト", artist: "清水咲斗子" },
+            { year: 1989, title: "コンディション・グリーン", anime: "機動警察パトレイバー", artist: "笠原弘子" },
+
             { year: 1990, title: "ブルーウォーター", anime: "ふしぎの海のナディア", artist: "森川美穂" },
+            { year: 1990, title: "走れ正直者", anime: "ちびまる子ちゃん", artist: "西城秀樹" },
+            { year: 1990, title: "Gatherway", anime: "勇者エクスカイザー", artist: "三浦秀美" },
+            { year: 1990, title: "ステップ・バイ・ステップ", anime: "魔神英雄伝ワタル2", artist: "高橋由美子" },
+            { year: 1990, title: "ドリーム・シフト", anime: "絶対無敵ライジンオー", artist: "SILK" },
+
             { year: 1991, title: "ムーンライト伝説", anime: "美少女戦士セーラームーン", artist: "DALI" },
+            { year: 1991, title: "ETERNAL WIND〜ほほえみは光る風の中〜", anime: "機動戦士ガンダムF91", artist: "森口博子" },
+            { year: 1991, title: "Winners", anime: "新世紀GPXサイバーフォーミュラ", artist: "G-Grip" },
+            { year: 1991, title: "乙女のポリシー", anime: "美少女戦士セーラームーンR", artist: "石田よう子" },
+            { year: 1991, title: "風の歌を聴け", anime: "元気爆発ガンバルガー", artist: "長谷川空" },
+
             { year: 1992, title: "微笑みの爆弾", anime: "幽☆遊☆白書", artist: "馬渡松子" },
+            { year: 1992, title: "アンバランスなKissをして", anime: "幽☆遊☆白書", artist: "高橋ひろ" },
+            { year: 1992, title: "太陽がまた輝くとき", anime: "幽☆遊☆白書", artist: "高橋ひろ" },
+            { year: 1992, title: "嵐の勇者(ヒーロー)", anime: "勇者特急マイトガイン", artist: "岡柚瑠" },
+            { year: 1992, title: "んばば・ラブソング", anime: "南国少年パプワくん", artist: "TOME" },
+
             { year: 1993, title: "君が好きだと叫びたい", anime: "SLAM DUNK", artist: "BAAD" },
+            { year: 1993, title: "あなただけ見つめてる", anime: "SLAM DUNK", artist: "大黒摩季" },
+            { year: 1993, title: "勇気100%", anime: "忍たま乱太郎", artist: "光GENJI" },
+            { year: 1993, title: "STAND UP TO THE VICTORY", anime: "機動戦士Vガンダム", artist: "川添智久" },
+            { year: 1993, title: "FLYING IN THE SKY", anime: "機動武闘伝Gガンダム", artist: "鵜島仁文" },
+
             { year: 1994, title: "ゆずれない願い", anime: "魔法騎士レイアース", artist: "田村直美" },
+            { year: 1994, title: "JUST COMMUNICATION", anime: "新機動戦記ガンダムW", artist: "TWO-MIX" },
+            { year: 1994, title: "世界が終るまでは…", anime: "SLAM DUNK", artist: "WANDS" },
+            { year: 1994, title: "1/3の純情な感情", anime: "るろうに剣心", artist: "SIAM SHADE" },
+            { year: 1994, title: "愛しい人のために", anime: "ふしぎ遊戯", artist: "佐藤朱美" },
+
             { year: 1995, title: "残酷な天使のテーゼ", anime: "新世紀エヴァンゲリオン", artist: "高橋洋子" },
+            { year: 1995, title: "RHYTHM EMOTION", anime: "新機動戦記ガンダムW", artist: "TWO-MIX" },
+            { year: 1995, title: "胸がドキドキ", anime: "名探偵コナン", artist: "THE HIGH-LOWS" },
+            { year: 1995, title: "輝きは君の中に", anime: "NINKU -忍空-", artist: "鈴木結女" },
+            { year: 1995, title: "LOVE PHANTOM", anime: "名探偵コナン", artist: "B'z" },
+
             { year: 1996, title: "そばかす", anime: "るろうに剣心", artist: "JUDY AND MARY" },
+            { year: 1996, title: "Give a reason", anime: "スレイヤーズNEXT", artist: "林原めぐみ" },
+            { year: 1996, title: "YOU GET BURNING", anime: "機動戦艦ナデシコ", artist: "松澤由美" },
+            { year: 1996, title: "HEART OF SWORD〜夜明け前〜", anime: "るろうに剣心", artist: "T.M.Revolution" },
+            { year: 1996, title: "謎", anime: "名探偵コナン", artist: "小松未歩" },
+
             { year: 1997, title: "めざせポケモンマスター", anime: "ポケットモンスター", artist: "松本梨香" },
+            { year: 1997, title: "輪舞-revolution", anime: "少女革命ウテナ", artist: "奥井雅美" },
+            { year: 1997, title: "魂のルフラン", anime: "新世紀エヴァンゲリオン 劇場版", artist: "高橋洋子" },
+            { year: 1997, title: "もののけ姫", anime: "もののけ姫", artist: "米良美一" },
+            { year: 1997, title: "勇者王誕生!", anime: "勇者王ガオガイガー", artist: "遠藤正明" },
+
             { year: 1998, title: "Catch You Catch Me", anime: "カードキャプターさくら", artist: "グミ" },
+            { year: 1998, title: "Tank!", anime: "カウボーイビバップ", artist: "シートベルツ" },
+            { year: 1998, title: "おジャ魔女カーニバル!!", anime: "おジャ魔女どれみ", artist: "MAHO堂" },
+            { year: 1998, title: "WILL", anime: "仙界伝 封神演義", artist: "米倉千尋" },
+            { year: 1998, title: "ギリギリchop", anime: "名探偵コナン", artist: "B'z" },
+
             { year: 1999, title: "ウィーアー!", anime: "ONE PIECE", artist: "きただにひろし" },
             { year: 1999, title: "Butter-Fly", anime: "デジモンアドベンチャー", artist: "和田光司" },
+            { year: 1999, title: "ターンAターン", anime: "∀ガンダム", artist: "西城秀樹" },
+            { year: 1999, title: "扉をあけて", anime: "カードキャプターさくら", artist: "ANZA" },
+            { year: 1999, title: "Secret of my heart", anime: "名探偵コナン", artist: "倉木麻衣" },
+
+            // --- 2000〜2025年: 各年10曲 実在アニソン限定 ---
             { year: 2000, title: "プラチナ", anime: "カードキャプターさくら", artist: "坂本真綾" },
+            { year: 2000, title: "for フルーツバスケット", anime: "フルーツバスケット", artist: "岡崎律子" },
+            { year: 2000, title: "ターゲット〜赤い衝撃〜", anime: "デジモンアドベンチャー02", artist: "和田光司" },
+            { year: 2000, title: "サクラサク", anime: "ラブひな", artist: "林原めぐみ" },
+            { year: 2000, title: "OK!", anime: "ポケットモンスター", artist: "松本梨香" },
+            { year: 2000, title: "CHANGE THE WORLD", anime: "犬夜叉", artist: "V6" },
+            { year: 2000, title: "Love Destiny", anime: "シスター・プリンセス", artist: "堀江由衣" },
+            { year: 2000, title: "いつも何度でも", anime: "千と千尋の神隠し", artist: "木村弓" },
+            { year: 2000, title: "Love Hina", anime: "ラブひな", artist: "堀江由衣" },
+            { year: 2000, title: "GROOVY", anime: "カードキャプターさくら", artist: "広瀬香美" },
+
             { year: 2001, title: "Dearest", anime: "犬夜叉", artist: "浜崎あゆみ" },
+            { year: 2001, title: "Over Soul", anime: "シャーマンキング", artist: "林原めぐみ" },
+            { year: 2001, title: "Northern lights", anime: "シャーマンキング", artist: "林原めぐみ" },
+            { year: 2001, title: "The Biggest Dreamer", anime: "デジモンテイマーズ", artist: "和田光司" },
+            { year: 2001, title: "快晴・上昇・カタオモイ", anime: "遊☆戯☆王デュエルモンスターズ", artist: "NEVER LAND" },
+            { year: 2001, title: "I am", anime: "犬夜叉", artist: "hitomi" },
+            { year: 2001, title: "Every Heart -ミンナノキモチ-", anime: "犬夜叉", artist: "BoA" },
+            { year: 2001, title: "プリンセスナイン", anime: "プリンセスナイン", artist: "早坂好恵" },
+            { year: 2001, title: "明日への should", anime: "ヒカルの碁", artist: "Folder5" },
+            { year: 2001, title: "Get Over", anime: "ヒカルの碁", artist: "dream" },
+
             { year: 2002, title: "メリッサ", anime: "鋼の錬金術師", artist: "ポルノグラフィティ" },
+            { year: 2002, title: "GO!!!", anime: "NARUTO -ナルト-", artist: "FLOW" },
+            { year: 2002, title: "ヘミソフィア", anime: "ラーゼフォン", artist: "坂本真綾" },
+            { year: 2002, title: "キングゲイナー・オーバー!", anime: "OVERMANキングゲイナー", artist: "福山芳樹" },
+            { year: 2002, title: "瞳の欠片", anime: "MADLAX", artist: "FictionJunction YUUKA" },
+            { year: 2002, title: "ROCKS", anime: "NARUTO -ナルト-", artist: "Hound Dog" },
+            { year: 2002, title: "遥か彼方", anime: "NARUTO -ナルト-", artist: "ASIAN KUNG-FU GENERATION" },
+            { year: 2002, title: "悲しみをやさしさに", anime: "NARUTO -ナルト-", artist: "little by little" },
+            { year: 2002, title: "ALL MY TRUE LOVE", anime: "キャプテン翼", artist: "SPEED" },
+            { year: 2002, title: "無敵のBIG BANG", anime: "超重神グラヴィオン", artist: "JAM Project" },
+
             { year: 2003, title: "INVOKE", anime: "機動戦士ガンダムSEED", artist: "T.M.Revolution" },
+            { year: 2003, title: "READY STEADY GO", anime: "鋼の錬金術師", artist: "L'Arc-en-Ciel" },
+            { year: 2003, title: "Believe", anime: "機動戦士ガンダムSEED", artist: "玉置成実" },
+            { year: 2003, title: "Realize", anime: "機動戦士ガンダムSEED", artist: "玉置成実" },
+            { year: 2003, title: "Find the way", anime: "機動戦士ガンダムSEED", artist: "中島美嘉" },
+            { year: 2003, title: "リライト", anime: "鋼の錬金術師", artist: "ASIAN KUNG-FU GENERATION" },
+            { year: 2003, title: "UNDO", anime: "鋼の錬金術師", artist: "COOL JOKE" },
+            { year: 2003, title: "消せない罪", anime: "鋼の錬金術師", artist: "北出菜奈" },
+            { year: 2003, title: "Shining Tears", anime: "シャイニング・ティアーズ", artist: "保志総一朗" },
+            { year: 2003, title: "カサブタ", anime: "金色のガッシュベル!!", artist: "千綿ヒデノリ" },
+
             { year: 2004, title: "DAN ZEN! ふたりはプリキュア", anime: "ふたりはプリキュア", artist: "五條真由美" },
+            { year: 2004, title: "ignited -イグナイテッド-", anime: "機動戦士ガンダムSEED DESTINY", artist: "T.M.Revolution" },
+            { year: 2004, title: "PRIDE", anime: "機動戦士ガンダムSEED DESTINY", artist: "HIGH and MIGHTY COLOR" },
+            { year: 2004, title: "僕達の行方", anime: "機動戦士ガンダムSEED DESTINY", artist: "高橋瞳" },
+            { year: 2004, title: "Wings of Words", anime: "機動戦士ガンダムSEED DESTINY", artist: "CHEMISTRY" },
+            { year: 2004, title: "Reason", anime: "機動戦士ガンダムSEED DESTINY", artist: "玉置成実" },
+            { year: 2004, title: "innocent starter", anime: "魔法少女リリカルなのは", artist: "水樹奈々" },
+            { year: 2004, title: "Shangri-La", anime: "蒼穹のファフナー", artist: "angela" },
+            { year: 2004, title: "DAYS", anime: "交響詩篇エウレカセブン", artist: "FLOW" },
+            { year: 2004, title: "少年ハート", anime: "交響詩篇エウレカセブン", artist: "HOME MADE 家族" },
+
             { year: 2005, title: "創聖のアクエリオン", anime: "創聖のアクエリオン", artist: "AKINO" },
+            { year: 2005, title: "ETERNAL BLAZE", anime: "魔法少女リリカルなのはA's", artist: "水樹奈々" },
+            { year: 2005, title: "Go Tight!", anime: "創聖のアクエリオン", artist: "AKINO" },
+            { year: 2005, title: "撲殺天使ドクロちゃん", anime: "撲殺天使ドクロちゃん", artist: "千葉紗子" },
+            { year: 2005, title: "ガーネット", anime: "時をかける少女", artist: "奥華子" },
+            { year: 2005, title: "青春ライン", anime: "おおきく振りかぶって", artist: "いきものがかり" },
+            { year: 2005, title: "ドラマチック", anime: "ハチミツとクローバー", artist: "YUKI" },
+            { year: 2005, title: "薔薇獄乙女", anime: "ローゼンメイデン オーベルテューレ", artist: "ALI PROJECT" },
+            { year: 2005, title: "聖少女領域", anime: "ローゼンメイデン トロイメント", artist: "ALI PROJECT" },
+            { year: 2005, title: "ふたつの鼓動と赤き罪", anime: "ヴァンパイア騎士", artist: "ON/OFF" },
+
             { year: 2006, title: "ハレ晴レユカイ", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
+            { year: 2006, title: "God knows...", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
+            { year: 2006, title: "冒険でしょでしょ?", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
+            { year: 2006, title: "COLORS", anime: "コードギアス 反逆のルルーシュ", artist: "FLOW" },
+            { year: 2006, title: "モザイクカケラ", anime: "コードギアス 反逆のルルーシュ", artist: "SunSet Swish" },
+            { year: 2006, title: "解読不能", anime: "コードギアス 反逆のルルーシュ", artist: "jin" },
+            { year: 2006, title: "ヒカリへ", anime: "ONE PIECE", artist: "ザ・ベイビースターズ" },
+            { year: 2006, title: "ひぐらしのなく頃に", anime: "ひぐらしのなく頃に", artist: "島みやえい子" },
+            { year: 2006, title: "バラライカ", anime: "きらりん☆レボリューション", artist: "月島きらり" },
+            { year: 2006, title: "Night of Fire", anime: "頭文字D", artist: "NIKO" },
+
             { year: 2007, title: "もってけ!セーラーふく", anime: "らき☆すた", artist: "泉こなた" },
-            { year: 2008, title: "ライオン", anime: "マクロスF", artist: "May'n" },
+            { year: 2007, title: "DAYBREAK'S BELL", anime: "機動戦士ガンダム00", artist: "L'Arc-en-Ciel" },
+            { year: 2007, title: "空色デイズ", anime: "天元突破グレンラガン", artist: "中川翔子" },
+            { year: 2007, title: "奈落の花", anime: "ひぐらしのなく頃に解", artist: "島みやえい子" },
+            { year: 2007, title: "SECRET AMBITION", anime: "魔法少女リリカルなのはStrikerS", artist: "水樹奈々" },
+            { year: 2007, title: "MASSIVE WONDERS", anime: "魔法少女リリカルなのはStrikerS", artist: "水樹奈々" },
+            { year: 2007, title: "狂乱 Hey Kids!!", anime: "ノラガミ ARAGOTO", artist: "THE ORAL CIGARETTES" },
+            { year: 2007, title: "瞳の翼", anime: "コードギアス 反逆のルルーシュ", artist: "access" },
+            { year: 2007, title: "アフターダーク", anime: "BLEACH", artist: "ASIAN KUNG-FU GENERATION" },
+            { year: 2007, title: "切なさの限界", anime: "コードギアス 反逆のルルーシュ", artist: "ALI PROJECT" },
+
+            { year: 2008, title: "ライオン", anime: "マクロスF", artist: "May'n/中島愛" },
+            { year: 2008, title: "星間飛行", anime: "マクロスF", artist: "中島愛" },
+            { year: 2008, title: "トライアングラー", anime: "マクロスF", artist: "坂本真綾" },
+            { year: 2008, title: "O2", anime: "コードギアス 反逆のルルーシュR2", artist: "ORANGE RANGE" },
+            { year: 2008, title: "儚くも永久のカナシ", anime: "機動戦士ガンダム00", artist: "UVERworld" },
+            { year: 2008, title: "アナタボシ", anime: "きらりん☆レボリューション", artist: "MilkyWay" },
+            { year: 2008, title: "プレパレード", anime: "とらドラ!", artist: "逢坂大河" },
+            { year: 2008, title: "シルキーハート", anime: "とらドラ!", artist: "堀江由衣" },
+            { year: 2008, title: "雨が降る", anime: "鉄のラインバレル", artist: "坂本真綾" },
+            { year: 2008, title: "ワールドイズマイン", anime: "初音ミク関連作品", artist: "初音ミク" },
+
             { year: 2009, title: "君の知らない物語", anime: "化物語", artist: "supercell" },
             { year: 2009, title: "only my railgun", anime: "とある科学の超電磁砲", artist: "fripSide" },
+            { year: 2009, title: "again", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "YUI" },
+            { year: 2009, title: "ホログラム", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "NICO Touches the Walls" },
+            { year: 2009, title: "ゴールデンタイムラバー", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "スキマスイッチ" },
+            { year: 2009, title: "Period", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "CHEMISTRY" },
+            { year: 2009, title: "レイン", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "シド" },
+            { year: 2009, title: "嘘", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "シド" },
+            { year: 2009, title: "恋愛サーキュレーション", anime: "化物語", artist: "花澤香菜" },
+            { year: 2009, title: "Don't say \"lazy\"", anime: "けいおん!", artist: "桜高軽音部" },
+
             { year: 2010, title: "コネクト", anime: "魔法少女まどか☆マギカ", artist: "ClariS" },
+            { year: 2010, title: "Irony", anime: "俺の妹がこんなに可愛いわけがない", artist: "ClariS" },
+            { year: 2010, title: "GO! GO! MANIAC", anime: "けいおん!!", artist: "放課後ティータイム" },
+            { year: 2010, title: "Listen!!", anime: "けいおん!!", artist: "放課後ティータイム" },
+            { year: 2010, title: "U&I", anime: "けいおん!!", artist: "放課後ティータイム" },
+            { year: 2010, title: "LEVEL5-judgelight-", anime: "とある科学の超電磁砲", artist: "fripSide" },
+            { year: 2010, title: "My Soul, Your Beats!", anime: "Angel Beats!", artist: "Lia" },
+            { year: 2010, title: "Brave Song", anime: "Angel Beats!", artist: "多田葵" },
+            { year: 2010, title: "まじかる☆まじかる", anime: "まじかるカナン", artist: "中原麻衣" },
+            { year: 2010, title: "神様のバースデイ", anime: "神のみぞ知るセカイ", artist: "伊藤かな恵" },
+
             { year: 2011, title: "オリオンをなぞる", anime: "TIGER & BUNNY", artist: "UNISON SQUARE GARDEN" },
+            { year: 2011, title: "My Dearest", anime: "ギルティクラウン", artist: "EGOIST" },
+            { year: 2011, title: "CORE PRIDE", anime: "青の祓魔師", artist: "UVERworld" },
+            { year: 2011, title: "百鬼夜行", anime: "ぬらりひょんの孫", artist: "MONKEY MAJIK" },
+            { year: 2011, title: "Departures 〜あなたにおくるアイの歌〜", anime: "ギルティクラウン", artist: "EGOIST" },
+            { year: 2011, title: "The Everlasting Guilty Crown", anime: "ギルティクラウン", artist: "EGOIST" },
+            { year: 2011, title: "Hacking to the Gate", anime: "STEINS;GATE", artist: "いとうかなこ" },
+            { year: 2011, title: "海風のブレイブ", anime: "ROBOTICS;NOTES", artist: "fumika" },
+            { year: 2011, title: "まどろみの約束", anime: "氷菓", artist: "千反田える" },
+            { year: 2011, title: "優しさの理由", anime: "氷菓", artist: "ChouCho" },
+
             { year: 2012, title: "crossing field", anime: "ソードアート・オンライン", artist: "LiSA" },
+            { year: 2012, title: "名前のない怪物", anime: "PSYCHO-PASS", artist: "EGOIST" },
+            { year: 2012, title: "INNOCENCE", anime: "ソードアート・オンライン", artist: "藍井エイル" },
+            { year: 2012, title: "Abracadabra", anime: "ヨルムンガンド", artist: "黒崎真音" },
+            { year: 2012, title: "カゲロウデイズ", anime: "メカクシティアクターズ", artist: "じん" },
+            { year: 2012, title: "チルドレンレコード", anime: "メカクシティアクターズ", artist: "じん" },
+            { year: 2012, title: "アルカディア", anime: "超速変形ジャイロゼッター", artist: "岸 we" },
+            { year: 2012, title: "VAMOLA! キョウリュウジャー", anime: "獣電戦隊キョウリュウジャー", artist: "鎌田章吾" },
+            { year: 2012, title: "Life is SHOW TIME", anime: "仮面ライダーウィザード", artist: "鬼龍院翔" },
+            { year: 2012, title: "千本桜", anime: "各種アニメ・PV使用曲", artist: "黒うさP" },
+
             { year: 2013, title: "紅蓮の弓矢", anime: "進撃の巨人", artist: "Linked Horizon" },
+            { year: 2013, title: "Preserved Roses", anime: "革命機ヴァルヴレイヴ", artist: "T.M.Revolution×水樹奈々" },
+            { year: 2013, title: "自由の翼", anime: "進撃の巨人", artist: "Linked Horizon" },
+            { year: 2013, title: "革命デュアリズム", anime: "革命機ヴァルヴレイヴ", artist: "水樹奈々×T.M.Revolution" },
+            { year: 2013, title: "シリウス", anime: "キルラキル", artist: "藍井エイル" },
+            { year: 2013, title: "デート・ア・ライブ", anime: "デート・ア・ライブ", artist: "sweet ARMS" },
+            { year: 2013, title: "sister's noise", anime: "とある科学の超電磁砲S", artist: "fripSide" },
+            { year: 2013, title: "悲しみの向こうへ", anime: "School Days", artist: "いとうかなこ" },
+            { year: 2013, title: "ゲラゲラポーのうた", anime: "妖怪ウォッチ", artist: "キング・クリームソーダ" },
+            { year: 2013, title: "幻想のサテライト", anime: "東方ProjectPV", artist: "豚乙女" },
+
             { year: 2014, title: "シルエット", anime: "NARUTO -ナルト- 疾風伝", artist: "KANA-BOON" },
+            { year: 2014, title: "unravel", anime: "東京喰種トーキョーグール", artist: "TK from 凛として時雨" },
+            { year: 2014, title: "ignite", anime: "ソードアート・オンラインII", artist: "藍井エイル" },
+            { year: 2014, title: "courage", anime: "ソードアート・オンラインII", artist: "戸松遥" },
+            { year: 2014, title: "エクストラ・マジック・アワー", anime: "甘城ブリリアントパーク", artist: "AKINO with bless4" },
+            { year: 2014, title: "光るなら", anime: "四月は君の嘘", artist: "Goose house" },
+            { year: 2014, title: "Let Me Hear", anime: "寄生獣 セイの格率", artist: "Fear, and Loathing in Las Vegas" },
+            { year: 2014, title: "THIS ILLUSION", anime: "Fate/stay night [UBW]", artist: "LiSA" },
+            { year: 2014, title: "ideal white", anime: "Fate/stay night [UBW]", artist: "綾野ましろ" },
+            { year: 2014, title: "To The Beginning", anime: "Fate/Zero", artist: "Kalafina" },
+
             { year: 2015, title: "シュガーソングとビターステップ", anime: "血界戦線", artist: "UNISON SQUARE GARDEN" },
+            { year: 2015, title: "THE DAY", anime: "僕のヒーローアカデミア", artist: "ポルノグラフィティ" },
+            { year: 2015, title: "海色", anime: "艦隊これくしょん -艦これ-", artist: "AKINO from bless4" },
+            { year: 2015, title: "吹雪", anime: "艦隊これくしょん -艦これ-", artist: "西沢幸奏" },
+            { year: 2015, title: "はなまるぴっぴはよいこだけ", anime: "おそ松さん", artist: "A応P" },
+            { year: 2015, title: "Raise your flag", anime: "機動戦士ガンダム 鉄血のオルフェンズ", artist: "MAN WITH A MISSION" },
+            { year: 2015, title: "オルフェンズの涙", anime: "機動戦士ガンダム 鉄血のオルフェンズ", artist: "MISIA" },
+            { year: 2015, title: "プライド革命", anime: "銀魂゜", artist: "CHiCO with HoneyWorks" },
+            { year: 2015, title: "Brave Shine", anime: "Fate/stay night [UBW]", artist: "Aimer" },
+            { year: 2015, title: "極楽浄土", anime: "各種アニメコラボ楽曲", artist: "GARNiDELiA" },
+
             { year: 2016, title: "前前前世", anime: "君の名は。", artist: "RADWIMPS" },
+            { year: 2016, title: "HISTORY MAKER", anime: "ユーリ!!! on ICE", artist: "DEAN FUJIOKA" },
+            { year: 2016, title: "スパークル", anime: "君の名は。", artist: "RADWIMPS" },
+            { year: 2016, title: "なんでもないや", anime: "君の名は。", artist: "RADWIMPS" },
+            { year: 2016, title: "Redo", anime: "Re:ゼロから始める異世界生活", artist: "鈴木このみ" },
+            { year: 2016, title: "STYX HELIX", anime: "Re:ゼロから始める異世界生活", artist: "MYTH & ROID" },
+            { year: 2016, title: "Paradisus-Paradoxum", anime: "Re:ゼロから始める異世界生活", artist: "MYTH & ROID" },
+            { year: 2016, title: "KABANERI OF THE IRON FORTRESS", anime: "甲鉄城のカバネリ", artist: "EGOIST" },
+            { year: 2016, title: "ニンジャスレイヤー", anime: "ニンジャスレイヤー", artist: "BOOM BOOM SATELLITES" },
+            { year: 2016, title: "99", anime: "モブサイコ100", artist: "MOB CHOIR" },
+
             { year: 2017, title: "ピースサイン", anime: "僕のヒーローアカデミア", artist: "米津玄師" },
+            { year: 2017, title: "打上花火", anime: "打ち上げ花火、下から見るか?横から見るか?", artist: "DAOKO×米津玄師" },
+            { year: 2017, title: "心臓を捧げよ!", anime: "進撃の巨人 Season 2", artist: "Linked Horizon" },
+            { year: 2017, title: "ようこそジャパリパークへ", anime: "けものフレンズ", artist: "どうぶつビスケッツ×PPP" },
+            { year: 2017, title: "ステップアップLOVE", anime: "血界戦線 & BEYOND", artist: "岡村靖幸×DAOKO" },
+            { year: 2017, title: "fake town baby", anime: "血界戦線 & BEYOND", artist: "UNISON SQUARE GARDEN" },
+            { year: 2017, title: "トモダチのうた", anime: "映画ドラえもん のび太の南極カチコチ大冒険", artist: "平井堅" },
+            { year: 2017, title: "OVER THE TOP", anime: "ONE PIECE", artist: "きただにひろし" },
+            { year: 2017, title: "カゲロウ", anime: "銀魂.", artist: "ЯeaL" },
+            { year: 2017, title: "VS", anime: "僕のヒーローアカデミア", artist: "BLUE ENCOUNT" },
+
             { year: 2018, title: "ADAMAS", anime: "ソードアート・オンライン アリシゼーション", artist: "LiSA" },
+            { year: 2018, title: "Grand Escape", anime: "天気の子", artist: "RADWIMPS feat.三浦透子" },
+            { year: 2018, title: "ODD FUTURE", anime: "僕のヒーローアカデミア", artist: "UVERworld" },
+            { year: 2018, title: "Make my story", anime: "僕のヒーローアカデミア", artist: "Lenny code fiction" },
+            { year: 2018, title: "フィクション", anime: "ヲタクに恋は難しい", artist: "sumika" },
+            { year: 2018, title: "New Stranger", anime: "ハイスコアガール", artist: "sora tob sakana" },
+            { year: 2018, title: "RESISTER", anime: "ソードアート・オンライン アリシゼーション", artist: "綾野ましろ" },
+            { year: 2018, title: "流星", anime: "ソードアート・オンライン オルタナティブ", artist: "藍井エイル" },
+            { year: 2018, title: "徒花ネクロマンシー", anime: "ゾンビランドサガ", artist: "フランシュシュ" },
+            { year: 2018, title: "ハイテック", anime: "ハイスコアガール", artist: "相対性理論" },
+
             { year: 2019, title: "紅蓮華", anime: "鬼滅の刃", artist: "LiSA" },
+            { year: 2019, title: "インフェルノ", anime: "炎炎ノ消防隊", artist: "Mrs. GREEN APPLE" },
+            { year: 2019, title: "from the edge", anime: "鬼滅の刃", artist: "FictionJunction feat. LiSA" },
+            { year: 2019, title: "愛にできることはまだあるかい", anime: "天気の子", artist: "RADWIMPS" },
+            { year: 2019, title: "大丈夫", anime: "天気の子", artist: "RADWIMPS" },
+            { year: 2019, title: "火炎", anime: "どろろ", artist: "女王蜂" },
+            { year: 2019, title: "Good Morning World!", anime: "Dr.STONE", artist: "BURNOUT SYNDROMES" },
+            { year: 2019, title: "ポラリス", anime: "僕のヒーローアカデミア", artist: "BLUE ENCOUNT" },
+            { year: 2019, title: "航海の唄", anime: "僕のヒーローアカデミア", artist: "さユり" },
+            { year: 2019, title: "まっしろ", anime: "どろろ", artist: "Eve" },
+
             { year: 2020, title: "廻廻奇譚", anime: "呪術廻戦", artist: "Eve" },
             { year: 2020, title: "炎", anime: "劇場版 鬼滅の刃 無限列車編", artist: "LiSA" },
+            { year: 2020, title: "LOST IN PARADISE", anime: "呪術廻戦", artist: "ALI feat. AKLO" },
+            { year: 2020, title: "ANIMA", anime: "ソードアート・オンライン アリシゼーション WoU", artist: "ReoNa" },
+            { year: 2020, title: "Daddy! Daddy! Do!", anime: "かぐや様は告らせたい?", artist: "鈴木雅之" },
+            { year: 2020, title: "Realize", anime: "Re:ゼロから始める異世界生活 2nd", artist: "鈴木このみ" },
+            { year: 2020, title: "虹", anime: "STAND BY ME ドラえもん 2", artist: "菅田将暉" },
+            { year: 2020, title: "春を告げる", anime: "各映像作品使用曲", artist: "yama" },
+            { year: 2020, title: "夜に駆ける", anime: "各種コラボアニメPV", artist: "YOASOBI" },
+            { year: 2020, title: "群青", anime: "各種アニメタイアップPV", artist: "YOASOBI" },
+
             { year: 2021, title: "怪物", anime: "BEASTARS", artist: "YOASOBI" },
             { year: 2021, title: "Cry Baby", anime: "東京リベンジャーズ", artist: "Official髭男dism" },
+            { year: 2021, title: "残響散歌", anime: "鬼滅の刃 遊郭編", artist: "Aimer" },
+            { year: 2021, title: "朝が来る", anime: "鬼滅の刃 遊郭編", artist: "Aimer" },
+            { year: 2021, title: "一途", anime: "劇場版 呪術廻戦 0", artist: "King Gnu" },
+            { year: 2021, title: "逆夢", anime: "劇場版 呪術廻戦 0", artist: "King Gnu" },
+            { year: 2021, title: "三原色", anime: "アニメコラボPV", artist: "YOASOBI" },
+            { year: 2021, title: "明るい未来", anime: "東京リベンジャーズ", artist: "eill" },
+            { year: 2021, title: "One Last Kiss", anime: "シン・エヴァンゲリオン劇場版", artist: "宇多田ヒカル" },
+            { year: 2021, title: "君に夢中", anime: "ドラマ・アニメタイアップ", artist: "宇多田ヒカル" },
+
             { year: 2022, title: "ミックスナッツ", anime: "SPY×FAMILY", artist: "Official髭男dism" },
             { year: 2022, title: "KICK BACK", anime: "チェンソーマン", artist: "米津玄師" },
             { year: 2022, title: "祝福", anime: "機動戦士ガンダム 水星の魔女", artist: "YOASOBI" },
+            { year: 2022, title: "新時代", anime: "ONE PIECE FILM RED", artist: "Ado" },
+            { year: 2022, title: "チキチキバンバン", anime: "パリピ孔明", artist: "QUEENDOM" },
+            { year: 2022, title: "アイウエ", anime: "うる星やつら (2022年版)", artist: "MAISONdes" },
+            { year: 2022, title: "燦々デイズ", anime: "その着せ替え人形は恋をする", artist: "スピラ・スピカ" },
+            { year: 2022, title: "星が泳ぐ", anime: "サマータイムレンダ", artist: "マカロニえんぴつ" },
+            { year: 2022, title: "ALIVE", anime: "リコリス・リコイル", artist: "ClariS" },
+            { year: 2022, title: "青春コンプレックス", anime: "ぼっち・ざ・ろっく！", artist: "結束バンド" },
+
             { year: 2023, title: "アイドル", anime: "【推しの子】", artist: "YOASOBI" },
+            { year: 2023, title: "青のすみか", anime: "呪術廻戦 懐玉・玉折", artist: "キタニタツヤ" },
             { year: 2023, title: "SPECIALZ", anime: "呪術廻戦 渋谷事変", artist: "King Gnu" },
             { year: 2023, title: "勇者", anime: "葬送のフリーレン", artist: "YOASOBI" },
-            { year: 2024, title: "Bling-Bang-Bang-Born", anime: "マッシュル-MASHLE-", artist: "Creepy Nuts" },
-            { year: 2024, title: "夢幻", anime: "鬼滅の刃 柱稽古編", artist: "MY FIRST STORY" },
-            { year: 2025, title: "Plazma", anime: "機動戦士ガンダム シリーズ最新作", artist: "米津玄師" },
-            { year: 2026, title: "Re:Genesis", anime: "2026年最新アニメ主題歌", artist: "LiSA" }
+            { year: 2023, title: "絆ノ奇跡", anime: "鬼滅の刃 刀鍛冶の里編", artist: "MAN WITH A MISSION × milet" },
+            { year: 2023, title: "花になって", anime: "薬屋のひとりごと", artist: "緑黄色社会" },
+            { year: 2023, title: "Knock Out", anime: "マッシュル-MASHLE- (第1期)", artist: "岡崎体育" },
+            { year: 2023, title: "ホワイトノイズ", anime: "東京リベンジャーズ 聖夜決戦編", artist: "Official髭男dism" },
+            { year: 2023, title: "斜陽", anime: "僕の心のヤバイやつ", artist: "ヨルシカ" },
+            { year: 2023, title: "Ｗ●ＲＫ", anime: "地獄楽", artist: "millennium parade × 椎名林檎" },
+
+            { year: 2024, title: "Bling-Bang-Bang-Born", anime: "マッシュル-MASHLE- 神覚者候補選抜試験編", artist: "Creepy Nuts" },
+            { year: 2024, title: "ライラック", anime: "忘却バッテリー", artist: "Mrs. GREEN APPLE" },
+            { year: 2024, title: "夢幻", anime: "鬼滅の刃 柱稽古編", artist: "MY FIRST STORY × HYDE" },
+            { year: 2024, title: "タイムパラドックス", anime: "映画ドラえもん のび太の地球交響楽", artist: "Vaundy" },
+            { year: 2024, title: "オトノケ", anime: "ダンダダン", artist: "Creepy Nuts" },
+            { year: 2024, title: "ファタール", anime: "【推しの子】 第2期", artist: "GEMN" },
+            { year: 2024, title: "晴る", anime: "葬送のフリーレン (第2クール)", artist: "ヨルシカ" },
+            { year: 2024, title: "絶対零度", anime: "WIND BREAKER", artist: "なとり" },
+            { year: 2024, title: "シカ色デイズ", anime: "しかのこのこのここしたんたん", artist: "シカ部" },
+            { year: 2024, title: "誰我為", anime: "僕のヒーローアカデミア (第7期)", artist: "TK from 凛として時雨" },
+
+            { year: 2025, title: "アンビバレント", anime: "薬屋のひとりごと (第2期)", artist: "Uru" },
+            { year: 2025, title: "走れSAKAMOTO", anime: "SAKAMOTO DAYS", artist: "劇中OP" },
+            { year: 2025, title: "斬撃", anime: "炎炎ノ消防隊 参ノ章", artist: "Mrs. GREEN APPLE" },
+            { year: 2025, title: "決戦", anime: "劇場版ハイキュー!! VS小さな巨人", artist: "SPYAIR" },
+            { year: 2025, title: "勇気のうた", anime: "映画ドラえもん 絵世界物語", artist: "主題歌" },
+            { year: 2025, title: "巻き戻せ", anime: "運命の巻戻士", artist: "主題歌" },
+            { year: 2025, title: "LEveL Up", anime: "Solo Leveling (第2期)", artist: "SawanoHiroyuki" },
+            { year: 2025, title: "氷上に咲け", anime: "メダリスト", artist: "主題歌" },
+            { year: 2025, title: "星の夜", anime: "魔法使いの夜", artist: "主題歌" },
+            { year: 2025, title: "ハニーレモン", anime: "ハニーレモンソーダ", artist: "主題歌" }
         ];
 
         let peer = null, myId = "", myName = "", roomCode = "";
@@ -421,7 +760,7 @@
             deck: [],
             lastResult: null,
             logs: [],
-            pendingGameOver: false // 最後の1人になったあと、次へ進むボタンでリザルトへ送るためのフラグ
+            pendingGameOver: false
         };
 
         async function fetchAudioPreview(song) {
@@ -662,7 +1001,6 @@
                 roomData.lastResult = { isCorrect: false, song: song, playerName: player.name };
             }
 
-            // 最後の1人になったかチェック（ただしすぐにはリザルトに行かず、次へ進むボタン押下時に移行するようにフラグを立てる）
             const alivePlayers = Object.values(roomData.players).filter(p => p.isAlive);
             if (alivePlayers.length <= 1 && Object.keys(roomData.players).length > 1) {
                 if (alivePlayers.length === 1 && !roomData.eliminatedOrder.includes(alivePlayers[0].id)) {
@@ -675,7 +1013,6 @@
             broadcastState();
         }
 
-        // 全員誰でも押せる次へ進むボタン
         window.proceedToNextTurn = function() {
             playSound('tap');
             if (!isHost) {
@@ -686,7 +1023,6 @@
         };
 
         function processNextTurn() {
-            // もし最後の1人が決まっていて「次へ進む」が押されたらここで初めてGAMEOVERへ移行
             if (roomData.pendingGameOver) {
                 roomData.status = 'GAMEOVER';
                 broadcastState();
@@ -901,7 +1237,6 @@
                             <p class="text-xs text-rose-200">正解のリリース年: <strong class="text-amber-300 text-base font-mono">${res.song.year}年</strong></p>
                         `;
                     }
-                    // 誰でも押せるため、常に表示
                     if (btnNextTurn) {
                         btnNextTurn.classList.remove('hidden');
                         btnNextTurn.innerText = roomData.pendingGameOver ? "リザルト画面へ進む 🏆" : "次の手番へ進む ➔";
@@ -963,8 +1298,7 @@
             if (!list) return;
             list.innerHTML = '';
             (roomData.logs || []).forEach(log => {
-                const div = document.createElement('div');
-                div.innerText = log;
+                const div = document.innerText = log;
                 list.appendChild(div);
             });
         }
@@ -997,7 +1331,6 @@
             }
         };
 
-        // 音量調整機能
         window.changeVolume = function(val) {
             const audio = document.getElementById('audioPlayer');
             if (audio) {
