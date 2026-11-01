@@ -37,7 +37,7 @@
             min-height: 100vh;
         }
 
-        /* 対戦ログエリアはドラッグ＆コピペができるように選択を許可する設定 */
+        /* 対戦ログエリアはドラッグ＆コピペができるように選択を許可 */
         #actionLogList {
             user-select: text !important;
             -webkit-user-select: text !important;
@@ -283,7 +283,7 @@
     </main>
 
     <script>
-        const PREFIX = "anison-hitster-online-v38-";
+        const PREFIX = "anison-hitster-online-v39-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -347,9 +347,8 @@
 
         // =========================================================================
         // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）をコピペしてください】
-        // ご自身でお持ちの曲リスト（オブジェクトの配列）をここに直接上書き・コピペしてください。
         // =========================================================================
-const ANISON_DATABASE = [
+ const ANISON_DATABASE = [
     // --- 1980年 (3曲) ---
     { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
     { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
@@ -572,7 +571,6 @@ const ANISON_DATABASE = [
     { year: 2004, title: "Reason", anime: "機動戦士ガンダムSEED DESTINY", artist: "玉置成実" },
     { year: 2004, title: "Life Goes On", anime: "機動戦士ガンダムSEED DESTINY", artist: "有坂美香" },
     { year: 2004, title: "銀河鉄道は遥かなり", anime: "銀河鉄道物語", artist: "ささきいさお" },
-    { year: 2004, title: "胸いっぱい…", anime: "冒険王ビィト", artist: "きただにひろし" },
 
     // --- 2005年 ---
     { year: 2005, title: "創聖のアクエリオン", anime: "創聖のアクエリオン", artist: "AKINO" },
@@ -765,7 +763,7 @@ const ANISON_DATABASE = [
     { year: 2015, title: "かくしん的☆めたまるふょ〜ぜっ!", anime: "干物妹!うまるちゃん", artist: "土間うまる (田中あいみ)" },
     { year: 2015, title: "プライド革命", anime: "銀魂゜", artist: "CHiCO with HoneyWorks" },
     { year: 2015, title: "Hello,world!", anime: "血界戦線", artist: "BUMP OF CHICKEN" },
-    { year: 2015, title: "SIX SAME FACES 〜今夜は最高ーーー!!!〜", anime: "おそ松さん", artist: "イヤミと総おそ松衆" },
+　{ year: 2015, title: "SIX SAME FACES 〜今夜は最高!!!!!!〜", anime: "おそ松さん", artist: "イヤミ feat.おそ松×カラ松×チョロ松×一松×十四松×トド松" },
     { year: 2015, title: "オルフェンズの涙", anime: "機動戦士ガンダム 鉄血のオルフェンズ", artist: "MISIA" },
     { year: 2015, title: "LAST STARDUST", anime: "Fate/stay night [Unlimited Blade Works]", artist: "Aimer" },
     { year: 2015, title: "海色", anime: "艦隊これくしょん -艦これ-", artist: "AKINO from bless4" },
@@ -1247,6 +1245,12 @@ const ANISON_DATABASE = [
             roomData.currentSong = song;
         }
 
+        function getCurrentPlayerId() {
+            const alivePlayerIds = (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
+            if (alivePlayerIds.length === 0) return null;
+            return alivePlayerIds[roomData.currentTurnIndex % alivePlayerIds.length];
+        }
+
         async function processPlaceCard(insertIndex) {
             if (roomData.lastResult) return;
 
@@ -1261,19 +1265,16 @@ const ANISON_DATABASE = [
                               (targetYear === leftYear) || 
                               (targetYear === rightYear);
 
-            const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-            const currentPlayerId = activePlayerIds[roomData.currentTurnIndex % activePlayerIds.length];
+            const currentPlayerId = getCurrentPlayerId();
             const player = roomData.players[currentPlayerId];
 
             if (isCorrect) {
                 playSound('correct');
 
-                // 【同一年代のカードが既に盤面にある場合、既存のカードを取り除く処理】
                 const existingIndex = timeline.findIndex(s => s.year === targetYear);
                 if (existingIndex !== -1) {
                     const removed = timeline.splice(existingIndex, 1)[0];
                     addLog(`🔄 同じ年代(${targetYear}年)の既存カード「${removed.title}」を盤面から除外しました。`);
-                    // 挿入位置のインデックスがずれる可能性があるため再調整
                     if (insertIndex > existingIndex) {
                         insertIndex = Math.max(0, insertIndex - 1);
                     }
@@ -1336,8 +1337,7 @@ const ANISON_DATABASE = [
         async function processSkipTurn() {
             if (roomData.lastResult) return;
 
-            const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-            const currentPlayerId = activePlayerIds[roomData.currentTurnIndex % activePlayerIds.length];
+            const currentPlayerId = getCurrentPlayerId();
             const player = roomData.players[currentPlayerId];
 
             if (!player || player.hasSkipped || !player.isAlive) return;
@@ -1345,7 +1345,6 @@ const ANISON_DATABASE = [
             player.hasSkipped = true;
             const song = roomData.currentSong;
             
-            // スキップ時も同一年代の重複があれば除外
             const existingIndex = roomData.timeline.findIndex(s => s.year === song.year);
             if (existingIndex !== -1) {
                 roomData.timeline.splice(existingIndex, 1);
@@ -1375,6 +1374,7 @@ const ANISON_DATABASE = [
             processNextTurn();
         };
 
+        // 脱落者が出ても順番が飛ばされないよう修正した手番交代処理
         function processNextTurn() {
             if (roomData.pendingGameOver) {
                 roomData.status = 'GAMEOVER';
@@ -1382,15 +1382,15 @@ const ANISON_DATABASE = [
                 return;
             }
 
-            const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-            if (activePlayerIds.length > 0) {
-                roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % activePlayerIds.length;
+            const alivePlayerIds = (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
+            if (alivePlayerIds.length > 0) {
+                // 手番を次の生存プレイヤーに繰り上げ
+                roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % alivePlayerIds.length;
             }
             roomData.lastResult = null;
             broadcastState();
         }
 
-        // 年代（西暦）を隠し、検索に役立つ曲名・アニメ名・アーティスト名のみを表示
         window.revealErrorSongTitle = function() {
             playSound('tap');
             const display = document.getElementById('errorSongTitleDisplay');
@@ -1415,8 +1415,7 @@ const ANISON_DATABASE = [
         };
 
         async function processRecoverAndRetry() {
-            const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id]);
-            const currentPlayerId = activePlayerIds[roomData.currentTurnIndex % activePlayerIds.length];
+            const currentPlayerId = getCurrentPlayerId();
             const player = roomData.players[currentPlayerId];
 
             if (player) {
@@ -1497,9 +1496,7 @@ const ANISON_DATABASE = [
             } else if (roomData.status === 'PLAYING') {
                 showView('viewGame');
 
-                const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-                const currentTurnPlayerId = activePlayerIds[roomData.currentTurnIndex % activePlayerIds.length];
-                
+                const currentTurnPlayerId = getCurrentPlayerId();
                 const isMyTurn = (currentTurnPlayerId === myId) && !roomData.lastResult;
 
                 const myPlayer = roomData.players[myId];
@@ -1575,7 +1572,6 @@ const ANISON_DATABASE = [
                     timelineContainer.appendChild(btnInsert);
 
                     const card = document.createElement('div');
-                    // 盤面のカードに西暦年（年代）を大きく表示
                     card.className = "flex-shrink-0 w-40 h-52 bg-gradient-to-b from-slate-900 to-indigo-950 border-2 border-purple-400/60 rounded-2xl p-3.5 flex flex-col justify-between items-center text-center shadow-xl";
                     card.innerHTML = `
                         <span class="text-2xl font-black font-mono text-amber-300 mt-1">${song.year}年</span>
