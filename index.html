@@ -37,20 +37,12 @@
             min-height: 100vh;
         }
 
-        /* 対戦ログエリアはドラッグ＆コピペができるように選択を許可する設定 */
-        #actionLogList {
-            user-select: text !important;
-            -webkit-user-select: text !important;
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-        }
-
         .glass-panel {
-            background: rgba(15, 23, 42, 0.82);
+            background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         .wave-bar {
@@ -65,10 +57,10 @@
 <body class="min-h-screen text-slate-100 flex flex-col justify-between overflow-x-hidden">
 
     <!-- Header / Navbar -->
-    <header class="w-full p-4 md:p-6 glass-panel sticky top-0 z-40 border-b border-purple-500/30 flex justify-between items-center">
+    <header class="w-full p-4 md:p-5 glass-panel sticky top-0 z-40 border-b border-purple-500/20 flex justify-between items-center">
         <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
-            <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/40 border border-purple-200/40">
-                <span class="text-2xl md:text-3xl">🎧</span>
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/30 border border-purple-200/30">
+                <span class="text-2xl">🎧</span>
             </div>
             <div>
                 <h1 class="font-black text-xl md:text-2xl tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-pink-200 to-indigo-400">
@@ -78,8 +70,8 @@
         </div>
 
         <div id="headerInfo" class="hidden flex items-center space-x-3">
-            <div id="roomBadge" class="bg-slate-900/90 border border-purple-500/40 px-4 py-2.5 rounded-2xl text-base md:text-lg font-mono font-bold text-purple-200 flex items-center gap-2.5 cursor-pointer hover:bg-slate-800 transition shadow-md" onclick="copyRoomCode()">
-                <i class="fa-regular fa-copy text-purple-400"></i>
+            <div id="roomBadge" class="bg-slate-900/80 border border-purple-500/30 px-4 py-2 rounded-full text-sm font-mono font-bold text-purple-300 flex items-center gap-2 cursor-pointer hover:bg-slate-800 transition" onclick="copyRoomCode()">
+                <i class="fa-regular fa-copy"></i>
                 <span id="displayRoomCode">----</span>
             </div>
         </div>
@@ -90,33 +82,33 @@
 
         <!-- VIEW 1: LOBBY -->
         <div id="viewLobby" class="space-y-6 max-w-2xl mx-auto w-full">
-            <div class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-3">
-                <label class="block text-base font-bold uppercase tracking-wider text-purple-200">プレイヤー名（ニックネーム）</label>
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl space-y-3">
+                <label class="block text-sm font-bold uppercase tracking-wider text-purple-200">プレイヤー名（ニックネーム）</label>
                 <input type="text" id="playerNameInput" maxlength="10" placeholder="名前を入力してください" 
-                    class="w-full bg-slate-950/90 border-2 border-purple-500/50 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-purple-300 transition font-bold text-xl placeholder-slate-500 shadow-inner">
+                    class="w-full bg-slate-950/80 border border-purple-500/40 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-purple-300 transition font-bold text-xl placeholder-slate-600">
             </div>
 
-            <div class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-3">
-                <label class="block text-base font-bold uppercase tracking-wider text-purple-200">合言葉（部屋のパスワード）</label>
+            <div class="glass-panel rounded-3xl p-6 shadow-2xl space-y-3">
+                <label class="block text-sm font-bold uppercase tracking-wider text-purple-200">合言葉（部屋のパスワード）</label>
                 <input type="text" id="joinRoomCodeInput" placeholder="お好きな合言葉 (例: anison1)" 
-                    class="w-full bg-slate-950/90 border-2 border-purple-500/50 rounded-2xl px-5 py-4 text-white font-mono tracking-widest text-xl focus:outline-none focus:border-purple-300 transition placeholder-slate-500 shadow-inner">
+                    class="w-full bg-slate-950/80 border border-purple-500/40 rounded-2xl px-5 py-4 text-white font-mono tracking-widest text-xl focus:outline-none focus:border-purple-300 transition placeholder-slate-600">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl hover:border-purple-400/80 transition flex flex-col justify-between space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="glass-panel rounded-3xl p-6 shadow-2xl hover:border-purple-400/60 transition flex flex-col justify-between space-y-4">
                     <div>
-                        <h3 class="font-bold text-2xl text-white mb-1"><i class="fa-solid fa-plus text-purple-400 mr-2"></i>部屋を作る (ホスト)</h3>
+                        <h3 class="font-bold text-xl text-white mb-1"><i class="fa-solid fa-plus text-purple-400 mr-2"></i>部屋を作る (ホスト)</h3>
                     </div>
-                    <button id="btnCreateRoom" onclick="handleCreateRoom()" class="w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white font-black text-xl py-4 rounded-2xl shadow-xl transition active:scale-95">
+                    <button id="btnCreateRoom" onclick="handleCreateRoom()" class="w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white font-black text-lg py-4 rounded-2xl shadow-lg transition active:scale-95">
                         部屋を作成
                     </button>
                 </div>
 
-                <div class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl hover:border-indigo-400/80 transition flex flex-col justify-between space-y-5">
+                <div class="glass-panel rounded-3xl p-6 shadow-2xl hover:border-indigo-400/60 transition flex flex-col justify-between space-y-4">
                     <div>
-                        <h3 class="font-bold text-2xl text-white mb-1"><i class="fa-solid fa-right-to-bracket text-indigo-400 mr-2"></i>部屋に入る (ゲスト)</h3>
+                        <h3 class="font-bold text-xl text-white mb-1"><i class="fa-solid fa-right-to-bracket text-indigo-400 mr-2"></i>部屋に入る (ゲスト)</h3>
                     </div>
-                    <button id="btnJoinRoom" onclick="handleJoinRoom()" class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black text-xl py-4 rounded-2xl shadow-xl transition active:scale-95">
+                    <button id="btnJoinRoom" onclick="handleJoinRoom()" class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black text-lg py-4 rounded-2xl shadow-lg transition active:scale-95">
                         部屋に参加
                     </button>
                 </div>
@@ -124,23 +116,23 @@
         </div>
 
         <!-- VIEW 2: ROOM LOBBY -->
-        <div id="viewRoomLobby" class="hidden space-y-6 max-w-2xl mx-auto w-full">
+        <div id="viewRoomLobby" class="hidden space-y-5 max-w-2xl mx-auto w-full">
             <div class="glass-panel rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
-                <div class="flex justify-between items-center border-b border-purple-500/30 pb-5">
+                <div class="flex justify-between items-center border-b border-purple-500/20 pb-4">
                     <div>
-                        <span class="text-sm font-bold text-purple-400 tracking-wider uppercase">GAME LOBBY</span>
-                        <h2 class="text-3xl md:text-4xl font-black text-white flex items-center gap-2 mt-1">
+                        <span class="text-xs font-bold text-purple-400 tracking-wider uppercase">GAME LOBBY</span>
+                        <h2 class="text-3xl font-black text-white flex items-center gap-2">
                             合言葉: <span id="lobbyRoomCode" class="font-mono text-purple-300">----</span>
                         </h2>
                     </div>
-                    <button onclick="copyRoomCode()" class="bg-slate-800 hover:bg-slate-700 text-purple-200 text-base font-bold px-5 py-3 rounded-2xl border border-purple-500/40 transition shadow-md">
+                    <button onclick="copyRoomCode()" class="bg-slate-800 hover:bg-slate-700 text-purple-300 text-sm font-bold px-4 py-2.5 rounded-2xl border border-purple-500/30 transition">
                         <i class="fa-regular fa-copy"></i> コピー
                     </button>
                 </div>
 
-                <div id="hostSettingsBox" class="hidden bg-slate-950/90 rounded-2xl p-5 border border-purple-500/40 space-y-3 shadow-inner">
-                    <label class="block text-sm font-bold text-purple-200 uppercase tracking-wider">初期ライフ設定</label>
-                    <select id="initialLifeSelect" onchange="updateLifeSetting(this.value)" class="w-full bg-slate-900 border-2 border-purple-500/50 rounded-2xl px-5 py-3.5 text-white font-bold text-lg focus:outline-none">
+                <div id="hostSettingsBox" class="hidden bg-slate-950/80 rounded-2xl p-4 border border-purple-500/30 space-y-2">
+                    <label class="block text-xs font-bold text-purple-300 uppercase tracking-wider">初期ライフ</label>
+                    <select id="initialLifeSelect" onchange="updateLifeSetting(this.value)" class="w-full bg-slate-900 border border-purple-500/40 rounded-xl px-4 py-2.5 text-white font-bold focus:outline-none">
                         <option value="1">ライフ 1</option>
                         <option value="2" selected>ライフ 2</option>
                         <option value="3">ライフ 3</option>
@@ -148,17 +140,17 @@
                 </div>
 
                 <div class="space-y-3">
-                    <div class="flex justify-between items-center text-base font-bold text-purple-200">
+                    <div class="flex justify-between items-center text-sm font-bold text-purple-200">
                         <span>参加メンバー (<span id="playerCount">0</span>名)</span>
                     </div>
-                    <div id="playerList" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-h-64 overflow-y-auto pr-1"></div>
+                    <div id="playerList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-1"></div>
                 </div>
 
                 <div class="pt-2">
-                    <button id="startGameBtn" onclick="startGame()" class="hidden w-full bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600 hover:from-purple-300 hover:to-indigo-400 text-white font-black text-2xl py-5 rounded-2xl shadow-2xl transition transform active:scale-95">
+                    <button id="startGameBtn" onclick="startGame()" class="hidden w-full bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600 hover:from-purple-300 hover:to-indigo-400 text-white font-black text-xl py-5 rounded-2xl shadow-xl transition transform active:scale-95">
                         ゲームを開始する 🚀
                     </button>
-                    <p id="waitingForHostMsg" class="text-center text-purple-300/80 text-base py-3 font-bold animate-pulse">
+                    <p id="waitingForHostMsg" class="text-center text-purple-300/70 text-sm py-2 font-medium animate-pulse">
                         ホストがゲームを開始するのを待っています...
                     </p>
                 </div>
@@ -168,114 +160,102 @@
         <!-- VIEW 3: GAME PLAYING -->
         <div id="viewGame" class="hidden space-y-6 w-full max-w-5xl mx-auto">
             
-            <!-- プレイヤー状態一覧 -->
-            <div class="glass-panel p-5 md:p-6 rounded-3xl border border-purple-500/40 space-y-3 shadow-xl">
-                <div class="text-sm font-black text-purple-300 uppercase tracking-widest flex items-center gap-2">
+            <div class="glass-panel p-5 rounded-3xl border border-purple-500/30 space-y-3">
+                <div class="text-xs font-black text-purple-300 uppercase tracking-widest flex items-center gap-2">
                     <i class="fa-solid fa-users"></i> プレイヤー状態 &amp; 残りライフ
                 </div>
-                <div id="gamePlayerStatusList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5"></div>
+                <div id="gamePlayerStatusList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
             </div>
 
-            <!-- オーディオプレイヤー & スキップボタン -->
-            <div class="glass-panel rounded-3xl p-6 md:p-8 text-center shadow-2xl border border-purple-500/40 bg-slate-950/90 space-y-5">
-                <div class="flex justify-between items-center text-sm text-purple-300 font-bold uppercase tracking-wider">
+            <!-- オーディオプレイヤー -->
+            <div class="glass-panel rounded-3xl p-6 text-center shadow-2xl border border-purple-500/30 bg-slate-950/80 space-y-4">
+                <div class="flex justify-between items-center text-xs text-purple-400 font-bold uppercase tracking-wider">
                     <span>NOW PLAYING (個人用プレイヤー)</span>
-                    <span id="turnIndicatorBadge" class="bg-purple-500/25 px-5 py-2 rounded-2xl border border-purple-400/50 text-yellow-300 font-black text-base shadow-sm">--の手番</span>
+                    <span id="turnIndicatorBadge" class="bg-purple-500/20 px-4 py-1.5 rounded-full border border-purple-400/40 text-yellow-300 font-black text-sm">--の手番</span>
                 </div>
 
-                <div class="h-24 bg-slate-900 rounded-2xl border border-purple-500/40 flex items-center justify-center gap-2 px-6 py-4 overflow-hidden shadow-inner">
-                    <div class="wave-bar w-2 bg-purple-400 rounded-full" style="animation-duration: 0.8s;"></div>
-                    <div class="wave-bar w-2 bg-pink-400 rounded-full" style="animation-duration: 1.1s;"></div>
-                    <div class="wave-bar w-2 bg-indigo-400 rounded-full" style="animation-duration: 0.9s;"></div>
-                    <div class="wave-bar w-2 bg-purple-300 rounded-full" style="animation-duration: 1.3s;"></div>
-                    <div class="wave-bar w-2 bg-pink-500 rounded-full" style="animation-duration: 0.7s;"></div>
-                    <div class="wave-bar w-2 bg-indigo-300 rounded-full" style="animation-duration: 1.0s;"></div>
-                    <div class="wave-bar w-2 bg-purple-500 rounded-full" style="animation-duration: 1.2s;"></div>
+                <div class="h-20 bg-slate-900 rounded-2xl border border-purple-500/30 flex items-center justify-center gap-1.5 px-6 py-3 overflow-hidden">
+                    <div class="wave-bar w-1.5 bg-purple-400 rounded-full" style="animation-duration: 0.8s;"></div>
+                    <div class="wave-bar w-1.5 bg-pink-400 rounded-full" style="animation-duration: 1.1s;"></div>
+                    <div class="wave-bar w-1.5 bg-indigo-400 rounded-full" style="animation-duration: 0.9s;"></div>
+                    <div class="wave-bar w-1.5 bg-purple-300 rounded-full" style="animation-duration: 1.3s;"></div>
+                    <div class="wave-bar w-1.5 bg-pink-500 rounded-full" style="animation-duration: 0.7s;"></div>
+                    <div class="wave-bar w-1.5 bg-indigo-300 rounded-full" style="animation-duration: 1.0s;"></div>
+                    <div class="wave-bar w-1.5 bg-purple-500 rounded-full" style="animation-duration: 1.2s;"></div>
                 </div>
 
-                <!-- 再生ボタン & 音量調整 & スキップボタン -->
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 flex-wrap">
-                    <button id="btnPlayAudio" onclick="toggleAudio()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-bold px-8 py-4 rounded-2xl shadow-xl border border-purple-300/40 flex items-center gap-3 text-lg transition active:scale-95">
+                <!-- 再生ボタン & 音量調整スライダー -->
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <button id="btnPlayAudio" onclick="toggleAudio()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-bold px-8 py-4 rounded-2xl shadow-lg border border-purple-300/30 flex items-center gap-3 text-lg transition">
                         <i class="fa-solid fa-play" id="audioPlayIcon"></i>
                         <span id="audioPlayText">自分の端末で曲を再生する</span>
                     </button>
 
-                    <div class="flex items-center gap-2.5 bg-slate-900 px-5 py-3.5 rounded-2xl border border-purple-500/40 shadow-inner">
-                        <i class="fa-solid fa-volume-high text-purple-300 text-base"></i>
-                        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)" class="w-32 accent-purple-400 cursor-pointer">
-                        <span id="volumePercent" class="text-sm font-mono font-bold text-purple-300 w-11 text-right">100%</span>
+                    <div class="flex items-center gap-2 bg-slate-900 px-4 py-3 rounded-2xl border border-purple-500/30">
+                        <i class="fa-solid fa-volume-high text-purple-300 text-sm"></i>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)" class="w-28 accent-purple-400 cursor-pointer">
+                        <span id="volumePercent" class="text-xs font-mono font-bold text-purple-300 w-9 text-right">100%</span>
                     </div>
-
-                    <!-- 1人1回スキップボタン -->
-                    <button id="btnSkipTurn" onclick="handleSkipTurn()" class="hidden bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-black px-6 py-4 rounded-2xl shadow-xl border border-amber-300/50 flex items-center gap-2 text-base transition active:scale-95">
-                        <i class="fa-solid fa-forward-step"></i>
-                        <span id="skipButtonText">スキップする (残り1回)</span>
-                    </button>
                 </div>
                 
                 <audio id="audioPlayer" preload="auto" loop></audio>
 
-                <!-- AI選曲エラー補償システム（死亡後でも使用可能） -->
-                <div class="mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-5 rounded-2xl border border-rose-500/40 shadow-md">
-                    <p class="text-xs md:text-sm font-bold text-rose-300">⚠️ AI選曲ゴミ・音源エラー補償システム</p>
-                    <p class="text-xs text-rose-200/90 font-medium">※流れた曲が「カバー曲」「別曲」「選曲ミス」「再生不能」の場合に押してください。脱落後でもライフを1回復して手番をやり直せます。</p>
+                <!-- AIゴミ選曲・音源エラー発生時のライフ回復＆やり直しメニュー -->
+                <div class="mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/20 p-4 rounded-2xl border border-rose-500/30">
+                    <p class="text-xs font-bold text-rose-300">⚠️ AI選曲ゴミ・音源エラー補償システム</p>
+                    <p class="text-[11px] text-rose-200/80 font-medium">※流れた曲が「カバー曲」「別曲」「選曲ミス」「再生不能」の場合に押してください。減ったライフを1回復して手番をやり直します。</p>
                     <div class="flex justify-center gap-3 flex-wrap">
-                        <button onclick="revealErrorSongTitle()" class="bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/50 text-xs md:text-sm font-bold px-5 py-3 rounded-xl transition shadow">
+                        <button onclick="revealErrorSongTitle()" class="bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition">
                             正解の曲名とアーティストを確認する
                         </button>
-                        <button onclick="recoverAndRetrySong()" class="bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white border border-rose-400/60 text-xs md:text-sm font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
-                            <i class="fa-solid fa-heart-circle-plus"></i> 【補償】ライフを1回復して手番をやり直す
+                        <button onclick="recoverAndRetrySong()" class="bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white border border-rose-400/50 text-xs font-bold px-5 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2">
+                            <i class="fa-solid fa-heart-circle-plus"></i> 【AIゴミ選曲補償】ライフを1回復して手番をやり直す
                         </button>
                     </div>
-                    <div id="errorSongTitleDisplay" class="hidden text-sm font-bold text-yellow-300 bg-slate-900 p-3.5 rounded-xl border border-yellow-500/40 mt-2 shadow-inner"></div>
+                    <div id="errorSongTitleDisplay" class="hidden text-sm font-bold text-yellow-300 bg-slate-900 p-3 rounded-xl border border-yellow-500/30 mt-2"></div>
                 </div>
             </div>
 
-            <!-- 共通タイムライン -->
-            <div class="glass-panel p-6 md:p-8 rounded-3xl border border-purple-500/40 space-y-5 shadow-2xl">
+            <div class="glass-panel p-6 rounded-3xl border border-purple-500/30 space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 class="font-black text-xl text-white">共通タイムライン (場のカード: <span id="timelineCount">1</span>枚)</h3>
+                    <h3 class="font-black text-lg text-white">共通タイムライン (場のカード: <span id="timelineCount">1</span>枚)</h3>
                 </div>
 
-                <div id="timelineContainer" class="flex items-center gap-3 overflow-x-auto py-5 px-3 scrollbar-thin"></div>
+                <div id="timelineContainer" class="flex items-center gap-2 overflow-x-auto py-4 px-2 scrollbar-thin"></div>
             </div>
 
             <!-- 手番結果判定 -->
-            <div id="turnResultBox" class="hidden glass-panel p-6 rounded-3xl border-2 text-center space-y-4 shadow-2xl">
+            <div id="turnResultBox" class="hidden glass-panel p-5 rounded-3xl border-2 text-center space-y-3">
                 <div id="turnResultContent"></div>
-                <button id="btnNextTurn" onclick="proceedToNextTurn()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black text-lg px-10 py-4 rounded-2xl shadow-xl transition active:scale-95">
+                <button id="btnNextTurn" onclick="proceedToNextTurn()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-black px-8 py-3 rounded-2xl shadow-lg transition">
                     次の手番へ進む ➔
                 </button>
             </div>
 
-            <div class="glass-panel p-5 rounded-3xl border border-purple-500/30 space-y-2 shadow-lg">
-                <div class="text-xs md:text-sm font-bold text-purple-300 uppercase tracking-wider flex justify-between items-center">
-                    <span>対戦ログ (マウスでドラッグ＆選択してコピーできます)</span>
-                    <span class="text-[11px] text-purple-400/80 font-mono">※ドラッグ選択可能</span>
-                </div>
-                <!-- ドラッグ選択してコピペできるように修正されたログ表示エリア -->
-                <div id="actionLogList" class="space-y-1.5 max-h-36 overflow-y-auto text-xs md:text-sm text-purple-100 font-mono pr-1 select-text cursor-text bg-slate-950/70 p-3 rounded-xl border border-purple-500/20"></div>
+            <div class="glass-panel p-4 rounded-3xl border border-purple-500/20 space-y-2">
+                <div class="text-xs font-bold text-purple-300 uppercase tracking-wider">対戦ログ</div>
+                <div id="actionLogList" class="space-y-1 max-h-28 overflow-y-auto text-xs text-purple-100 font-mono"></div>
             </div>
         </div>
 
         <!-- VIEW 4: GAME OVER -->
-        <div id="viewGameOver" class="hidden glass-panel rounded-3xl p-8 md:p-10 shadow-2xl text-center space-y-6 max-w-xl mx-auto w-full border border-purple-500/40">
+        <div id="viewGameOver" class="hidden glass-panel rounded-3xl p-8 shadow-2xl text-center space-y-6 max-w-xl mx-auto w-full border border-purple-500/30">
             <div class="py-2 space-y-2">
-                <div class="text-6xl mb-2">🏆</div>
-                <h2 class="text-4xl font-black text-amber-300">ゲーム終了！</h2>
+                <div class="text-5xl mb-2">🏆</div>
+                <h2 class="text-3xl font-black text-amber-300">ゲーム終了！</h2>
             </div>
 
             <div class="space-y-3 text-left">
-                <h3 class="text-sm font-bold text-purple-300 uppercase tracking-wider text-center">最終結果ランキング</h3>
-                <div id="finalRankingList" class="space-y-2.5"></div>
+                <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider text-center">最終結果ランキング</h3>
+                <div id="finalRankingList" class="space-y-2"></div>
             </div>
 
-            <div id="gameOverHostControls" class="hidden space-y-3 pt-2">
-                <button onclick="restartGame()" class="w-full bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600 text-white font-black text-2xl py-4.5 rounded-2xl shadow-2xl transition active:scale-95">
+            <div id="gameOverHostControls" class="hidden space-y-2 pt-2">
+                <button onclick="restartGame()" class="w-full bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600 text-white font-black text-xl py-4 rounded-2xl shadow-xl transition active:scale-95">
                     ロビーに戻る 🔄
                 </button>
             </div>
-            <p id="gameOverClientMsg" class="hidden text-base text-purple-300/80 animate-pulse font-bold">
+            <p id="gameOverClientMsg" class="hidden text-sm text-purple-300/70 animate-pulse">
                 ホストがロビーへ戻すのを待っています...
             </p>
         </div>
@@ -283,7 +263,7 @@
     </main>
 
     <script>
-        const PREFIX = "anison-hitster-online-v35-";
+        const PREFIX = "anison-hitster-online-v32-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -345,608 +325,722 @@
             }
         }
 
-        // =========================================================================
-        // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）を記述してください】
-        // ご自身が所有・編集したいカスタム曲リストをここに書き換えてください。
-        // フォーマット例: { year: 1995, title: "残酷な天使のテーゼ", anime: "新世紀エヴァンゲリオン", artist: "高橋洋子" }
-        // =========================================================================
-const ANISON_DATABASE = [
-    // --- 1980年 (3曲) ---
-    { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
-    { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
-    { year: 1980, title: "裸足のフローネ", anime: "家族ロビンソン漂流記 ふしぎな島のフローネ", artist: "潘恵子" },
+        // 2026年完全削除・年代重複一切なし・各年確実な楽曲リスト（全網羅）
+        const ANISON_DATABASE = [
+            // --- 1979〜1999年 ---
+            { year: 1979, title: "翔べ! ガンダム", anime: "機動戦士ガンダム", artist: "池田鴻" },
+            { year: 1979, title: "銀河鉄道999", anime: "銀河鉄道999", artist: "ゴダイゴ" },
+            { year: 1979, title: "ドラえもんのうた", anime: "ドラえもん", artist: "大杉久美子" },
+            { year: 1979, title: "ルパン三世のテーマ'79", anime: "ルパン三世 PART2", artist: "大野雄司" },
+            { year: 1979, title: "誰がために", anime: "サイボーグ009", artist: "成田賢" },
+            { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
+            { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
+            { year: 1980, title: "オタスケマンの歌", anime: "タイムパトロール隊オタスケマン", artist: "山本正之" },
+            { year: 1980, title: "裸足のフローネ", anime: "ふしぎの島のフローネ", artist: "潘恵子" },
+            { year: 1980, title: "ニルスのふしぎな旅", anime: "ニルスのふしぎな旅", artist: "加橋かつみ" },
+            { year: 1981, title: "ラムのラブソング", anime: "うる星やつら", artist: "松谷祐子" },
+            { year: 1981, title: "ワイワイワールド", anime: "Dr.スランプ アラレちゃん", artist: "水森亜土" },
+            { year: 1981, title: "銀河旋風ブライガー", anime: "銀河旋風ブライガー", artist: "たいらいさお" },
+            { year: 1981, title: "太陽の牙ダグラム", anime: "太陽の牙ダグラム", artist: "麻田マモル" },
+            { year: 1981, title: "じゃりン子チエ", anime: "じゃりン子チエ", artist: "中山千夏" },
+            { year: 1982, title: "マクロス", anime: "超時空要塞マクロス", artist: "藤原誠" },
+            { year: 1982, title: "コブラ", anime: "スペースコブラ", artist: "前野曜子" },
+            { year: 1982, title: "疾風ザブングル", anime: "戦闘メカ ザブングル", artist: "串田アキラ" },
+            { year: 1982, title: "ラブ・ラブ・ミンキーモモ", anime: "魔法のプリンセス ミンキーモモ", artist: "小山茉美" },
+            { year: 1982, title: "パタリロ!", anime: "パタリロ!", artist: "藤本房子" },
+            { year: 1983, title: "CAT'S EYE", anime: "キャッツ・アイ", artist: "杏里" },
+            { year: 1983, title: "キン肉マン Go Fight!", anime: "キン肉マン", artist: "串田アキラ" },
+            { year: 1983, title: "ダンバイン とぶ", anime: "聖戦士ダンバイン", artist: "MIO" },
+            { year: 1983, title: "デリケートに好きして", anime: "魔法の天使クリィミーマミ", artist: "太田貴子" },
+            { year: 1983, title: "想い出がいっぱい", anime: "みゆき", artist: "H2O" },
+            { year: 1984, title: "愛・おぼえていますか", anime: "超時空要塞マクロス", artist: "飯島真理" },
+            { year: 1984, title: "愛をとりもどせ!!", anime: "北斗の拳", artist: "クリスタルキング" },
+            { year: 1984, title: "エルガイム-Time for L-GAIM-", anime: "重戦機エルガイム", artist: "MIO" },
+            { year: 1984, title: "風のノー・リプライ", anime: "重戦機エルガイム", artist: "鮎川麻弥" },
+            { year: 1984, title: "よろしくチューニング", anime: "よろしくメカドック", artist: "STR!P" },
+            { year: 1985, title: "タッチ", anime: "タッチ", artist: "岩崎良美" },
+            { year: 1985, title: "Z・刻をこえて", anime: "機動戦士Ζガンダム", artist: "鮎川麻弥" },
+            { year: 1985, title: "水の星へ愛をこめて", anime: "機動戦士Ζガンダム", artist: "森口博子" },
+            { year: 1985, title: "うしろゆびさされ組", anime: "ハイスクール!奇面組", artist: "うしろゆびさされ組" },
+            { year: 1985, title: "ロマンティックあげるよ", anime: "ドラゴンボール", artist: "橋本潮" },
+            { year: 1986, title: "ペガサス幻想", anime: "聖闘士星矢", artist: "MAKE-UP" },
+            { year: 1986, title: "魔訶不思議アドベンチャー!", anime: "ドラゴンボール", artist: "高橋洋樹" },
+            { year: 1986, title: "アニメじゃない〜夢を忘れた古い地球人よ〜", anime: "機動戦士ガンダムZZ", artist: "新井正人" },
+            { year: 1986, title: "悲しみよこんにちは", anime: "めぞん一刻", artist: "斉藤由貴" },
+            { year: 1986, title: "サイレント・ヴォイス", anime: "機動戦士ガンダムZZ", artist: "ひろえ純" },
+            { year: 1987, title: "Get Wild", anime: "シティーハンター", artist: "TM NETWORK" },
+            { year: 1987, title: "夢色チェイサー", anime: "機甲戦記ドラグナー", artist: "鮎川麻弥" },
+            { year: 1987, title: "ナイト・オブ・サマーサイド", anime: "きまぐれオレンジ☆ロード", artist: "池田政典" },
+            { year: 1987, title: "City Hunter〜愛よ消えないで〜", anime: "シティーハンター", artist: "小比類巻かほる" },
+            { year: 1987, title: "スターダストボーイズ", anime: "宇宙船サジタリウス", artist: "影山ヒロノブ" },
+            { year: 1988, title: "BEYOND THE TIME", anime: "機動戦士ガンダム 逆襲のシャア", artist: "TM NETWORK" },
+            { year: 1988, title: "アンパンマンのマーチ", anime: "それいけ!アンパンマン", artist: "ドリーミング" },
+            { year: 1988, title: "STEP", anime: "魔神英雄伝ワタル", artist: "a・chi-a・chi" },
+            { year: 1988, title: "聖闘士神話〜ソルジャー・ドリーム〜", anime: "聖闘士星矢", artist: "影山ヒロノブ" },
+            { year: 1988, title: "はじめてのチュウ", anime: "キテレツ大百科", artist: "あんしんパパ" },
+            { year: 1989, title: "CHA-LA HEAD-CHA-LA", anime: "ドラゴンボールZ", artist: "影山ヒロノブ" },
+            { year: 1989, title: "おどるポンポコリン", anime: "ちびまる子ちゃん", artist: "B.B.クィーンズ" },
+            { year: 1989, title: "やさしさに包まれたなら", anime: "魔女の宅急便", artist: "荒井由実" },
+            { year: 1989, title: "Seek You", anime: "天空戦記シュラト", artist: "清水咲斗子" },
+            { year: 1989, title: "コンディション・グリーン", anime: "機動警察パトレイバー", artist: "笠原弘子" },
+            { year: 1990, title: "ブルーウォーター", anime: "ふしぎの海のナディア", artist: "森川美穂" },
+            { year: 1990, title: "走れ正直者", anime: "ちびまる子ちゃん", artist: "西城秀樹" },
+            { year: 1990, title: "Gatherway", anime: "勇者エクスカイザー", artist: "三浦秀美" },
+            { year: 1990, title: "ステップ・バイ・ステップ", anime: "魔神英雄伝ワタル2", artist: "高橋由美子" },
+            { year: 1990, title: "ドリーム・シフト", anime: "絶対無敵ライジンオー", artist: "SILK" },
+            { year: 1991, title: "ムーンライト伝説", anime: "美少女戦士セーラームーン", artist: "DALI" },
+            { year: 1991, title: "ETERNAL WIND〜ほほえみは光る風の中〜", anime: "機動戦士ガンダムF91", artist: "森口博子" },
+            { year: 1991, title: "Winners", anime: "新世紀GPXサイバーフォーミュラ", artist: "G-Grip" },
+            { year: 1991, title: "乙女のポリシー", anime: "美少女戦士セーラームーンR", artist: "石田よう子" },
+            { year: 1991, title: "風の歌を聴け", anime: "元気爆発ガンバルガー", artist: "長谷川空" },
+            { year: 1992, title: "微笑みの爆弾", anime: "幽☆遊☆白書", artist: "馬渡松子" },
+            { year: 1992, title: "アンバランスなKissをして", anime: "幽☆遊☆白書", artist: "高橋ひろ" },
+            { year: 1992, title: "太陽がまた輝くとき", anime: "幽☆遊☆白書", artist: "高橋ひろ" },
+            { year: 1992, title: "嵐の勇者(ヒーロー)", anime: "勇者特急マイトガイン", artist: "岡柚瑠" },
+            { year: 1992, title: "んばば・ラブソング", anime: "南国少年パプワくん", artist: "TOME" },
+            { year: 1993, title: "君が好きだと叫びたい", anime: "SLAM DUNK", artist: "BAAD" },
+            { year: 1993, title: "あなただけ見つめてる", anime: "SLAM DUNK", artist: "大黒摩季" },
+            { year: 1993, title: "勇気100%", anime: "忍たま乱太郎", artist: "光GENJI" },
+            { year: 1993, title: "STAND UP TO THE VICTORY", anime: "機動戦士Vガンダム", artist: "川添智久" },
+            { year: 1993, title: "FLYING IN THE SKY", anime: "機動武闘伝Gガンダム", artist: "鵜島仁文" },
+            { year: 1994, title: "ゆずれない願い", anime: "魔法騎士レイアース", artist: "田村直美" },
+            { year: 1994, title: "JUST COMMUNICATION", anime: "新機動戦記ガンダムW", artist: "TWO-MIX" },
+            { year: 1994, title: "世界が終るまでは…", anime: "SLAM DUNK", artist: "WANDS" },
+            { year: 1994, title: "1/3の純情な感情", anime: "るろうに剣心", artist: "SIAM SHADE" },
+            { year: 1994, title: "愛しい人のために", anime: "ふしぎ遊戯", artist: "佐藤朱美" },
+            { year: 1995, title: "You've Got a Friend in Me", anime: "トイ・ストーリー", artist: "Randy Newman" },
+            { year: 1995, title: "残酷な天使のテーゼ", anime: "新世紀エヴァンゲリオン", artist: "高橋洋子" },
+            { year: 1995, title: "RHYTHM EMOTION", anime: "新機動戦記ガンダムW", artist: "TWO-MIX" },
+            { year: 1995, title: "胸がドキドキ", anime: "名探偵コナン", artist: "THE HIGH-LOWS" },
+            { year: 1995, title: "輝きは君の中に", anime: "NINKU -忍空-", artist: "鈴木結女" },
+            { year: 1995, title: "LOVE PHANTOM", anime: "名探偵コナン", artist: "B'z" },
+            { year: 1996, title: "そばかす", anime: "るろうに剣心", artist: "JUDY AND MARY" },
+            { year: 1996, title: "Give a reason", anime: "スレイヤーズNEXT", artist: "林原めぐみ" },
+            { year: 1996, title: "YOU GET BURNING", anime: "機動戦艦ナデシコ", artist: "松澤由美" },
+            { year: 1996, title: "HEART OF SWORD〜夜明け前〜", anime: "るろうに剣心", artist: "T.M.Revolution" },
+            { year: 1996, title: "謎", anime: "名探偵コナン", artist: "小松未歩" },
+            { year: 1997, title: "めざせポケモンマスター", anime: "ポケットモンスター", artist: "松本梨香" },
+            { year: 1997, title: "輪舞-revolution", anime: "少女革命ウテナ", artist: "奥井雅美" },
+            { year: 1997, title: "魂のルフラン", anime: "新世紀エヴァンゲリオン", artist: "高橋洋子" },
+            { year: 1997, title: "もののけ姫", anime: "もののけ姫", artist: "米良美一" },
+            { year: 1997, title: "勇者王誕生!", anime: "勇者王ガオガイガー", artist: "遠藤正明" },
+            { year: 1998, title: "Catch You Catch Me", anime: "カードキャプターさくら", artist: "グミ" },
+            { year: 1998, title: "Tank!", anime: "カウボーイビバップ", artist: "シートベルツ" },
+            { year: 1998, title: "おジャ魔女カーニバル!!", anime: "おジャ魔女どれみ", artist: "MAHO堂" },
+            { year: 1998, title: "WILL", anime: "仙界伝 封神演義", artist: "米倉千尋" },
+            { year: 1998, title: "ギリギリchop", anime: "名探偵コナン", artist: "B'z" },
+            { year: 1999, title: "ウィーアー!", anime: "ONE PIECE", artist: "きただにひろし" },
+            { year: 1999, title: "Butter-Fly", anime: "デジモンアドベンチャー", artist: "和田光司" },
+            { year: 1999, title: "ターンAターン", anime: "∀ガンダム", artist: "西城秀樹" },
+            { year: 1999, title: "扉をあけて", anime: "カードキャプターさくら", artist: "ANZA" },
+            { year: 1999, title: "Secret of my heart", anime: "名探偵コナン", artist: "倉木麻衣" },
 
-    // --- 1981年 (3曲) ---
-    { year: 1981, title: "ラムのラブソング", anime: "うる星やつら", artist: "松谷祐子" },
-    { year: 1981, title: "ワイワイワールド", anime: "Dr.スランプ アラレちゃん", artist: "水森亜土" },
-    { year: 1981, title: "ハロー! サンディベル", anime: "ハロー!サンディベル", artist: "堀江美都子" },
+            // --- 2000〜2025年（各年16曲・厳選・重複なし） ---
+            { year: 2000, title: "プラチナ", anime: "カードキャプターさくら", artist: "坂本真綾" },
+            { year: 2000, title: "for フルーツバスケット", anime: "フルーツバスケット", artist: "岡崎律子" },
+            { year: 2000, title: "ターゲット〜赤い衝撃〜", anime: "デジモンアドベンチャー02", artist: "和田光司" },
+            { year: 2000, title: "サクラサク", anime: "ラブひな", artist: "林原めぐみ" },
+            { year: 2000, title: "OK!", anime: "ポケットモンスター", artist: "松本梨香" },
+            { year: 2000, title: "CHANGE THE WORLD", anime: "犬夜叉", artist: "V6" },
+            { year: 2000, title: "Love Destiny", anime: "シスター・プリンセス", artist: "堀江由衣" },
+            { year: 2000, title: "いつも何度でも", anime: "千と千尋の神隠し", artist: "木村弓" },
+            { year: 2000, title: "brave heart", anime: "デジモンアドベンチャー", artist: "宮崎歩" },
+            { year: 2000, title: "ヒロイン", anime: "犬夜叉", artist: "Do As Infinity" },
+            { year: 2000, title: "おっとっとっと", anime: "コレクター・ユイ", artist: "oods" },
+            { year: 2000, title: "白い花", anime: "ブラック・ジャック", artist: "ジャパハリネット" },
+            { year: 2000, title: "ハッピー・マンデー", anime: "周防", artist: "THE COLLECTORS" },
+            { year: 2000, title: "STAY", anime: "無限のリヴァイアス", artist: "井上麻美" },
+            { year: 2000, title: "dis-", anime: "無限のリヴァイアス", artist: "有坂美香" },
+            { year: 2000, title: "夢のendはいつも目覚まし!", anime: "コレクター・ユイ", artist: "愛内里菜" },
 
-    // --- 1982年 (3曲) ---
-    { year: 1982, title: "マクロス", anime: "超時空要塞マクロス", artist: "藤原誠" },
-    { year: 1982, title: "コブラ", anime: "スペースコブラ", artist: "前野曜子" },
-    { year: 1982, title: "パタリロ!", anime: "パタリロ!", artist: "藤本房子" },
+            { year: 2001, title: "Dearest", anime: "犬夜叉", artist: "浜崎あゆみ" },
+            { year: 2001, title: "Over Soul", anime: "シャーマンキング", artist: "林原めぐみ" },
+            { year: 2001, title: "Northern lights", anime: "シャーマンキング", artist: "林原めぐみ" },
+            { year: 2001, title: "The Biggest Dreamer", anime: "デジモンテイマーズ", artist: "和田光司" },
+            { year: 2001, title: "OVERLAPS", anime: "遊☆戯☆王デュエルモンスターズ", artist: "Kimeru" },
+            { year: 2001, title: "Get Over", anime: "ヒカルの碁", artist: "dream" },
+            { year: 2001, title: "I am", anime: "犬夜叉", artist: "hitomi" },
+            { year: 2001, title: "Every Heart -ミンナノキモチ-", anime: "犬夜叉", artist: "BoA" },
+            { year: 2001, title: "明日へのschool", anime: "ヒカルの碁", artist: "Folder5" },
+            { year: 2001, title: "try again", anime: "シャーマンキング", artist: "椎名林檎" },
+            { year: 2001, title: "feel my soul", anime: "ヒカルの碁", artist: "YUI" },
+            { year: 2001, title: "光と影のロマン", anime: "名探偵コナン", artist: "宇徳敬子" },
+            { year: 2001, title: "願い事ひとつだけ", anime: "名探偵コナン", artist: "小松未歩" },
+            { year: 2001, title: "MY FRIEND", anime: "スラムダンク", artist: "ZARD" },
+            { year: 2001, title: "そばにいるから", anime: "るろうに剣心", artist: "L'Arc-en-Ciel" },
+            { year: 2001, title: "VOICE", anime: "WOLF'S RAIN", artist: "坂本真綾" },
 
-    // --- 1983年 (3曲) ---
-    { year: 1983, title: "CAT'S EYE", anime: "キャッツ・アイ", artist: "杏里" },
-    { year: 1983, title: "キン肉マン Go Fight!", anime: "キン肉マン", artist: "串田アキラ" },
-    { year: 1983, title: "ダンバイン とぶ", anime: "聖戦士ダンバイン", artist: "MIO" },
+            { year: 2002, title: "メリッサ", anime: "鋼の錬金術師", artist: "ポルノグラフィティ" },
+            { year: 2002, title: "GO!!!", anime: "NARUTO -ナルト-", artist: "FLOW" },
+            { year: 2002, title: "ヘミソフィア", anime: "ラーゼフォン", artist: "坂本真綾" },
+            { year: 2002, title: "キングゲイナー・オーバー!", anime: "OVERMANキングゲイナー", artist: "福山芳樹" },
+            { year: 2002, title: "遥か彼方", anime: "NARUTO -ナルト-", artist: "ASIAN KUNG-FU GENERATION" },
+            { year: 2002, title: "瞳の欠片", anime: "MADLAX", artist: "FictionJunction YUUKA" },
+            { year: 2002, title: "ROCKS", anime: "NARUTO -ナルト-", artist: "Hound Dog" },
+            { year: 2002, title: "悲しみをやさしさに", anime: "NARUTO -ナルト-", artist: "little by little" },
+            { year: 2002, title: "ALL MY TRUE LOVE", anime: "キャプテン翼", artist: "SPEED" },
+            { year: 2002, title: "無敵のBIG BANG", anime: "超重神グラヴィオン", artist: "JAM Project" },
+            { year: 2002, title: "trust you", anime: "機動戦士ガンダムSEED", artist: "伊藤由奈" },
+            { year: 2002, title: "esprit", anime: "十二国記", artist: "梁邦彦" },
+            { year: 2002, title: "十二幻夢曲", anime: "十二国記", artist: "梁邦彦" },
+            { year: 2002, title: "月の繭", anime: "∀ガンダム", artist: "奥井亜紀" },
+            { year: 2002, title: "琥珀の揺りかご", anime: "ラーゼフォン", artist: "坂本真綾" },
+            { year: 2002, title: "炎のたからもの", anime: "ルパン三世", artist: "ボビー" },
 
-    // --- 1984年 (3曲) ---
-    { year: 1984, title: "愛をとりもどせ!!", anime: "北斗の拳", artist: "クリスタルキング" },
-    { year: 1984, title: "愛・おぼえていますか", anime: "超時空要塞マクロス", artist: "飯島真理" },
-    { year: 1984, title: "ガラスの仮面", anime: "ガラスの仮面", artist: "芦部真梨子" },
+            { year: 2003, title: "INVOKE", anime: "機動戦士ガンダムSEED", artist: "T.M.Revolution" },
+            { year: 2003, title: "READY STEADY GO", anime: "鋼の錬金術師", artist: "L'Arc-en-Ciel" },
+            { year: 2003, title: "Believe", anime: "機動戦士ガンダムSEED", artist: "玉置成実" },
+            { year: 2003, title: "リライト", anime: "鋼の錬金術師", artist: "ASIAN KUNG-FU GENERATION" },
+            { year: 2003, title: "カサブタ", anime: "金色のガッシュベル!!", artist: "千綿ヒデノリ" },
+            { year: 2003, title: "Realize", anime: "機動戦士ガンダムSEED", artist: "玉置成実" },
+            { year: 2003, title: "Find the way", anime: "機動戦士ガンダムSEED", artist: "中島美嘉" },
+            { year: 2003, title: "UNDO", anime: "鋼の錬金術師", artist: "COOL JOKE" },
+            { year: 2003, title: "消せない罪", anime: "鋼の錬金術師", artist: "北出菜奈" },
+            { year: 2003, title: "ゴールデンタイムラバー", anime: "鋼の錬金術師", artist: "スキマスイッチ" },
+            { year: 2003, title: "planet", anime: "プラネテス", artist: "黒石ひとみ" },
+            { year: 2003, title: "memory", anime: "プラネテス", artist: "石川智晶" },
+            { year: 2003, title: "wind", anime: "NARUTO -ナルト-", artist: "山田タマル" },
+            { year: 2003, title: "Alive", anime: "爆転シュート ベイブレード", artist: "SS501" },
+            { year: 2003, title: "STRIKE BACK", anime: "FAIRY TAIL", artist: "BACK-ON" },
+            { year: 2003, title: "サクラ色", anime: "ななついろ★ドロップス", artist: "橋本みゆき" },
 
-    // --- 1985年 (3曲) ---
-    { year: 1985, title: "タッチ", anime: "タッチ", artist: "岩崎良美" },
-    { year: 1985, title: "Z・刻をこえて", anime: "機動戦士Ζガンダム", artist: "鮎川麻弥" },
-    { year: 1985, title: "水の星へ愛をこめて", anime: "機動戦士Ζガンダム", artist: "森口博子" },
+            { year: 2004, title: "DAN ZEN! ふたりはプリキュア", anime: "ふたりはプリキュア", artist: "五條真由美" },
+            { year: 2004, title: "ignited -イグナイテッド-", anime: "機動戦士ガンダムSEED DESTINY", artist: "T.M.Revolution" },
+            { year: 2004, title: "PRIDE", anime: "機動戦士ガンダムSEED DESTINY", artist: "HIGH and MIGHTY COLOR" },
+            { year: 2004, title: "innocent starter", anime: "魔法少女リリカルなのは", artist: "水樹奈々" },
+            { year: 2004, title: "Shangri-La", anime: "蒼穹のファフナー", artist: "angela" },
+            { year: 2004, title: "Shining tears", anime: "シャニング・ティアーズ・クロス・ウィンド", artist: "保志総一朗" },
+            { year: 2004, title: "僕達の行方", anime: "機動戦士ガンダムSEED DESTINY", artist: "高橋瞳" },
+            { year: 2004, title: "Wings of Words", anime: "機動戦士ガンダムSEED DESTINY", artist: "CHEMISTRY" },
+            { year: 2004, title: "Reason", anime: "機動戦士ガンダムSEED DESTINY", artist: "玉置成実" },
+            { year: 2004, title: "DAYS", anime: "交響詩篇エウレカセブン", artist: "FLOW" },
+            { year: 2004, title: "少年ハート", anime: "交響詩篇エウレカセブン", artist: "HOME MADE 家族" },
+            { year: 2004, title: "Fly Away", anime: "交響詩篇エウレカセブン", artist: "TIM Mullen" },
+            { year: 2004, title: "太陽の国", anime: "BLEACH", artist: "ORANGE RANGE" },
+            { year: 2004, title: "カルマ", anime: "テイルズ オブ ジ アビス", artist: "BUMP OF CHICKEN" },
+            { year: 2004, title: "あんなに一緒だったのに", anime: "機動戦士ガンダムSEED", artist: "See-Saw" },
+            { year: 2004, title: "石川智晶", anime: "ノワール", artist: "coccinelle" },
 
-    // --- 1986年 (3曲) ---
-    { year: 1986, title: "ペガサス幻想", anime: "聖闘士星矢", artist: "MAKE-UP" },
-    { year: 1986, title: "魔訶不思議アドベンチャー!", anime: "ドラゴンボール", artist: "高橋洋樹" },
-    { year: 1986, title: "悲しみよこんにちは", anime: "めぞん一刻", artist: "斉藤由貴" },
+            { year: 2005, title: "ハッピー☆マテリアル", anime: "魔法先生ネギま！", artist: "麻帆良学園中等部2-A" },
+            { year: 2005, title: "創聖のアクエリオン", anime: "創聖のアクエリオン", artist: "AKINO" },
+            { year: 2005, title: "ETERNAL BLAZE", anime: "魔法少女リリカルなのはA's", artist: "水樹奈々" },
+            { year: 2005, title: "マジカル☆ジェネレーション", anime: "まじかるカナン", artist: "榊原ゆい" },
+            { year: 2005, title: "Go Tight!", anime: "創聖のアクエリオン", artist: "AKINO" },
+            { year: 2005, title: "撲殺天使ドクロちゃん", anime: "撲殺天使ドクロちゃん", artist: "千葉紗子" },
+            { year: 2005, title: "ガーネット", anime: "時をかける少女", artist: "奥華子" },
+            { year: 2005, title: "青春ライン", anime: "おおきく振りかぶって", artist: "いきものがかり" },
+            { year: 2005, title: "ドラマチック", anime: "ハチミツとクローバー", artist: "YUKI" },
+            { year: 2005, title: "薔薇獄乙女", anime: "ローゼンメイデン", artist: "ALI PROJECT" },
+            { year: 2005, title: "聖少女領域", anime: "ローゼンメイデン", artist: "ALI PROJECT" },
+            { year: 2005, title: "ハレ晴レユカイ", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
+            { year: 2005, title: "ループ", anime: "ツバサ・クロニクル", artist: "坂本真綾" },
+            { year: 2005, title: "blaze", anime: "灼眼のシャナ", artist: "KOTOKO" },
+            { year: 2005, title: "being", anime: "灼眼のシャナ", artist: "KOTOKO" },
+            { year: 2005, title: "銀色", anime: "AIR", artist: "Lia" },
 
-    // --- 1987年 (3曲) ---
-    { year: 1987, title: "Get Wild", anime: "シティーハンター", artist: "TM NETWORK" },
-    { year: 1987, title: "アニメじゃない〜夢を忘れた古い地球人よ〜", anime: "機動戦士ガンダムZZ", artist: "新井正人" },
-    { year: 1987, title: "City Hunter〜愛よ消えないで〜", anime: "シティーハンター", artist: "小比類巻かほる" },
+            { year: 2006, title: "God knows...", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
+            { year: 2006, title: "COLORS", anime: "コードギアス 反逆のルルーシュ", artist: "FLOW" },
+            { year: 2006, title: "解読不能", anime: "コードギアス 反逆のルルーシュ", artist: "JINN" },
+            { year: 2006, title: "disillusion", anime: "Fate/stay night", artist: "タイナカサチ" },
+            { year: 2006, title: "ひぐらしのなく頃に", anime: "ひぐらしのなく頃に", artist: "島みやえい子" },
+            { year: 2006, title: "冒険でしょでしょ?", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
+            { year: 2006, title: "モザイクカケラ", anime: "コードギアス 反逆のルルーシュ", artist: "SunSet Swish" },
+            { year: 2006, title: "ヒカリへ", anime: "ONE PIECE", artist: "ザ・ベイビースターズ" },
+            { year: 2006, title: "バラライカ", anime: "きらりん☆レボリューション", artist: "月島きらり" },
+            { year: 2006, title: "Night of Fire", anime: "頭文字D", artist: "NIKO" },
+            { year: 2006, title: "残酷な天使のテーゼ (Remix)", anime: "新世紀エヴァンゲリオン", artist: "高橋洋子" },
+            { year: 2006, title: "ホウキモドキ", anime: "RED GARDEN", artist: "中田ヤスタカ" },
+            { year: 2006, title: "少女迷路でつかまえて", anime: "ぱにぽにだっしゅ!", artist: "宇都宮隆" },
+            { year: 2006, title: "ハピハピ", anime: "きらりん☆レボリューション", artist: "月島きらり" },
+            { year: 2006, title: "恋の呪縛", anime: "Berryz工房", artist: "Berryz工房" },
 
-    // --- 1988年 (3曲) ---
-    { year: 1988, title: "アンパンマンのマーチ", anime: "それいけ!アンパンマン", artist: "ドリーミング" },
-    { year: 1988, title: "BEYOND THE TIME (メビウスの宇宙を越えて)", anime: "機動戦士ガンダム 逆襲のシャア", artist: "TM NETWORK" },
-    { year: 1988, title: "STEP", anime: "魔神英雄伝ワタル", artist: "a・chi-a・chi" },
+            { year: 2007, title: "もってけ!セーラーふく", anime: "らき☆すた", artist: "泉こなた" },
+            { year: 2007, title: "空色デイズ", anime: "天元突破グレンラガン", artist: "中川翔子" },
+            { year: 2007, title: "ウソツキ", anime: "School Days", artist: "CooRie" },
+            { year: 2007, title: "DAYBREAK'S BELL", anime: "機動戦士ガンダム00", artist: "L'Arc-en-Ciel" },
+            { year: 2007, title: "人として軸がブレている", anime: "さよなら絶望先生", artist: "大槻ケンヂと絶望少女達" },
+            { year: 2007, title: "奈落の花", anime: "ひぐらしのなく頃に解", artist: "島みやえい子" },
+            { year: 2007, title: "SECRET AMBITION", anime: "魔法少女リリカルなのはStrikerS", artist: "水樹奈々" },
+            { year: 2007, title: "MASSIVE WONDERS", anime: "魔法少女リリカルなのはStrikerS", artist: "水樹奈々" },
+            { year: 2007, title: "アフターダーク", anime: "BLEACH", artist: "ASIAN KUNG-FU GENERATION" },
+            { year: 2007, title: "瞳の翼", anime: "コードギアス", artist: "access" },
+            { year: 2007, title: "アンインストール", anime: "ぼくらの", artist: "石川智晶" },
+            { year: 2007, title: "Shining Sky", anime: "GR-GIANT ROBOT-", artist: "the Indigo" },
+            { year: 2007, title: "恋のミクル伝説", anime: "涼宮ハルヒの憂鬱", artist: "後藤邑子" },
+            { year: 2007, title: "ハッピー☆マテリアル (2007 ver.)", anime: "魔法先生ネギま！", artist: "麻帆良学園" },
+            { year: 2007, title: "Prism", anime: "電脳コイル", artist: "池田綾子" },
+            { year: 2007, title: "cosmic mind", anime: "AIKa R-16", artist: "石田燿子" },
 
-    // --- 1989年 (3曲) ---
-    { year: 1989, title: "CHA-LA HEAD-CHA-LA", anime: "ドラゴンボールZ", artist: "影山ヒロノブ" },
-    { year: 1989, title: "じゃじゃ馬にさせないで", anime: "らんま1/2", artist: "西尾えつ子" },
-    { year: 1989, title: "やさしさに包まれたなら", anime: "魔女の宅急便", artist: "荒井由実" },
+            { year: 2008, title: "ライオン", anime: "マクロスF", artist: "May'n/中島愛" },
+            { year: 2008, title: "星間飛行", anime: "マクロスF", artist: "中島愛" },
+            { year: 2008, title: "O2", anime: "コードギアス R2", artist: "ORANGE RANGE" },
+            { year: 2008, title: "プレパレード", anime: "とらドラ!", artist: "逢坂大河" },
+            { year: 2008, title: "トライアングラー", anime: "マクロスF", artist: "坂本真綾" },
+            { year: 2008, title: "儚くも永久のカナシ", anime: "機動戦士ガンダム00", artist: "UVERworld" },
+            { year: 2008, title: "アナタボシ", anime: "きらりん☆レボリューション", artist: "MilkyWay" },
+            { year: 2008, title: "シルキーハート", anime: "とらドラ!", artist: "堀江由衣" },
+            { year: 2008, title: "雨が降る", anime: "鉄のラインバレル", artist: "坂本真綾" },
+            { year: 2008, title: "ワールドイズマイン", anime: "初音ミク", artist: "初音ミク" },
+            { year: 2008, title: "mono", anime: "鉄のラインバレル", artist: "坂本真綾" },
+            { year: 2008, title: "蒼き炎", anime: "隠の王", artist: "ALI PROJECT" },
+            { year: 2008, title: "スピード", anime: "ドルアーガの塔", artist: "サイダーガール" },
+            { year: 2008, title: "resonance", anime: "ソウルイーター", artist: "T.M.Revolution" },
+            { year: 2008, title: "紙ヒコーキ", anime: "逮捕しちゃうぞ", artist: "辻詩音" },
+            { year: 2008, title: "サイダー", anime: "ヒャッコ", artist: "伊藤かな恵" },
 
-    // --- 1990年 (3曲) ---
-    { year: 1990, title: "おどるポンポコリン", anime: "ちびまる子ちゃん", artist: "B.B.クィーンズ" },
-    { year: 1990, title: "ブルーウォーター", anime: "ふしぎの海のナディア", artist: "森川美穂" },
-    { year: 1990, title: "Gatherway", anime: "勇者エクスカイザー", artist: "三浦秀美" },
+            { year: 2009, title: "君の知らない物語", anime: "化物語", artist: "supercell" },
+            { year: 2009, title: "only my railgun", anime: "とある科学の超電磁砲", artist: "fripSide" },
+            { year: 2009, title: "again", anime: "鋼の錬金術師", artist: "YUI" },
+            { year: 2009, title: "恋愛サーキュレーション", anime: "化物語", artist: "花澤香菜" },
+            { year: 2009, title: "Don't say \"lazy\"", anime: "けいおん!", artist: "桜高軽音部" },
+            { year: 2009, title: "ホログラム", anime: "鋼の錬金術師", artist: "NICO Touches the Walls" },
+            { year: 2009, title: "ゴールデンタイムラバー", anime: "鋼の錬金術師", artist: "スキマスイッチ" },
+            { year: 2009, title: "Period", anime: "鋼の錬金術師", artist: "CHEMISTRY" },
+            { year: 2009, title: "レイン", anime: "鋼の錬金術師", artist: "シド" },
+            { year: 2009, title: "嘘", anime: "鋼の錬金術師", artist: "シド" },
+            { year: 2009, title: "Cagayake!GIRLS", anime: "けいおん!", artist: "桜高軽音部" },
+            { year: 2009, title: "super script", anime: "シャングリ・ラ", artist: "中島愛" },
+            { year: 2009, title: "STORY", anime: "バスカッシュ!", artist: "恵比寿マスカッツ" },
+            { year: 2009, title: "ETERNAL BLAZE (Live)", anime: "魔法少女リリカルなのは", artist: "水樹奈々" },
+            { year: 2009, title: "Light My Fire", anime: "灼眼のシャナ", artist: "KOTOKO" },
+            { year: 2009, title: "マジックナンバー", anime: "こばと。", artist: "坂本真綾" },
 
-   // --- 1991年 ---
-    { year: 1991, title: "Winners", anime: "新世紀GPXサイバーフォーミュラ", artist: "G・GRIP" },
-    { year: 1991, title: "ドリーム・シフト", anime: "絶対無敵ライジンオー", artist: "SILK" },
-    { year: 1991, title: "炎のゴー・ファイト", anime: "炎の闘球児 ドッジ弾平", artist: "徳垣とも子" },
-    { year: 1991, title: "背中からフリクション", anime: "新世紀GPXサイバーフォーミュラ", artist: "G・GRIP" },
-    { year: 1991, title: "ETERNAL WIND〜ほほえみは光る風の中〜", anime: "機動戦士ガンダムF91", artist: "森口博子" },
+            { year: 2010, title: "コネクト", anime: "魔法少女まどか☆マギカ", artist: "ClariS" },
+            { year: 2010, title: "GO! GO! MANIAC", anime: "けいおん!!", artist: "放課後ティータイム" },
+            { year: 2010, title: "My Soul, Your Beats!", anime: "Angel Beats!", artist: "Lia" },
+            { year: 2010, title: "Listen!!", anime: "けいおん!!", artist: "放課後ティータイム" },
+            { year: 2010, title: "U&I", anime: "けいおん!!", artist: "放課後ティータイム" },
+            { year: 2010, title: "LEVEL5-judgelight-", anime: "とある科学の超電磁砲", artist: "fripSide" },
+            { year: 2010, title: "Brave Song", anime: "Angel Beats!", artist: "多田葵" },
+            { year: 2010, title: "Irony", anime: "俺の妹がこんなに可愛いわけがない", artist: "ClariS" },
+            { year: 2010, title: "神様のバースデイ", anime: "神のみぞ知るセカイ", artist: "伊藤かな恵" },
+            { year: 2010, title: "Secret Base", anime: "あの日見た花の名前を僕達はまだ知らない。", artist: "本間芽衣子" },
+            { year: 2010, title: "crossing field (Demo)", anime: "ソードアート・オンライン", artist: "LiSA" },
+            { year: 2010, title: "センチメンタル", anime: "薄桜鬼", artist: "吉岡亜衣加" },
+            { year: 2010, title: "マジLOVE1000%", anime: "うたの☆プリンスさまっ♪", artist: "ST☆RISH" },
+            { year: 2010, title: "オルフェ", anime: "うたの☆プリンスさまっ♪", artist: "宮野真守" },
+            { year: 2010, title: "マジカルさくら", anime: "カードキャプターさくら", artist: "丹下桜" },
+            { year: 2010, title: "ハレ晴レユカイ (Piano)", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
 
-    // --- 1992年 ---
-    { year: 1992, title: "ムーンライト伝説", anime: "美少女戦士セーラームーン", artist: "DALI" },
-    { year: 1992, title: "微笑みの爆弾", anime: "幽☆遊☆白書", artist: "馬渡松子" },
-    { year: 1992, title: "よろしくSOS", anime: "ママは小学4年生", artist: "水谷優子" },
-    { year: 1992, title: "風の未来へ", anime: "伝説の勇者ダ・ガーン", artist: "佐藤有香" },
-    { year: 1992, title: "見つめていたい", anime: "伝説の勇者ダ・ガーン", artist: "佐藤有香" },
-    { year: 1992, title: "ハートの呪文", anime: "南国少年パプワくん", artist: "PINK SAPPHIRE" },
-    { year: 1992, title: "コスモスのシュート", anime: "燃えろ!トップストライカー", artist: "影山ヒロノブ" },
-    { year: 1992, title: "正義の使者だよユーロビート", anime: "宇宙の騎士テッカマンブレード", artist: "小坂由美子" },
+            { year: 2011, title: "Hacking to the Gate", anime: "STEINS;GATE", artist: "いとうかなこ" },
+            { year: 2011, title: "オリオンをなぞる", anime: "TIGER & BUNNY", artist: "UNISON SQUARE GARDEN" },
+            { year: 2011, title: "My Dearest", anime: "ギルティクラウン", artist: "EGOIST" },
+            { year: 2011, title: "純情スペクトラ", anime: "ROBOTICS;NOTES", artist: "Zwei" },
+            { year: 2011, title: "CORE PRIDE", anime: "青の祓魔師", artist: "UVERworld" },
+            { year: 2011, title: "Departures 〜あなたにおくるアイの歌〜", anime: "ギルティクラウン", artist: "EGOIST" },
+            { year: 2011, title: "The Everlasting Guilty Crown", anime: "ギルティクラウン", artist: "EGOIST" },
+            { year: 2011, title: "まどろみの約束", anime: "氷菓", artist: "千反田える" },
+            { year: 2011, title: "優しさの理由", anime: "氷菓", artist: "ChouCho" },
+            { year: 2011, title: "百鬼夜行", anime: "ぬらりひょんの孫", artist: "MONKEY MAJIK" },
+            { year: 2011, title: "太陽のサイン", anime: "夏目友人帳", artist: "金子麻美" },
+            { year: 2011, title: "君シニタモフコトナカレ", anime: "シャングリ・ラ", artist: "May'n" },
+            { year: 2011, title: "scarlet", anime: "緋弾のアリア", artist: "May'n" },
+            { year: 2011, title: "buzz", anime: "ブレイクブレイド", artist: "KOTOKO" },
+            { year: 2011, title: "モザイク", anime: "ロウきゅーぶ!", artist: "RO-KYU-BU!" },
+            { year: 2011, title: "SHOOT!", anime: "ロウきゅーぶ!", artist: "RO-KYU-BU!" },
 
-// --- 1993年 ---
-    { year: 1993, title: "君が好きだと叫びたい", anime: "SLAM DUNK", artist: "BAAD" },
-    { year: 1993, title: "勇気100%", anime: "忍たま乱太郎", artist: "光GENJI" },
-    { year: 1993, title: "僕らは天使だった", anime: "ドラゴンボールZ", artist: "影山ヒロノブ" },
-    { year: 1993, title: "STAND UP TO THE VICTORY", anime: "機動戦士Vガンダム", artist: "川添智久" },
-    { year: 1993, title: "WINNER", anime: "機動戦士ガンダム0083 STARDUST MEMORY", artist: "松原みき" },
-    { year: 1993, title: "HEART TO HEART", anime: "勇者警察ジェイデッカー", artist: "彩恵津子" },
-    { year: 1993, title: "ZOO〜愛をください〜", anime: "ツヨシしっかりしなさい", artist: "T-BOLAN" },
-    { year: 1993, title: "素顔のままで", anime: "疾風!アイアンリーガー", artist: "渡辺美里" },
+            { year: 2012, title: "ジョジョ 〜その血の運命〜", anime: "ジョジョの奇妙な冒険", artist: "富永TOMMY弘明" },
+            { year: 2012, title: "crossing field", anime: "ソードアート・オンライン", artist: "LiSA" },
+            { year: 2012, title: "名前のない怪物", anime: "PSYCHO-PASS", artist: "EGOIST" },
+            { year: 2012, title: "Borderland", anime: "ヨルムンガンド", artist: "黒崎真音" },
+            { year: 2012, title: "INNOCENCE", anime: "ソードアート・オンライン", artist: "藍井エイル" },
+            { year: 2012, title: "VAMOLA! キョウリュウジャー", anime: "獣電戦隊キョウリュウジャー", artist: "鎌田章吾" },
+            { year: 2012, title: "Life is SHOW TIME", anime: "仮面ライダーウィザード", artist: "鬼龍院翔" },
+            { year: 2012, title: "千本桜", anime: "初音ミク", artist: "黒うさP" },
+            { year: 2012, title: "おねがいダーリン", anime: "アイドルマスター", artist: "高槻やよい" },
+            { year: 2012, title: "READY!!", anime: "アイドルマスター", artist: "765PRO ALLSTARS" },
+            { year: 2012, title: "CHANGE!!!!", anime: "アイドルマスター", artist: "765PRO ALLSTARS" },
+            { year: 2012, title: "Butter-Fly (Tri ver.)", anime: "デジモンアドベンチャー tri.", artist: "和田光司" },
+            { year: 2012, title: "革命デュアリズム", anime: "革命機ヴァルヴレイヴ", artist: "水樹奈々×T.M.Revolution" },
+            { year: 2012, title: "Preserved Roses", anime: "革命機ヴァルヴレイヴ", artist: "T.M.Revolution×水樹奈々" },
+            { year: 2012, title: "departure!", anime: "HUNTER×HUNTER", artist: "小野正利" },
+            { year: 2012, title: "hoshikuzu", anime: "氷菓", artist: "ChouCho" },
 
-    // --- 1994年 ---
-    { year: 1994, title: "ゆずれない願い", anime: "魔法騎士レイアース", artist: "田村直美" },
-    { year: 1994, title: "世界が終るまでは…", anime: "SLAM DUNK", artist: "WANDS" },
-    { year: 1994, title: "FLYING IN THE SKY", anime: "機動武闘伝Gガンダム", artist: "鵜島仁文" },
-    { year: 1994, title: "Trust You Forever", anime: "機動武闘伝Gガンダム", artist: "鵜島仁文" },
-    { year: 1994, title: "あなただけ見つめてる", anime: "SLAM DUNK", artist: "大黒摩季" },
-    { year: 1994, title: "愛をつかみとれ", anime: "覇王大系リューナイト", artist: "三重野瞳" },
-    { year: 1994, title: "ラッキーマンの歌", anime: "とっても!ラッキーマン", artist: "八代亜紀" },
-    { year: 1994, title: "夢のヒーロー", anime: "電光超人グリッドマン", artist: "坂井紀雄" }, // ※特撮は1993年
-    { year: 1994, title: "笑顔に会いたい", anime: "ママレード・ボーイ", artist: "濱田理恵" },
+            { year: 2013, title: "BLOODY STREAM", anime: "ジョジョの奇妙な冒険 第2部", artist: "Coda" },
+            { year: 2013, title: "紅蓮の弓矢", anime: "進撃の巨人", artist: "Linked Horizon" },
+            { year: 2013, title: "自由の翼", anime: "進撃の巨人", artist: "Linked Horizon" },
+            { year: 2013, title: "シリウス", anime: "キルラキル", artist: "藍井エイル" },
+            { year: 2013, title: "デート・ア・ライブ", anime: "デート・ア・ライブ", artist: "sweet ARMS" },
+            { year: 2013, title: "sister's noise", anime: "とある科学の超電磁砲S", artist: "fripSide" },
+            { year: 2013, title: "イノセント・ソルジャー", anime: "School Days", artist: "CooRie" },
+            { year: 2013, title: "ゲラゲラポーのうた", anime: "妖怪ウォッチ", artist: "キング・クリームソーダ" },
+            { year: 2013, title: "SAVIOR OF SONG", anime: "蒼き鋼のアルペジオ", artist: "ナノ×MY FIRST STORY" },
+            { year: 2013, title: "スタアライト", anime: "きんいろモザイク", artist: "Rhodanthe*" },
+            { year: 2013, title: "Gimme×Gimme", anime: "中二病でも恋がしたい!", artist: "ZAQ" },
+            { year: 2013, title: "Sparkling Daydream", anime: "中二病でも恋がしたい!", artist: "ZAQ" },
+            { year: 2013, title: "私的旅行", anime: "凪のあすから", artist: "Ray" },
+            { year: 2013, title: "lull 〜そして僕らは〜", anime: "凪のあすから", artist: "Ray" },
+            { year: 2013, title: "境界の彼方", anime: "境界の彼方", artist: "茅原実里" },
+            { year: 2013, title: "GO AHEAD", anime: "ガンダムビルドファイターズ", artist: "BACK-ON" },
 
-    // --- 1995年（元リストから正しい年代に移行） ---
-    { year: 1995, title: "JUST COMMUNICATION", anime: "新機動戦記ガンダムW", artist: "TWO-MIX" },
-    { year: 1995, title: "輝きは君の中に", anime: "NINKU -忍空-", artist: "鈴木結女" },
-    { year: 1995, title: "ときめきの導火線", anime: "ふしぎ遊戯", artist: "今野友加里" },
-    { year: 1995, title: "空へ…", anime: "ロミオの青い空", artist: "笠原弘子" },
+            { year: 2014, title: "シルエット", anime: "NARUTO -ナルト- 疾風伝", artist: "KANA-BOON" },
+            { year: 2014, title: "unravel", anime: "東京喰種トーキョーグール", artist: "TK from 凛として時雨" },
+            { year: 2014, title: "daze", anime: "メカクシティアクターズ", artist: "GARNiDELiA" },
+            { year: 2014, title: "days", anime: "メカクシティアクターズ", artist: "じん ft.Lia" },
+            { year: 2014, title: "光るなら", anime: "四月は君の嘘", artist: "Goose house" },
+            { year: 2014, title: "ignite", anime: "ソードアート・オンラインII", artist: "藍井エイル" },
+            { year: 2014, title: "courage", anime: "ソードアート・オンラインII", artist: "戸松遥" },
+            { year: 2014, title: "エクストラ・マジック・アワー", anime: "甘城ブリリアントパーク", artist: "AKINO with bless4" },
+            { year: 2014, title: "Let Me Hear", anime: "寄生獣 セイの格率", artist: "Fear, and Loathing in Las Vegas" },
+            { year: 2014, title: "ideal white", anime: "Fate/stay night [UBW]", artist: "綾野ましろ" },
+            { year: 2014, title: "To The Beginning", anime: "Fate/Zero", artist: "Kalafina" },
+            { year: 2014, title: "ギミー!レボリューション", anime: "俺がお嬢様学校に…", artist: "内田真礼" },
+            { year: 2014, title: "ambiguous", anime: "キルラキル", artist: "GARNiDELiA" },
+            { year: 2014, title: "DATABASE", anime: "ログ・ホライズン", artist: "MAN WITH A MISSION feat.TAKUMA" },
+            { year: 2014, title: "starry go", anime: "ブレイクブレイド", artist: "fripSide" },
+            { year: 2014, title: "resonance (Live)", anime: "ソウルイーター", artist: "T.M.Revolution" },
 
-// --- 1995年 ---
-    { year: 1995, title: "残酷な天使のテーゼ", anime: "新世紀エヴァンゲリオン", artist: "高橋洋子" },
-    { year: 1995, title: "Get along", anime: "スレイヤーズ", artist: "林原めぐみ・奥井雅美" },
-    { year: 1995, title: "Rhythm Emotion", anime: "新機動戦記ガンダムW", artist: "TWO-MIX" },
-    { year: 1995, title: "FLY ME TO THE MOON", anime: "新世紀エヴァンゲリオン", artist: "CLAIRE" },
-    { year: 1995, title: "MASK", anime: "爆れつハンター", artist: "奥井雅美・松村香澄" },
-    { year: 1995, title: "Forever Love", anime: "X -エックス- 劇場版", artist: "X JAPAN" },
-    { year: 1995, title: "負けないで", anime: "ドラゴンボールZ", artist: "影山ヒロノブ" }, // 補完枠
+            { year: 2015, title: "シュガーソングとビターステップ", anime: "血界戦線", artist: "UNISON SQUARE GARDEN" },
+            { year: 2015, title: "THE DAY", anime: "僕のヒーローアカデミア", artist: "ポルノグラフィティ" },
+            { year: 2015, title: "はなまるぴっぴはよいこだけ", anime: "おそ松さん", artist: "A応P" },
+            { year: 2015, title: "ジョジョ その血の記憶〜end of THE WORLD〜", anime: "ジョジョの奇妙な冒険 第3部", artist: "JO☆STARS" },
+            { year: 2015, title: "海色", anime: "艦隊これくしょん", artist: "AKINO from bless4" },
+            { year: 2015, title: "吹雪", anime: "艦隊これくしょん", artist: "西沢幸奏" },
+            { year: 2015, title: "Raise your flag", anime: "機動戦士ガンダム 鉄血のオルフェンズ", artist: "MAN WITH A MISSION" },
+            { year: 2015, title: "オルフェンズの涙", anime: "機動戦士ガンダム 鉄血のオルフェンズ", artist: "MISIA" },
+            { year: 2015, title: "プライド革命", anime: "銀魂゜", artist: "CHiCO with HoneyWorks" },
+            { year: 2015, title: "Brave Shine", anime: "Fate/stay night [UBW]", artist: "Aimer" },
+            { year: 2015, title: "いつかの自分", anime: "Charlotte", artist: "Lia" },
+            { year: 2015, title: "Bravely You", anime: "Charlotte", artist: "Lia" },
+            { year: 2015, title: "アイのシナリオ", anime: "魔法少女リリカルなのは", artist: "CHiCO with HoneyWorks" },
+            { year: 2015, title: "かくしん的☆めたまるふぉ～ぜっ!", anime: "干物妹!うまるちゃん", artist: "土間うまる" },
+            { year: 2015, title: "Star Chart", anime: "プラスティック・メモリーズ", artist: "ASCA" },
+            { year: 2015, title: "Ring of Fortune", anime: "プラスティック・メモリーズ", artist: "恵比寿マスカッツ" },
 
-    // --- 1996年 ---
-    { year: 1996, title: "そばかす", anime: "るろうに剣心", artist: "JUDY AND MARY" },
-    { year: 1996, title: "DAN DAN 心魅かれてく", anime: "ドラゴンボールGT", artist: "FIELD OF VIEW" },
-    { year: 1996, title: "Successful Mission", anime: "セイバーマリオネットJ", artist: "林原めぐみ" },
-    { year: 1996, title: "YOU GET TO BURNING", anime: "機動戦艦ナデシコ", artist: "松澤由美" },
-    { year: 1996, title: "Dreams", anime: "機動新世紀ガンダムX", artist: "ROMANTIC MODE" },
-    { year: 1996, title: "Give a reason", anime: "スレイヤーズNEXT", artist: "林原めぐみ" },
-    { year: 1996, title: "1/2", anime: "るろうに剣心", artist: "川本真琴" },
-    { year: 1996, title: "HEART OF SWORD 〜夜明け前〜", anime: "るろうに剣心", artist: "T.M.Revolution" },
-    { year: 1996, title: "STEP BY STEP", anime: "名探偵コナン", artist: "ZIGGY" },
-    { year: 1996, title: "バリバリ最強No.1", anime: "地獄先生ぬ〜べ〜", artist: "FEEL SO BAD" },
-    { year: 1996, title: "胸がドキドキ", anime: "名探偵コナン", artist: "ザ・ハイロウズ" },
+            { year: 2016, title: "前前前世", anime: "君の名は。", artist: "RADWIMPS" },
+            { year: 2016, title: "HISTORY MAKER", anime: "ユーリ!!! on ICE", artist: "DEAN FUJIOKA" },
+            { year: 2016, title: "Redo", anime: "Re:ゼロから始める異世界生活", artist: "鈴木このみ" },
+            { year: 2016, title: "スパークル", anime: "君の名は。", artist: "RADWIMPS" },
+            { year: 2016, title: "STYX HELIX", anime: "Re:ゼロから始める異世界生活", artist: "MYTH & ROID" },
+            { year: 2016, title: "KABANERI OF THE IRON FORTRESS", anime: "甲鉄城のカバネリ", artist: "EGOIST" },
+            { year: 2016, title: "99", anime: "モブサイコ100", artist: "MOB CHOIR" },
+            { year: 2016, title: "極楽浄土", anime: "GARNiDELiA", artist: "GARNiDELiA" },
+            { year: 2016, title: "なんでもないや", anime: "君の名は。", artist: "RADWIMPS" },
+            { year: 2016, title: "Crazy Noisy Bizarre Town", anime: "ジョジョの奇妙な冒険 第4部", artist: "THE DU" },
+            { year: 2016, title: "Shadow and Truth", anime: "ACCA13区監察課", artist: "ONE III NOTES" },
+            { year: 2016, title: "AZALEA", anime: "ラブライブ!サンシャイン!!", artist: "Aqours" },
+            { year: 2016, title: "青空Jumping Heart", anime: "ラブライブ!サンシャイン!!", artist: "Aqours" },
+            { year: 2016, title: "HIGH-STEPPER", anime: "バッテリー", artist: "sumika" },
+            { year: 2016, title: "Re:Re:", anime: "僕だけがいない街", artist: "ASIAN KUNG-FU GENERATION" },
+            { year: 2016, title: "名前のない怪物 (Remix)", anime: "PSYCHO-PASS", artist: "EGOIST" },
 
-    // --- 1997年（1995〜1996年リストから正しい年代へ移行） ---
-    { year: 1997, title: "輪舞-revolution", anime: "少女革命ウテナ", artist: "奥井雅美" },
-    { year: 1997, title: "1/3の純情な感情", anime: "るろうに剣心", artist: "SIAM SHADE" },
-    { year: 1997, title: "風は未来に吹く", anime: "トライガン", artist: "AKIMA & NEOS" }, // ※正確には1998年トライガン
+            { year: 2017, title: "ピースサイン", anime: "僕のヒーローアカデミア", artist: "米津玄師" },
+            { year: 2017, title: "打上花火", anime: "打ち上げ花火、下から見るか?横から見るか?", artist: "DAOKO×米津玄師" },
+            { year: 2017, title: "ようこそジャパリパークへ", anime: "けものフレンズ", artist: "どうぶつビスケッツ×PPP" },
+            { year: 2017, title: "心臓を捧げよ!", anime: "進撃の巨人 Season 2", artist: "Linked Horizon" },
+            { year: 2017, title: "ステップアップLOVE", anime: "血界戦線 & BEYOND", artist: "岡村靖幸×DAOKO" },
+            { year: 2017, title: "fake town baby", anime: "血界戦線 & BEYOND", artist: "UNISON SQUARE GARDEN" },
+            { year: 2017, title: "トモダチのうた", anime: "映画ドラえもん", artist: "平井堅" },
+            { year: 2017, title: "OVER THE TOP", anime: "ONE PIECE", artist: "きただにひろし" },
+            { year: 2017, title: "VS", anime: "僕のヒーローアカデミア", artist: "BLUE ENCOUNT" },
+            { year: 2017, title: "カゲロウ", anime: "銀魂.", artist: "ЯeaL" },
+            { year: 2017, title: "Here", anime: "魔法使いの嫁", artist: "JUNNA" },
+            { year: 2017, title: "レルム", anime: "メイドインアビス", artist: "Kevin Penkin" },
+            { year: 2017, title: "Deep in Abyss", anime: "メイドインアビス", artist: "富田美憂, 伊瀬茉莉也" },
+            { year: 2017, title: "ハローマイワールド", anime: "ブレンド・S", artist: "ブレンド・A" },
+            { year: 2017, title: "シュガーソング (Acoustic)", anime: "血界戦線", artist: "UNISON SQUARE GARDEN" },
+            { year: 2017, title: "Sign", anime: "NARUTO -ナルト- 疾風伝", artist: "FLOW" },
 
-    // --- 1997年 ---
-    { year: 1997, title: "めざせポケモンマスター", anime: "ポケットモンスター", artist: "松本梨香" },
-    { year: 1997, title: "魂のルフラン", anime: "新世紀エヴァンゲリオン劇場版", artist: "高橋洋子" },
-    { year: 1997, title: "勇者王誕生!", anime: "勇者王ガオガイガー", artist: "遠藤正明" },
-    { year: 1997, title: "君がいない夏", anime: "名探偵コナン", artist: "ZARD" },
-    { year: 1997, title: "謎", anime: "名探偵コナン", artist: "小松未歩" },
+            { year: 2018, title: "ADAMAS", anime: "ソードアート・オンライン アリシゼーション", artist: "LiSA" },
+            { year: 2018, title: "フィクション", anime: "ヲタクに恋は難しい", artist: "sumika" },
+            { year: 2018, title: "Fighting Gold", anime: "ジョジョの奇妙な冒険 第5部", artist: "Coda" },
+            { year: 2018, title: "Grand Escape", anime: "天気の子", artist: "RADWIMPS feat.三浦透子" },
+            { year: 2018, title: "ODD FUTURE", anime: "僕のヒーローアカデミア", artist: "UVERworld" },
+            { year: 2018, title: "RESISTER", anime: "ソードアート・オンライン アリシゼーション", artist: "綾野ましろ" },
+            { year: 2018, title: "流星", anime: "ソードアート・オンライン オルタナティブ", artist: "藍井エイル" },
+            { year: 2018, title: "徒花ネクロマンシー", anime: "ゾンビランドサガ", artist: "フランシュシュ" },
+            { year: 2018, title: "New Stranger", anime: "ハイスコアガール", artist: "sora tob sakana" },
+            { year: 2018, title: "ハイテック", anime: "ハイスコアガール", artist: "相対性理論" },
+            { year: 2018, title: "POP TEAM EPIC", anime: "ポプテピピック", artist: "上坂すみれ" },
+            { year: 2018, title: "お願いマッスル", anime: "ダンベル何キロ持てる?", artist: "ファイルーズあい, 石川界人" },
+            { year: 2018, title: "モザイクカケラ (Live)", anime: "コードギアス", artist: "SunSet Swish" },
+            { year: 2018, title: "ギミアブレイク", anime: "ハイスコアガール", artist: "sora tob sakana" },
+            { year: 2018, title: "闪光", anime: "機動戦士ガンダム 閃光のハサウェイ", artist: "Alexandros" },
+            { year: 2018, title: "スピカ", anime: "ソードアート・オンライン", artist: "藍井エイル" },
 
-    // --- 1998年 ---
-    { year: 1998, title: "Birth", anime: "アキハバラ電脳組", artist: "奥井雅美" },
-    { year: 1998, title: "天使のゆびきり", anime: "彼氏彼女の事情", artist: "福田舞" },
-    { year: 1998, title: "運命のルーレット廻して", anime: "名探偵コナン", artist: "ZARD" },
-    { year: 1998, title: "扉をあけて", anime: "カードキャプターさくら", artist: "ANZA" },
-    { year: 1998, title: "Dearest", anime: "機動戦艦ナデシコ -The prince of darkness-", artist: "松澤由美" },
-    { year: 1998, title: "Tank!", anime: "カウボーイビバップ", artist: "シートベルツ" },
-    { year: 1998, title: "THE REAL FOLK BLUES", anime: "カウボーイビバップ", artist: "山根麻衣" },
+            { year: 2019, title: "紅蓮華", anime: "鬼滅の刃", artist: "LiSA" },
+            { year: 2019, title: "インフェルノ", anime: "炎炎ノ消防隊", artist: "Mrs. GREEN APPLE" },
+            { year: 2019, title: "from the edge", anime: "鬼滅の刃", artist: "FictionJunction feat. LiSA" },
+            { year: 2019, title: "愛にできることはまだあるかい", anime: "天気の子", artist: "RADWIMPS" },
+            { year: 2019, title: "火炎", anime: "どろろ", artist: "女王蜂" },
+            { year: 2019, title: "Good Morning World!", anime: "Dr.STONE", artist: "BURNOUT SYNDROMES" },
+            { year: 2019, title: "ポラリス", anime: "僕のヒーローアカデミア", artist: "BLUE ENCOUNT" },
+            { year: 2019, title: "航海の唄", anime: "僕のヒーローアカデミア", artist: "さユり" },
+            { year: 2019, title: "まっしろ", anime: "どろろ", artist: "Eve" },
+            { year: 2019, title: "裏切り者のレクイエム", anime: "ジョジョの奇妙な冒険 第5部", artist: "ハセガワダイスケ" },
+            { year: 2019, title: "チカっとチカ千花っ♡", anime: "かぐや様は告らせたい", artist: "小原好美" },
+            { year: 2019, title: "DADDY ! DADDY ! DO !", anime: "かぐや様は告らせたい?", artist: "鈴木雅之 feat. 鈴木愛理" },
+            { year: 2019, title: "セツナの愛", anime: "文豪ストレイドッグス", artist: "GRANRODEO" },
+            { year: 2019, title: "スターマーカー", anime: "僕のヒーローアカデミア", artist: "KANA-BOON" },
+            { year: 2019, title: "ハルノヒ", anime: "クレヨンしんちゃん 新婚旅行ハリケーン", artist: "あいみょん" },
+            { year: 2019, title: "ヴィータ", anime: "BEASTARS", artist: "ALI" },
 
-    // --- 1999年 ---
-    { year: 1999, title: "ウィーアー!", anime: "ONE PIECE", artist: "きただにひろし" },
-    { year: 1999, title: "Butter-Fly", anime: "デジモンアドベンチャー", artist: "和田光司" },
-    { year: 1999, title: "プラチナ", anime: "カードキャプターさくら", artist: "坂本真綾" },
-    { year: 1999, title: "Driver's High", anime: "GTO", artist: "L'Arc-en-Ciel" },
-    { year: 1999, title: "WILL", anime: "仙界伝 封神演義", artist: "米倉千尋" },
-    { year: 1999, title: "ターンAターン", anime: "ターンエーガンダム", artist: "西城秀樹" },
-    { year: 1999, title: "Wild Flowers", anime: "ゾイド -ZOIDS-", artist: "RAMAR" },
-    { year: 1999, title: "おジャ魔女カーニバル!!", anime: "おジャ魔女どれみ", artist: "MAHO堂" },
-    { year: 1999, title: "dis-", anime: "無限のリヴァイアス", artist: "有坂美香" },
-    { year: 1999, title: "ギリギリchop", anime: "名探偵コナン", artist: "B'z" },
-    { year: 1999, title: "LOVE FLIES", anime: "GTO", artist: "L'Arc-en-Ciel" },
+            { year: 2020, title: "廻廻奇譚", anime: "呪術廻戦", artist: "Eve" },
+            { year: 2020, title: "炎", anime: "劇場版 鬼滅の刃 無限列車編", artist: "LiSA" },
+            { year: 2020, title: "LOST IN PARADISE", anime: "呪術廻戦", artist: "ALI feat. AKLO" },
+            { year: 2020, title: "ANIMA", anime: "ソードアート・オンライン", artist: "ReoNa" },
+            { year: 2020, title: "Realize", anime: "Re:ゼロから始める異世界生活", artist: "鈴木このみ" },
+            { year: 2020, title: "虹", anime: "STAND BY ME ドラえもん 2", artist: "菅田将暉" },
+            { year: 2020, title: "春を告げる", anime: "yama", artist: "yama" },
+            { year: 2020, title: "夜に駆ける", anime: "YOASOBI", artist: "YOASOBI" },
+            { year: 2020, title: "群青", anime: "YOASOBI", artist: "YOASOBI" },
+            { year: 2020, title: "Duvet", anime: "serial experiments lain", artist: "bôa" },
+            { year: 2020, title: "LEAN ON ME", anime: "BNA ビー・エヌ・エー", artist: "岡崎体育" },
+            { year: 2020, title: "Easy Breezy", anime: "映像研には手を出すな!", artist: "chelmico" },
+            { year: 2020, title: "ReSTARTING!!", anime: "放課後ていぼう日誌", artist: "海野高校ていぼう部" },
+            { year: 2020, title: "Memento", anime: "Re:ゼロから始める異世界生活", artist: "nonoc" },
+            { year: 2020, title: "ダイヤモンドの眼差し", anime: "富豪刑事 Balance:UNLIMITED", artist: "OKAMOTO'S" },
+            { year: 2020, title: "コネクト (Piano)", anime: "魔法少女まどか☆マギカ", artist: "ClariS" },
 
-    // --- 2000年（1998〜1999年リストから正しい年代へ移行） ---
-    { year: 2000, title: "君のためにできること", anime: "仙界伝 封神演義", artist: "米倉千尋" },
-    { year: 2000, title: "Believe", anime: "ONE PIECE", artist: "Folder5" },
-    { year: 2000, title: "ヒトリノ夜", anime: "GTO", artist: "ポルノグラフィティ" },
-    { year: 2000, title: "Reset", anime: "無限のリヴァイアス", artist: "酒井ミキオ" },
+            { year: 2021, title: "Cry Baby", anime: "東京リベンジャーズ", artist: "Official髭男dism" },
+            { year: 2021, title: "残響散歌", anime: "鬼滅の刃 遊郭編", artist: "Aimer" },
+            { year: 2021, title: "一途", anime: "劇場版 呪術廻戦 0", artist: "King Gnu" },
+            { year: 2021, title: "逆夢", anime: "劇場版 呪術廻戦 0", artist: "King Gnu" },
+            { year: 2021, title: "朝が来る", anime: "鬼滅の刃 遊郭編", artist: "Aimer" },
+            { year: 2021, title: "STONE OCEAN", anime: "ジョジョの奇妙な冒険 第6部", artist: "ichigo from 岸田教団&THE明星ロケット" },
+            { year: 2021, title: "怪物", anime: "BEASTARS", artist: "YOASOBI" },
+            { year: 2021, title: "One Last Kiss", anime: "シン・エヴァンゲリオン劇場版", artist: "宇多田ヒカル" },
+            { year: 2021, title: "三原色", anime: "YOASOBI", artist: "YOASOBI" },
+            { year: 2021, title: "明るい未来", anime: "東京リベンジャーズ", artist: "eill" },
+            { year: 2021, title: "ODDTAXI", anime: "オッドタクシー", artist: "スカートとPUNPEE" },
+            { year: 2021, title: "青春の馬", anime: "日向坂46", artist: "日向坂46" },
+            { year: 2021, title: "Akuma no Ko", anime: "進撃の巨人 The Final Season", artist: "ヒグチアイ" },
+            { year: 2021, title: "Anemone", anime: "SSSS.DYNAZENON", artist: "内田真礼" },
+            { year: 2021, title: "インパーフェクト", anime: "SSSS.DYNAZENON", artist: "オーイシマサヨシ" },
+            { year: 2021, title: "怪物 (Acoustic)", anime: "BEASTARS", artist: "YOASOBI" },
 
-    // --- 2000年 ---
-    { year: 2000, title: "CHANGE THE WORLD", anime: "犬夜叉", artist: "V6" },
-    { year: 2000, title: "サクラサク", anime: "ラブひな", artist: "林原めぐみ" },
-    { year: 2000, title: "Secret of my heart", anime: "名探偵コナン", artist: "倉木麻衣" },
-    { year: 2000, title: "My Will", anime: "犬夜叉", artist: "dream" },
-    { year: 2000, title: "誓い", anime: "闇の末裔", artist: "奥井雅美" },
-    { year: 2000, title: "VOICE", anime: "遊☆戯☆王デュエルモンスターズ", artist: "CLOUD" },
-    { year: 2000, title: "Shuffle", anime: "遊☆戯☆王デュエルモンスターズ", artist: "奥井雅美" },
-    { year: 2000, title: "夢の果てまで", anime: "アルジェントソーマ", artist: "有坂美香" },
-    { year: 2000, title: "ターゲット〜赤く熱い鼓動〜", anime: "デジモンアドベンチャー02", artist: "和田光司" },
-    { year: 2000, title: "アシタへの羽", anime: "デジモンアドベンチャー02", artist: "AiM" },
-    { year: 2000, title: "君のとなりで", anime: "ラブひな", artist: "堀江由衣" },
+            { year: 2022, title: "ミックスナッツ", anime: "SPY×FAMILY", artist: "Official髭男dism" },
+            { year: 2022, title: "KICK BACK", anime: "チェンソーマン", artist: "米津玄師" },
+            { year: 2022, title: "祝福", anime: "機動戦士ガンダム 水星の魔女", artist: "YOASOBI" },
+            { year: 2022, title: "新時代", anime: "ONE PIECE FILM RED", artist: "Ado" },
+            { year: 2022, title: "アイウエ", anime: "うる星やつら", artist: "MAISONdes feat. 美波, SACA" },
+            { year: 2022, title: "青春コンプレックス", anime: "ぼっち・ざ・ろっく！", artist: "結束バンド" },
+            { year: 2022, title: "チキチキバンバン", anime: "パリピ孔明", artist: "QUEENDOM" },
+            { year: 2022, title: "燦々デイズ", anime: "その着せ替え人形は恋をする", artist: "スピラ・スピカ" },
+            { year: 2022, title: "星が泳ぐ", anime: "サマータイムレンダ", artist: "マカロニえんぴつ" },
+            { year: 2022, title: "ALIVE", anime: "リコリス・リコイル", artist: "ClariS" },
+            { year: 2022, title: "トウキョウ・シャンディ・ランデヴ", anime: "うる星やつら", artist: "MAISONdes" },
+            { year: 2022, title: "Comedy", anime: "SPY×FAMILY", artist: "星野源" },
+            { year: 2022, title: "CHAINSAW BLOOD", anime: "チェンソーマン", artist: "Vaundy" },
+            { year: 2022, title: "Deep down", anime: "チェンソーマン", artist: "Aimer" },
+            { year: 2022, title: "Hole Dweller", anime: "チェンソーマン", artist: "TOOBOE" },
+            { year: 2022, title: "ミックスナッツ (Piano)", anime: "SPY×FAMILY", artist: "Official髭男dism" },
 
-    // --- 2001年 ---
-    { year: 2001, title: "Over Soul", anime: "シャーマンキング", artist: "林原めぐみ" },
-    { year: 2001, title: "Get Over", anime: "ヒカルの碁", artist: "dream" },
-    { year: 2001, title: "Love Destiny", anime: "シスター・プリンセス", artist: "堀江由衣" },
-    { year: 2001, title: "The Biggest Dreamer", anime: "デジモンテイマーズ", artist: "和田光司" },
-    { year: 2001, title: "For フルーツバスケット", anime: "フルーツバスケット", artist: "岡崎律子" },
-    { year: 2001, title: "future", anime: "テニスの王子様", artist: "HIRO-X" },
-    { year: 2001, title: "You got game?", anime: "テニスの王子様", artist: "KIMERU" },
-    { year: 2001, title: "かえりみち", anime: "まほろまてぃっく", artist: "川澄綾子" },
+            { year: 2023, title: "アイドル", anime: "【推しの子】", artist: "YOASOBI" },
+            { year: 2023, title: "青のすみか", anime: "呪術廻戦 懐玉・玉折", artist: "キタニタツヤ" },
+            { year: 2023, title: "SPECIALZ", anime: "呪術廻戦 渋谷事変", artist: "King Gnu" },
+            { year: 2023, title: "勇者", anime: "葬送のフリーレン", artist: "YOASOBI" },
+            { year: 2023, title: "絆ノ奇跡", anime: "鬼滅の刃 刀鍛冶の里編", artist: "MAN WITH A MISSION × milet" },
+            { year: 2023, title: "花になって", anime: "薬屋のひとりごと", artist: "緑黄色社会" },
+            { year: 2023, title: "Knock Out", anime: "マッシュル-MASHLE-", artist: "岡崎体育" },
+            { year: 2023, title: "ホワイトノイズ", anime: "東京リベンジャーズ", artist: "Official髭男dism" },
+            { year: 2023, title: "斜陽", anime: "僕の心のヤバイやつ", artist: "ヨルシカ" },
+            { year: 2023, title: "Ｗ●ＲＫ", anime: "地獄楽", artist: "millennium parade × 椎名林檎" },
+            { year: 2023, title: "レッド・ゾーン", anime: "マッシュル-MASHLE-", artist: "岡崎体育" },
+            { year: 2023, title: "チグハグ", anime: "山田くんとLv999の恋をする", artist: "Kana-Boon" },
+            { year: 2023, title: "アイデンティティ", anime: "僕の心のヤバイやつ", artist: "さユり" },
+            { year: 2023, title: "メフィスト", anime: "【推しの子】", artist: "女王蜂" },
+            { year: 2023, title: "スイートメモリー", anime: "アンデッドアンラック", artist: "女王蜂" },
+            { year: 2023, title: "アイドル (Acoustic)", anime: "【推しの子】", artist: "YOASOBI" },
 
-    // --- 2002年 ---
-    { year: 2002, title: "キングゲイナー・オーバー!", anime: "OVERMANキングゲイナー", artist: "福山芳樹" },
-    { year: 2002, title: "Northern lights", anime: "シャーマンキング", artist: "林原めぐみ" },
+            { year: 2024, title: "Bling-Bang-Bang-Born", anime: "マッシュル-MASHLE- 神覚者候補選抜試験編", artist: "Creepy Nuts" },
+            { year: 2024, title: "ライラック", anime: "忘却バッテリー", artist: "Mrs. GREEN APPLE" },
+            { year: 2024, title: "タイムパラドックス", anime: "映画ドラえもん のび太の地球交響楽", artist: "Vaundy" },
+            { year: 2024, title: "オトノケ", anime: "ダンダダン", artist: "Creepy Nuts" },
+            { year: 2024, title: "ファタール", anime: "【推しの子】 第2期", artist: "GEMN" },
+            { year: 2024, title: "晴る", anime: "葬送のフリーレン", artist: "ヨルシカ" },
+            { year: 2024, title: "オレンジ", anime: "劇場版ハイキュー!! ゴミ捨て場の決戦", artist: "SPYAIR" },
+            { year: 2024, title: "LEveL", anime: "俺だけレベルアップな件", artist: "SawanoHiroyuki[nZk]:XAI" },
+            { year: 2024, title: "アンビバレント", anime: "薬屋のひとりごと", artist: "Uru" },
+            { year: 2024, title: "シカ色デイズ", anime: "しかのこのここしたんたん", artist: "シカ部" },
+            { year: 2024, title: "誰我為", anime: "僕のヒーローアカデミア", artist: "TK from 凛として時雨" },
+            { year: 2024, title: "絶対零度", anime: "WIND BREAKER", artist: "なとり" },
+            { year: 2024, title: "夢幻", anime: "鬼滅の刃 柱稽古編", artist: "MY FIRST STORY × HYDE" },
+            { year: 2024, title: "カーテンコール", anime: "BEYBLADE X", artist: "ONE OK ROCK" },
+            { year: 2024, title: "ホログラム (2024)", anime: "鋼の錬金術師", artist: "NICO Touches the Walls" },
+            { year: 2024, title: "ツバメ", anime: "YOASOBI with ミドリーズ", artist: "YOASOBI" },
 
-    // --- 2003年 ---
-    { year: 2003, title: "明日へのbrilliant road", anime: "宇宙のステルヴィア", artist: "angela" },
-    { year: 2003, title: "Grip!", anime: "犬夜叉", artist: "Every Little Thing" },
+            { year: 2025, title: "BOW AND ARROW", anime: "メダリスト", artist: "米津玄師" },
+            { year: 2025, title: "Magic Hour", anime: "ハニーレモンソーダ", artist: "&TEAM" },
+            { year: 2025, title: "走れSAKAMOTO", anime: "SAKAMOTO DAYS", artist: "Vaundy" },
+            { year: 2025, title: "斬撃", anime: "炎炎ノ消防隊 参ノ章", artist: "Mrs. GREEN APPLE" },
+            { year: 2025, title: "青の未来", anime: "地獄楽 2期", artist: "millennium parade" },
+            { year: 2025, title: "ネバーランド", anime: "薬屋のひとりごと 2期", artist: "Uru" },
+            { year: 2025, title: "サイレン", anime: "チェンソーマン 映画編", artist: "米津玄師" },
+            { year: 2025, title: "閃光の彼方", anime: "機動戦士ガンダム 復讐のレクイエム", artist: "SawanoHiroyuki" },
+            { year: 2025, title: "星のクロニクル", anime: "Dr.STONE SCIENCE FUTURE", artist: "BURNOUT SYNDROMES" },
+            { year: 2025, title: "リアライズ", anime: "Re:ゼロから始める異世界生活 3rd season", artist: "鈴木このみ" },
+            { year: 2025, title: "影の王国", anime: "オーバーロード 劇場版", artist: "OxT" },
+            { year: 2025, title: "サクラノアメ", anime: "初音ミク", artist: "halyosy" },
+            { year: 2025, title: "無限の旅", anime: "ダンジョンに出会いを求めるのは間違っているだろうか V", artist: "GIRLS' BAND CRY" },
+            { year: 2025, title: "ブルーメモリー", anime: "ブルーアーカイブ", artist: "Yui Ogura" },
+            { year: 2025, title: "ゼロの軌跡", anime: "軌跡シリーズ", artist: "falcom jdk BAND" },
+            { year: 2025, title: "ユメノセカイ", anime: "魔法科高校の劣等生", artist: "ASCA" }
+// --- ブラック・ジャック ---
+    { year: 2004, title: "月光花", anime: "ブラック・ジャック", artist: "Janne Da Arc" },
 
-  // --- 2002年 ---
-    { year: 2002, title: "INVOKE", anime: "機動戦士ガンダムSEED", artist: "T.M.Revolution" },
-    { year: 2002, title: "あんなに一緒だったのに", anime: "機動戦士ガンダムSEED", artist: "See-Saw" },
-    { year: 2002, title: "遥か彼方", anime: "NARUTO -ナルト-", artist: "ASIAN KUNG-FU GENERATION" },
-    { year: 2002, title: "ヘミソフィア", anime: "ラーゼフォン", artist: "坂本真綾" },
-    { year: 2002, title: "空耳ケーキ", anime: "あずまんが大王", artist: "Oranges & Lemons" },
-    { year: 2002, title: "Reckless fire", anime: "スクライド", artist: "井出泰彰" }, // ※2001/2002年周辺
+    // --- マリア様がみてる ---
+    { year: 2004, title: "pastel pure", anime: "マリア様がみてる", artist: "ALI PROJECT" },
 
-    // --- 2003年 ---
-    { year: 2003, title: "メリッサ", anime: "鋼の錬金術師", artist: "ポルノグラフィティ" },
-    { year: 2003, title: "READY STEADY GO", anime: "鋼の錬金術師", artist: "L'Arc-en-Ciel" },
-    { year: 2003, title: "消せない罪", anime: "鋼の錬金術師", artist: "北出菜奈" },
-    { year: 2003, title: "扉の向こうへ", anime: "鋼の錬金術師", artist: "Yellow Generation" },
-    { year: 2003, title: "Motherland", anime: "鋼の錬金術師", artist: "Crystal Kay" },
-    { year: 2003, title: "Believe", anime: "機動戦士ガンダムSEED", artist: "玉置成実" },
-    { year: 2003, title: "Shangri-La", anime: "蒼穹のファフナー", artist: "angela" },
-    { year: 2003, title: "太陽の楽園", anime: "人魚姫マーメイドメロディー ぴちぴちピッチ", artist: "神戸みゆき" },
-    { year: 2003, title: "SKILL", anime: "第2次スーパーロボット大戦α", artist: "JAM Project" },
-    { year: 2003, title: "大好きなシャツ", anime: "ぽぽたん", artist: "UNDER17" },
+    // --- アイシールド21 ---
+    { year: 2005, title: "INNOCENCE", anime: "アイシールド21", artist: "V6" },
 
-    // --- 2004年（正しい年代へ移行） ---
-    { year: 2004, title: "リライト", anime: "鋼の錬金術師", artist: "ASIAN KUNG-FU GENERATION" },
-    { year: 2004, title: "DAN ZEN! ふたりはプリキュア", anime: "ふたりはプリキュア", artist: "五條真由美" },
-    { year: 2004, title: "GO!!!", anime: "NARUTO -ナルト-", artist: "FLOW" },
+    // --- おねがいマイメロディ ---
+    { year: 2005, title: "オトメロディー", anime: "おねがいマイメロディ", artist: "高橋美佳子" },
 
- // --- 2004年 ---
-    { year: 2004, title: "ignited -イグナイテッド-", anime: "機動戦士ガンダムSEED DESTINY", artist: "T.M.Revolution" },
-    { year: 2004, title: "Reason", anime: "機動戦士ガンダムSEED DESTINY", artist: "玉置成実" },
-    { year: 2004, title: "Life Goes On", anime: "機動戦士ガンダムSEED DESTINY", artist: "有坂美香" },
-    { year: 2004, title: "銀河鉄道は遥かなり", anime: "銀河鉄道物語", artist: "ささきいさお" },
-    { year: 2004, title: "胸いっぱい…", anime: "冒険王ビィト", artist: "きただにひろし" },
+    // --- 苺ましまろ ---
+    { year: 2005, title: "いちごコンプリート", anime: "苺ましまろ", artist: "千葉紗子・折笠富美子・川澄綾子・能登麻美子" },
 
-    // --- 2005年 ---
-    { year: 2005, title: "創聖のアクエリオン", anime: "創聖のアクエリオン", artist: "AKINO" },
-    { year: 2005, title: "PRIDE", anime: "機動戦士ガンダムSEED DESTINY", artist: "HIGH and MIGHTY COLOR" },
-    { year: 2005, title: "僕たちの行方", anime: "機動戦士ガンダムSEED DESTINY", artist: "高橋瞳" },
-    { year: 2005, title: "Wings of Words", anime: "機動戦士ガンダムSEED DESTINY", artist: "CHEMISTRY" },
-    { year: 2005, title: "DAYS", anime: "交響詩篇エウレカセブン", artist: "FLOW" },
-    { year: 2005, title: "秘密基地", anime: "交響詩篇エウレカセブン", artist: "高田梢枝" },
-    { year: 2005, title: "少年ハート", anime: "交響詩篇エウレカセブン", artist: "HOME MADE 家族" },
-    { year: 2005, title: "太陽の真ん中へ", anime: "交響詩篇エウレカセブン", artist: "BIVATTCH" },
-    { year: 2005, title: "sakura", anime: "交響詩篇エウレカセブン", artist: "NIRGILIS" },
-    { year: 2005, title: "Fly Away", anime: "交響詩篇エウレカセブン", artist: "伊沢麻未" },
-    { year: 2005, title: "Canvas", anime: "交響詩篇エウレカセブン", artist: "COOL JOKE" },
-    { year: 2005, title: "Tip Taps Tip", anime: "交響詩篇エウレカセブン", artist: "HALCALI" },
-    { year: 2005, title: "DAN ZEN! ふたりはプリキュア (Max Heart ver.)", anime: "ふたりはプリキュア Max Heart", artist: "五條真由美" },
+    // --- DEATH NOTE ---
+    { year: 2006, title: "the WORLD", anime: "DEATH NOTE", artist: "ナイトメア" },
 
-    // --- 2006年（元リストから正しい年代へ移行） ---
-    { year: 2006, title: "ハレ晴レユカイ", anime: "涼宮ハルヒの憂鬱", artist: "平野綾・茅原実里・後藤邑子" },
-    { year: 2006, title: "冒険でしょでしょ?", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
-    { year: 2006, title: "God knows...", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
-    { year: 2006, title: "Lost my music", anime: "涼宮ハルヒの憂鬱", artist: "平野綾" },
-    { year: 2006, title: "COLORS", anime: "コードギアス 反逆のルルーシュ", artist: "FLOW" },
-    { year: 2006, title: "ガーネット", anime: "時をかける少女", artist: "奥華子" },
-    { year: 2006, title: "変わらないもの", anime: "時をかける少女", artist: "奥華子" },
+    // --- 銀魂 ---
+    { year: 2006, title: "Pray", anime: "銀魂", artist: "Tommy heavenly6" },
 
-  // --- 2006年 ---
-    { year: 2006, title: "未来への咆哮", anime: "マブラヴ オルタネイティヴ (PC/OVA)", artist: "JAM Project" },
-    { year: 2006, title: "Disillusion", anime: "Fate/stay night", artist: "タイナカサチ" },
-    { year: 2006, title: "ひぐらしのなく頃に", anime: "ひぐらしのなく頃に", artist: "島みやえい子" },
-    { year: 2006, title: "why,or why not", anime: "ひぐらしのなく頃に", artist: "大嶋啓之 feat. 片霧烈火" },
-    { year: 2006, title: "勇侠青春謳", anime: "コードギアス 反逆のルルーシュ", artist: "ALI PROJECT" },
-    { year: 2006, title: "Kirameku Namida wa Hoshi ni", anime: "Fate/stay night", artist: "タイナカサチ" },
-    { year: 2006, title: "ヒカリ", anime: "Fate/stay night", artist: "タイナカサチ" },
+    // --- ゼロの使い魔 ---
+    { year: 2006, title: "First Kiss", anime: "ゼロの使い魔", artist: "釘宮理恵" },
 
-    // --- 2007年 ---
-    { year: 2007, title: "もってけ!セーラーふく", anime: "らき☆すた", artist: "泉こなた(平野綾), 柊かがみ(加藤英美里), 柊つかさ(福原香織), 高良みゆき(遠藤綾)" },
-    { year: 2007, title: "空色デイズ", anime: "天元突破グレンラガン", artist: "中川翔子" },
-    { year: 2007, title: "アンインストール", anime: "ぼくらの", artist: "石川智晶" },
-    { year: 2007, title: "解読不能", anime: "コードギアス 反逆のルルーシュ", artist: "Jinn" },
-    { year: 2007, title: "モザイクカケラ", anime: "コードギアス 反逆のルルーシュ", artist: "SunSet Swish" },
-    { year: 2007, title: "瞳の翼", anime: "コードギアス 反逆のルルーシュ", artist: "access" },
-    { year: 2007, title: "風のつばさ", anime: "風の少女エミリー", artist: "秋島ルイ" },
-    { year: 2007, title: "トライアングラー", anime: "マクロスF", artist: "坂本真綾" },
-    { year: 2007, title: "JOINT", anime: "灼眼のシャナII", artist: "川田まみ" },
-    { year: 2007, title: "triangle", anime: "灼眼のシャナII", artist: "川田まみ" },
-    { year: 2007, title: "Daybreak's Bell", anime: "機動戦士ガンダム00", artist: "L'Arc-en-Ciel" },
-    { year: 2007, title: "奈落の花", anime: "ひぐらしのなく頃に解", artist: "島みやえい子" },
-    { year: 2007, title: "対象a", anime: "ひぐらしのなく頃に解", artist: "anabel" },
-    { year: 2007, title: "Ash Like Snow", anime: "機動戦士ガンダム00", artist: "the brilliant green" },
-    { year: 2007, title: "罠", anime: "機動戦士ガンダム00", artist: "THE BACK HORN" },
+    // --- D.Gray-man ---
+    { year: 2007, title: "INNOCENT SORROW", anime: "D.Gray-man", artist: "abingdon boys school" },
 
-    // --- 2008年 ---
-    { year: 2008, title: "ライオン", anime: "マクロスF", artist: "May'n / 中島愛" },
-    { year: 2008, title: "星間飛行", anime: "マクロスF", artist: "ランカ・リー＝中島愛" },
-    { year: 2008, title: "ノーザンクロス", anime: "マクロスF", artist: "シェリル・ノーム starring May'n" },
-    { year: 2008, title: "ダイアモンド クレバス", anime: "マクロスF", artist: "シェリル・ノーム starring May'n" },
-    { year: 2008, title: "射手座☆午後九時Don't be late", anime: "マクロスF", artist: "シェリル・ノーム starring May'n" },
-    { year: 2008, title: "フレンズ", anime: "機動戦士ガンダム00", artist: "ステファニー" },
-    { year: 2008, title: "儚くも永久のカナシ", anime: "機動戦士ガンダム00 2nd Season", artist: "UVERworld" },
-    { year: 2008, title: "泪のムコウ", anime: "機動戦士ガンダム00 2nd Season", artist: "ステレオポニー" },
-    { year: 2008, title: "Prototype", anime: "機動戦士ガンダム00 2nd Season", artist: "石川智晶" },
+    // --- おおきく振りかぶって ---
+    { year: 2007, title: "ドラマチック", anime: "おおきく振りかぶって", artist: "Base Ball Bear" }
+// --- みなみけ ---
+    { year: 2007, title: "経験値上昇中☆", anime: "みなみけ", artist: "みなみけ3姉妹（佐藤利奈、井上麻里奈、茅原実里）" },
 
-    // --- 2009年（正しい年代へ移行） ---
-    { year: 2009, title: "君の知らない物語", anime: "化物語", artist: "supercell" },
-    { year: 2009, title: "only my railgun", anime: "とある科学の超電磁砲", artist: "fripSide" },
-    { year: 2009, title: "again", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "YUI" },
-    { year: 2009, title: "嘘", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "シド" },
-    { year: 2009, title: "ホログラム", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "NICO Touches the Walls" },
-    { year: 2009, title: "ゴールデンタイムラバー", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "スキマスイッチ" },
-    { year: 2009, title: "LET IT OUT", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "福原美穂" },
-    { year: 2009, title: "つないだ手", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "Lil'B" },
+    // --- さよなら絶望先生 ---
+    { year: 2007, title: "人として軸がぶれている", anime: "さよなら絶望先生", artist: "大槻ケンヂと絶望少女達" },
 
-    // --- 2010年（正しい年代へ移行） ---
-    { year: 2010, title: "Period", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "CHEMISTRY" },
-    { year: 2010, title: "レイン", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "シド" },
-    { year: 2010, title: "瞬間センチメンタル", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "SCANDAL" },
-    { year: 2010, title: "RAY OF LIGHT", anime: "鋼の錬金術師 FULLMETAL ALCHEMIST", artist: "中川翔子" },
+    // --- とらドラ！ ---
+    { year: 2008, title: "プレパレード", anime: "とらドラ！", artist: "逢坂大河（釘宮理恵）、櫛枝実乃梨（堀江由衣）、川嶋亜美（喜多村英梨）" },
 
- // --- 2009年 ---
-    { year: 2009, title: "Cagayake!GIRLS", anime: "けいおん!", artist: "放課後ティータイム" },
-    { year: 2009, title: "Don't say \"lazy\"", anime: "けいおん!", artist: "放課後ティータイム" },
+    // --- ソウルイーター ---
+    { year: 2008, title: "resonance", anime: "ソウルイーター", artist: "T.M.Revolution" },
 
-    // --- 2010年 ---
-    { year: 2010, title: "GO! GO! MANIAC", anime: "けいおん!!", artist: "放課後ティータイム" },
-    { year: 2010, title: "Listen!!", anime: "けいおん!!", artist: "放課後ティータイム" },
-    { year: 2010, title: "Utauyo!!MIRACLE", anime: "けいおん!!", artist: "放課後ティータイム" },
-    { year: 2010, title: "NO,Thank You!", anime: "けいおん!!", artist: "放課後ティータイム" },
-    { year: 2010, title: "My Soul, Your Beats!", anime: "Angel Beats!", artist: "Lia" },
-    { year: 2010, title: "Brave Song", anime: "Angel Beats!", artist: "多田葵" },
-    { year: 2010, title: "Crow Song", anime: "Angel Beats!", artist: "Girls Dead Monster" },
-    { year: 2010, title: "Alchemy", anime: "Angel Beats!", artist: "Girls Dead Monster" },
-    { year: 2010, title: "LEVEL5-judgelight-", anime: "とある科学の超電磁砲", artist: "fripSide" },
-    { year: 2010, title: "Dear My Friend -まだ見ぬ未来へ-", anime: "とある科学の超電磁砲", artist: "ELISA" },
-    { year: 2010, title: "Real Force", anime: "とある科学の超電磁砲", artist: "ELISA" },
-    { year: 2010, title: "Irony", anime: "俺の妹がこんなに可愛いわけがない", artist: "ClariS" },
+    // --- 黒執事 ---
+    { year: 2008, title: "モノクロのキス", anime: "黒執事", artist: "シド" },
 
-    // --- 2011年 ---
-    { year: 2011, title: "コネクト", anime: "魔法少女まどか☆マギカ", artist: "ClariS" },
-    { year: 2011, title: "Magia", anime: "魔法少女まどか☆マギカ", artist: "Kalafina" },
-    { year: 2011, title: "マジLOVE1000%", anime: "うたの☆プリンスさまっ♪ マジLOVE1000%", artist: "ST☆RISH" },
-    { year: 2011, title: "oath sign", anime: "Fate/Zero", artist: "LiSA" },
-    { year: 2011, title: "MEMORIA", anime: "Fate/Zero", artist: "藍井エイル" },
-    { year: 2011, title: "Hacking to the Gate", anime: "STEINS;GATE", artist: "いとうかなこ" },
-    { year: 2011, title: "オリオンをなぞる", anime: "TIGER & BUNNY", artist: "UNISON SQUARE GARDEN" },
-    { year: 2011, title: "My Dearest", anime: "ギルティクラウン", artist: "EGOIST" },
-    { year: 2011, title: "CORE PRIDE", anime: "青の祓魔師", artist: "UVERworld" },
-    { year: 2011, title: "SHOOT!", anime: "ロウきゅーぶ!", artist: "RO-KYU-BU!" },
-    { year: 2011, title: "Departures 〜あなたにおくるアイの歌〜", anime: "ギルティクラウン", artist: "EGOIST" },
-    { year: 2011, title: "The Everlasting Guilty Crown", anime: "ギルティクラウン", artist: "EGOIST" },
-    { year: 2011, title: "IN MY WORLD", anime: "青の祓魔師", artist: "ROOKIEZ is PUNK'D" },
-    { year: 2011, title: "Take off", anime: "青の祓魔師", artist: "2PM" },
-    { year: 2011, title: "告白", anime: "ギルティクラウン", artist: "supercell" },
-    { year: 2011, title: "Party Love〜およげ!ウニさん〜", anime: "ロウきゅーぶ!", artist: "RO-KYU-BU!" },
+    // --- 化物語 ---
+    { year: 2009, title: "staple stable", anime: "化物語", artist: "戦場ヶ原ひたぎ（斎藤千和）" },
 
-    // --- 2012年（移行） ---
-    { year: 2012, title: "crossing field", anime: "ソードアート・オンライン", artist: "LiSA" },
-    { year: 2012, title: "INNOCENCE", anime: "ソードアート・オンライン", artist: "藍井エイル" },
-    { year: 2012, title: "Overfly", anime: "ソードアート・オンライン", artist: "春奈るな" },
-    { year: 2012, title: "to the beginning", anime: "Fate/Zero", artist: "Kalafina" },
-    { year: 2012, title: "空は高く風は歌う", anime: "Fate/Zero", artist: "春奈るな" },
-    { year: 2012, title: "太陽曰く燃えよカオス", anime: "這いよれ! ニャル子さん", artist: "後ろから這いよる隊G" },
-    { year: 2012, title: "Sparkling Daydream", anime: "中二病でも恋がしたい!", artist: "ZAQ" },
-    { year: 2012, title: "INSIDE IDENTITY", anime: "中二病でも恋がしたい!", artist: "Black Raison d'etre" },
-    { year: 2012, title: "優しさの理由", anime: "氷菓", artist: "ChouCho" },
-    { year: 2012, title: "未完成ストライド", anime: "氷菓", artist: "こだまさおり" },
-    { year: 2012, title: "まどろみの約束", anime: "氷菓", artist: "千反田える、伊原摩耶花" },
+    // --- ヘタリア Axis Powers ---
+    { year: 2009, title: "まるかいて地球", anime: "ヘタリア Axis Powers", artist: "イタリア（浪川大輔）" },
 
-    // --- 2013年（移行） ---
-    { year: 2013, title: "マジLOVE2000%", anime: "うたの☆プリンスさまっ♪ マジLOVE2000%", artist: "ST☆RISH" },
-    { year: 2013, title: "カノン", anime: "うたの☆プリンスさまっ♪ マジLOVE2000%", artist: "宮野真守" },
+    // --- とっとこハム太郎 ---
+    { year: 2000, title: "ハム太郎とっとこうた", anime: "とっとこハム太郎", artist: "ハムちゃんず" },
 
-  // --- 2011年（移行枠） ---
-    { year: 2011, title: "READY!!", anime: "アイドルマスター", artist: "765PRO ALLSTARS" },
-    { year: 2011, title: "CHANGE!!!!", anime: "アイドルマスター", artist: "765PRO ALLSTARS" },
+    // --- 星のカービィ ---
+    { year: 2001, title: "カービィ！", anime: "星のカービィ", artist: "朝川ひろこ" },
 
-    // --- 2012年 ---
-    { year: 2012, title: "ジョジョ 〜その血の運命〜", anime: "ジョジョの奇妙な冒険", artist: "富永TOMMY弘明" },
-    { year: 2012, title: "名前のない怪物", anime: "PSYCHO-PASS", artist: "EGOIST" },
-    { year: 2012, title: "departure!", anime: "HUNTER×HUNTER", artist: "小野正利" },
-    { year: 2012, title: "abnormalize", anime: "PSYCHO-PASS", artist: "凛として時雨" },
+    // --- 小林さんちのメイドラゴン ---
+    { year: 2017, title: "青空のラプソディ", anime: "小林さんちのメイドラゴン", artist: "fhána" },
 
-    // --- 2013年 ---
-    { year: 2013, title: "BLOODY STREAM", anime: "ジョジョの奇妙な冒険", artist: "Coda" },
-    { year: 2013, title: "紅蓮の弓矢", anime: "進撃の巨人", artist: "Linked Horizon" },
-    { year: 2013, title: "自由の翼", anime: "進撃の巨人", artist: "Linked Horizon" },
-    { year: 2013, title: "美しき残酷な世界", anime: "進撃の巨人", artist: "日笠陽子" },
-    { year: 2013, title: "great escape", anime: "進撃の巨人", artist: "cinema staff" },
-    { year: 2013, title: "デート・ア・ライブ", anime: "デート・ア・ライブ", artist: "sweet ARMS" },
-    { year: 2013, title: "ゲラゲラポーのうた", anime: "妖怪ウォッチ", artist: "キング・クリームソーダ" },
-    { year: 2013, title: "境界の彼方", anime: "境界の彼方", artist: "茅原実里" },
-    { year: 2013, title: "Daisy", anime: "境界の彼方", artist: "STEREO DIVE FOUNDATION" },
-    { year: 2013, title: "シリウス", anime: "キルラキル", artist: "藍井エイル" },
-    { year: 2013, title: "database", anime: "ログ・ホライズン", artist: "MAN WITH A MISSION" },
-    { year: 2013, title: "lull 〜そして僕らは〜", anime: "凪のあすから", artist: "Ray" },
-    { year: 2013, title: "Out of Control", anime: "PSYCHO-PASS", artist: "Nothing's Carved In Stone" },
-    { year: 2013, title: "All Alone With You", anime: "PSYCHO-PASS", artist: "EGOIST" },
-    { year: 2013, title: "革命デュアリズム", anime: "革命機ヴァルヴレイヴ", artist: "水樹奈々×T.M.Revolution" },
-    { year: 2013, title: "Preserved Roses", anime: "革命機ヴァルヴレイヴ", artist: "T.M.Revolution×水樹奈々" },
-    { year: 2013, title: "sister's noise", anime: "とある科学の超電磁砲S", artist: "fripSide" },
-    { year: 2013, title: "eternal reality", anime: "とある科学の超電磁砲S", artist: "fripSide" },
-    { year: 2013, title: "SAVIOR OF SONG", anime: "蒼き鋼のアルペジオ -アルス・ノヴァ-", artist: "ナノ" },
-    { year: 2013, title: "ブレイブルー", anime: "蒼き鋼のアルペジオ -アルス・ノヴァ-", artist: "ナノ" },
+    // --- 無職転生 ～異世界行ったら本気だす～ ---
+    { year: 2021, title: "旅人の唄", anime: "無職転生 ～異世界行ったら本気だす～", artist: "大原ゆい子" },
 
-    // --- 2014年（移行枠） ---
-    { year: 2014, title: "ambiguous", anime: "キルラキル", artist: "GARNiDELiA" },
+    // --- シュタインズゲート ---
+    { year: 2011, title: "Hacking to the Gate", anime: "シュタインズゲート", artist: "いとうかなこ" },
 
- // --- 2014年 ---
-    { year: 2014, title: "シルエット", anime: "NARUTO -ナルト- 疾風伝", artist: "KANA-BOON" },
-    { year: 2014, title: "unravel", anime: "東京喰種トーキョーグール", artist: "TK from 凛として時雨" },
-    { year: 2014, title: "光るなら", anime: "四月は君の嘘", artist: "Goose house" },
-    { year: 2014, title: "IGNITE", anime: "ソードアート・オンラインII", artist: "藍井エイル" },
-    { year: 2014, title: "daze", anime: "メカクシティアクターズ", artist: "GARNiDELiA" },
-    { year: 2014, title: "エクストラ・マジック・アワー", anime: "甘城ブリリアントパーク", artist: "AKINO with bless4" },
-    { year: 2014, title: "Let Me Hear", anime: "寄生獣 セイの格率", artist: "Fear, and Loathing in Las Vegas" },
-    { year: 2014, title: "ギミー!レボリューション", anime: "俺、ツインテールになります。", artist: "内田真礼" },
-    { year: 2014, title: "七色シンフォニー", anime: "四月は君の嘘", artist: "コアラモード." },
-    { year: 2014, title: "キラメキ", anime: "四月は君の嘘", artist: "wacci" },
-    { year: 2014, title: "オレンジ", anime: "四月は君の嘘", artist: "7!!" },
-    { year: 2014, title: "courage", anime: "ソードアート・オンラインII", artist: "戸松遥" },
-    { year: 2014, title: "Startear", anime: "ソードアート・オンラインII", artist: "春奈るな" },
-    { year: 2014, title: "days", anime: "メカクシティアクターズ", artist: "じん feat. Lia" },
+    // --- 俺の妹がこんなに可愛いわけがない ---
+    { year: 2010, title: "irony", anime: "俺の妹がこんなに可愛いわけがない", artist: "ClariS" },
 
-    // --- 2015年 ---
-    { year: 2015, title: "シュガーソングとビターステップ", anime: "血界戦線", artist: "UNISON SQUARE GARDEN" },
-    { year: 2015, title: "はなまるぴっぴはよいこだけ", anime: "おそ松さん", artist: "A応P" },
-    { year: 2015, title: "Raise your flag", anime: "機動戦士ガンダム 鉄血のオルフェンズ", artist: "MAN WITH A MISSION" },
-    { year: 2015, title: "Brave Shine", anime: "Fate/stay night [Unlimited Blade Works]", artist: "Aimer" },
-    { year: 2015, title: "Bravely You", anime: "Charlotte", artist: "Lia" },
-    { year: 2015, title: "灼け落ちない翼", anime: "Charlotte", artist: "多田葵" },
-    { year: 2015, title: "かくしん的☆めたまるふょ〜ぜっ!", anime: "干物妹!うまるちゃん", artist: "土間うまる (田中あいみ)" },
-    { year: 2015, title: "プライド革命", anime: "銀魂゜", artist: "CHiCO with HoneyWorks" },
-    { year: 2015, title: "Hello,world!", anime: "血界戦線", artist: "BUMP OF CHICKEN" },
-    { year: 2015, title: "SIX SAME FACES 〜今夜は最高ーーー!!!〜", anime: "おそ松さん", artist: "イヤミと総おそ松衆" },
-    { year: 2015, title: "オルフェンズの涙", anime: "機動戦士ガンダム 鉄血のオルフェンズ", artist: "MISIA" },
-    { year: 2015, title: "LAST STARDUST", anime: "Fate/stay night [Unlimited Blade Works]", artist: "Aimer" },
-    { year: 2015, title: "海色", anime: "艦隊これくしょん -艦これ-", artist: "AKINO from bless4" },
+    // --- あの日見た花の名前を僕達はまだ知らない。 ---
+    { year: 2011, title: "青い栞", anime: "あの日見た花の名前を僕達はまだ知らない。", artist: "Galileo Galilei" },
 
-    // --- 2016年（正しい年代へ移行） ---
-    { year: 2016, title: "THE DAY", anime: "僕のヒーローアカデミア", artist: "ポルノグラフィティ" },
-    { year: 2016, title: "HEROES", anime: "僕のヒーローアカデミア", artist: "Brian the Sun" },
+    // --- 日常 ---
+    { year: 2011, title: "ヒャダインのじょーじょーゆーじょー", anime: "日常", artist: "ヒャダイン" }
+// --- 未来日記 ---
+    { year: 2011, title: "Kuusou Mesorogiwi", anime: "未来日記", artist: "妖精帝國" },
 
-// --- 2016年 ---
-    { year: 2016, title: "前前前世", anime: "君の名は。", artist: "RADWIMPS" },
-    { year: 2016, title: "Redo", anime: "Re:ゼロから始める異世界生活", artist: "鈴木このみ" },
-    { year: 2016, title: "STYX HELIX", anime: "Re:ゼロから始める異世界生活", artist: "MYTH & ROID" },
-    { year: 2016, title: "KABANERI OF THE IRON FORTRESS", anime: "甲鉄城のカバネリ", artist: "EGOIST" },
-    { year: 2016, title: "99", anime: "モブサイコ100", artist: "MOB CHOIR" },
-    { year: 2016, title: "青空Jumping Heart", anime: "ラブライブ!サンシャイン!!", artist: "Aqours" },
+    // --- PSYCHO-PASS サイコパス ---
+    { year: 2012, title: "abnormalize", anime: "PSYCHO-PASS サイコパス", artist: "凛として時雨" },
+
+    // --- 中二病でも恋がしたい！ ---
+    { year: 2012, title: "Sparkling Daydream", anime: "中二病でも恋がしたい！", artist: "ZAQ" },
+
+    // --- ガールズ＆パンツァー ---
+    { year: 2012, title: "DreamRiser", anime: "ガールズ＆パンツァー", artist: "ChouCho" },
+
+    // --- はたらく魔王さま！ ---
+    { year: 2013, title: "ZERO!!", anime: "はたらく魔王さま！", artist: "栗林みな実" },
+
+    // --- のんのんびより ---
+    { year: 2013, title: "なないろ日和", anime: "のんのんびより", artist: "nano.RIPE" },
+
+    // --- ハイキュー!! ---
+    { year: 2014, title: "イマジネーション", anime: "ハイキュー!!", artist: "SPYAIR" },
+
+    // --- 魔法科高校の劣等生 ---
+    { year: 2014, title: "Rising Hope", anime: "魔法科高校の劣等生", artist: "LiSA" },
+
+    // --- SHIROBAKO ---
+    { year: 2014, title: "COLORFUL BOX", anime: "SHIROBAKO", artist: "石田燿子" },
+
+    // --- 七つの大罪 ---
+    { year: 2014, title: "熱情のスペクトラム", anime: "七つの大罪", artist: "いきものがかり" },
+
+    // --- 暗殺教室 ---
+    { year: 2015, title: "青春サツバツ論", anime: "暗殺教室", artist: "3年E組うた担" },
+
+    // --- オーバーロード ---
+    { year: 2015, title: "Clattanoia", anime: "オーバーロード", artist: "OxT" },
+
+    // --- 響け！ユーフォニアム ---
+    { year: 2015, title: "DREAM SOLISTER", anime: "響け！ユーフォニアム", artist: "TRUE" },
+
+    // --- ダンジョンに出会いを求めるのは間違っているだろうか ---
+    { year: 2015, title: "Hey World", anime: "ダンジョンに出会いを求めるのは間違っているだろうか", artist: "井口裕香" }
+// --- 干物妹！うまるちゃん ---
+    { year: 2015, title: "かくしん的☆めたまるふょ〜ぜっ!", anime: "干物妹！うまるちゃん", artist: "土間うまる（田中あいみ）" },
+
+    // --- この素晴らしい世界に祝福を！ ---
+    { year: 2016, title: "fantastic dreamer", anime: "この素晴らしい世界に祝福を！", artist: "Machico" },
+
+    // --- ユーリ!!! on ICE ---
     { year: 2016, title: "HISTORY MAKER", anime: "ユーリ!!! on ICE", artist: "DEAN FUJIOKA" },
-    { year: 2016, title: "スパークル", anime: "君の名は。", artist: "RADWIMPS" },
-    { year: 2016, title: "夢灯籠", anime: "君の名は。", artist: "RADWIMPS" },
-    { year: 2016, title: "なんでもないや", anime: "君の名は。", artist: "RADWIMPS" },
-    { year: 2016, title: "Paradisus-Paradoxum", anime: "Re:ゼロから始める異世界生活", artist: "MYTH & ROID" },
-    { year: 2016, title: "Stay Alive", anime: "Re:ゼロから始める異世界生活", artist: "高橋李依" },
-    { year: 2016, title: "ninelie", anime: "甲鉄城のカバネリ", artist: "Aimer with chelly (EGOIST)" },
-    { year: 2016, title: "Refrain Boy", anime: "モブサイコ100", artist: "ALL OFF" },
-    { year: 2016, title: "ユメ語るよりユメ歌おう", anime: "ラブライブ!サンシャイン!!", artist: "Aqours" },
 
-    // --- 2017年 ---
-    { year: 2017, title: "ピースサイン", anime: "僕のヒーローアカデミア", artist: "米津玄師" },
-    { year: 2017, title: "打上花火", anime: "打ち上げ花火、下から見るか?横から見るか?", artist: "DAOKO×米津玄師" },
-    { year: 2017, title: "ようこそジャパリパークへ", anime: "けものフレンズ", artist: "どうぶつビスケッツ×PPP" },
-    { year: 2017, title: "心臓を捧げよ!", anime: "進撃の巨人 Season 2", artist: "Linked Horizon" },
-    { year: 2017, title: "ステップアップLOVE", anime: "血界戦線 & BEYOND", artist: "岡村靖幸×DAOKO" },
-    { year: 2017, title: "fake town baby", anime: "血界戦線 & BEYOND", artist: "UNISON SQUARE GARDEN" },
-    { year: 2017, title: "Here", anime: "魔法使いの嫁", artist: "JUNNA" },
-    { year: 2017, title: "Deep in Abyss", anime: "メイドインアビス", artist: "リコ (富田美憂) & レグ (伊瀬茉莉也)" },
-    { year: 2017, title: "空に歌えば", anime: "僕のヒーローアカデミア", artist: "amazarashi" },
-    { year: 2017, title: "だから、ひとりじゃない", anime: "僕のヒーローアカデミア", artist: "Little Glee Monster" },
-    { year: 2017, title: "夕暮れの鳥", anime: "進撃の巨人 Season 2", artist: "神聖かまってちゃん" },
-    { year: 2017, title: "環-cycle-", anime: "魔法使いの嫁", artist: "糸奇はな" },
-    { year: 2017, title: "旅の左手、果ての右手", anime: "メイドインアビス", artist: "リコ (富田美憂)、レグ (伊瀬茉莉也)、ナナチ (井澤詩織)" },
-    { year: 2017, title: "トモダチのうた", anime: "けものフレンズ", artist: "PPP" },
+    // --- ようこそ実力至上主義の教室へ ---
+    { year: 2017, title: "Caste Room", anime: "ようこそ実力至上主義の教室へ", artist: "ZAQ" },
 
-// --- 2018年 ---
-    { year: 2018, title: "Nameless Story", anime: "転生したらスライムだった件", artist: "寺島拓篤" },
-    { year: 2018, title: "ADAMAS", anime: "ソードアート・オンライン アリシゼーション", artist: "LiSA" },
-    { year: 2018, title: "フィクション", anime: "ヲタクに恋は難しい", artist: "sumika" },
-    { year: 2018, title: "Fighting Gold", anime: "ジョジョの奇妙な冒険 黄金の風", artist: "Coda" },
-    { year: 2018, title: "ODD FUTURE", anime: "僕のヒーローアカデミア", artist: "UVERworld" },
-    { year: 2018, title: "流星", anime: "ソードアート・オンライン オルタナティブ ガンゲイル・オンライン", artist: "藍井エイル" },
-    { year: 2018, title: "徒花ネクロマンシー", anime: "ゾンビランドサガ", artist: "フランシュシュ" },
-    { year: 2018, title: "Another colony", anime: "転生したらスライムだった件", artist: "TRUE" },
-    { year: 2018, title: "アイリス", anime: "ソードアート・オンライン アリシゼーション", artist: "藍井エイル" },
-    { year: 2018, title: "キミの隣", anime: "ヲタクに恋は難しい", artist: "halca" },
-    { year: 2018, title: "Make my story", anime: "僕のヒーローアカデミア", artist: "Lenny code fiction" },
-    { year: 2018, title: "光へ", anime: "ゾンビランドサガ", artist: "フランシュシュ" },
-    { year: 2018, title: "POP TEAM EPIC", anime: "ポプテピピック", artist: "上坂すみれ" },
+    // --- 幼女戦記 ---
+    { year: 2017, title: "JINGO JUNGLE", anime: "幼女戦記", artist: "MYTH & ROID" },
 
-    // --- 2019年 ---
-    { year: 2019, title: "Resister", anime: "ソードアート・オンライン アリシゼーション", artist: "綾野ましろ" },
-    { year: 2019, title: "forget-me-not", anime: "ソードアート・オンライン アリシゼーション", artist: "ReoNa" },
-    { year: 2019, title: "紅蓮華", anime: "鬼滅の刃", artist: "LiSA" },
-    { year: 2019, title: "インフェルノ", anime: "炎炎ノ消防隊", artist: "Mrs. GREEN APPLE" },
-    { year: 2019, title: "愛にできることはまだあるかい", anime: "天気の子", artist: "RADWIMPS" },
-    { year: 2019, title: "火炎", anime: "どろろ", artist: "女王蜂" },
+    // --- ブラッククローバー ---
+    { year: 2017, title: "ハルカミライ", anime: "ブラッククローバー", artist: "感覚ピエロ" },
+
+    // --- Dr.STONE ---
     { year: 2019, title: "Good Morning World!", anime: "Dr.STONE", artist: "BURNOUT SYNDROMES" },
-    { year: 2019, title: "ポラリス", anime: "僕のヒーローアカデミア", artist: "BLUE ENCOUNT" },
-    { year: 2019, title: "裏切り者のレクイエム", anime: "ジョジョの奇妙な冒険 黄金の風", artist: "ハセガワダイスケ" },
-    { year: 2019, title: "ラブ・ドラマティック", anime: "かぐや様は告らせたい〜天才たちの恋愛頭脳戦〜", artist: "鈴木雅之" },
-    { year: 2019, title: "from the edge", anime: "鬼滅の刃", artist: "FictionJunction feat. LiSA" },
-    { year: 2019, title: "veil", anime: "炎炎ノ消防隊", artist: "須田景凪" },
-    { year: 2019, title: "Grand Escape", anime: "天気の子", artist: "RADWIMPS feat.三浦透子" },
-    { year: 2019, title: "大丈夫", anime: "天気の子", artist: "RADWIMPS" },
-    { year: 2019, title: "さよならごっこ", anime: "どろろ", artist: "amazarashi" },
-    { year: 2019, title: "三原色", anime: "Dr.STONE", artist: "PELICAN FANCLUB" },
-    { year: 2019, title: "航海の唄", anime: "僕のヒーローアカデミア", artist: "さユり" },
 
-    // --- 2020年 ---
-    { year: 2020, title: "廻廻奇譚", anime: "呪術廻戦", artist: "Eve" },
-    { year: 2020, title: "LOST IN PARADISE", anime: "呪術廻戦", artist: "ALI feat. AKLO" },
-    { year: 2020, title: "炎", anime: "劇場版 鬼滅の刃 無限列車編", artist: "LiSA" },
-    { year: 2020, title: "ANIMA", anime: "ソードアート・オンライン アリシゼーション War of Underworld", artist: "ReoNa" },
-    { year: 2020, title: "Realize", anime: "Re:ゼロから始める異世界生活 2nd season", artist: "鈴木このみ" },
-    { year: 2020, title: "虹", anime: "STAND BY ME ドラえもん 2", artist: "菅田将暉" },
-    { year: 2020, title: "DADDY ! DADDY ! DO !", anime: "かぐや様は告らせたい?〜天才たちの恋愛頭脳戦〜", artist: "鈴木雅之 feat. 鈴木愛理" },
-    { year: 2020, title: "I will...", anime: "ソードアート・オンライン アリシゼーション War of Underworld", artist: "藍井エイル" },
-    { year: 2020, title: "Memento", anime: "Re:ゼロから始める異世界生活 2nd season", artist: "nonoc" },
-    { year: 2020, title: "風に吹かれて", anime: "かぐや様は告らせたい?〜天才たちの恋愛頭脳戦〜", artist: "福原遥" },
-    { year: 2020, title: "Will", anime: "劇場版 ヴァイオレット・エヴァーガーデン", artist: "TRUE" },
+    // --- 五等分の花嫁 ---
+    { year: 2019, title: "五等分の気持ち", anime: "五等分の花嫁", artist: "中野家の五つ子" },
 
-    // --- 2021年（移行枠） ---
-    { year: 2021, title: "VIVID VICE", anime: "呪術廻戦", artist: "Who-ya Extended" },
-    { year: 2021, title: "give it back", anime: "呪術廻戦", artist: "Cö shu Nie" },    
+    // --- 約束のネバーランド ---
+    { year: 2019, title: "Touch off", anime: "約束のネバーランド", artist: "UVERworld" },
 
-// --- 2016年（過去枠修正分） ---
-    { year: 2016, title: "嫌いなはずだった", anime: "好きになるその瞬間を。〜告白実行委員会〜", artist: "HoneyWorks feat. 鎖那" },
+    // --- ヴァイオレット・エヴァーガーデン ---
+    { year: 2018, title: "Sincerely", anime: "ヴァイオレット・エヴァーガーデン", artist: "TRUE" },
 
-    // --- 2021年 ---
-    { year: 2021, title: "VIVID VICE", anime: "呪術廻戦", artist: "Who-ya Extended" },
-    { year: 2021, title: "give it back", anime: "呪術廻戦", artist: "Cö shu Nie" },
-    { year: 2021, title: "Storyteller", anime: "転生したらスライムだった件 第2期", artist: "TRUE" },
-    { year: 2021, title: "Cry Baby", anime: "東京リベンジャーズ", artist: "Official髭男dism" },
-    { year: 2021, title: "一途", anime: "劇場版 呪術廻戦 0", artist: "King Gnu" },
-    { year: 2021, title: "逆夢", anime: "劇場版 呪術廻戦 0", artist: "King Gnu" },
-    { year: 2021, title: "明け星", anime: "鬼滅の刃 無限列車編", artist: "LiSA" },
-    { year: 2021, title: "白銀", anime: "鬼滅の刃 無限列車編", artist: "LiSA" },
-    { year: 2021, title: "怪物", anime: "BEASTARS", artist: "YOASOBI" },
-    { year: 2021, title: "優しい彗星", anime: "BEASTARS", artist: "YOASOBI" },
-    { year: 2021, title: "One Last Kiss", anime: "シン・エヴァンゲリオン劇場版", artist: "宇多田ヒカル" },
-    { year: 2021, title: "Sing My Pleasure", anime: "Vivy -Fluorite Eye's Song-", artist: "ヴィヴィ (八木海莉)" },
-    { year: 2021, title: "Like Flames", anime: "転生したらスライムだった件 第2期", artist: "MindaRyn" },
-    { year: 2021, title: "STORYSEEKER", anime: "転生したらスライムだった件 第2期", artist: "STEREO DIVE FOUNDATION" },
-    { year: 2021, title: "Reincarnate", anime: "転生したらスライムだった件 第2期", artist: "寺島拓篤" },
-    { year: 2021, title: "トーキョーワンダー。", anime: "東京リベンジャーズ", artist: "泣き虫☔" },
+    // --- 青春ブタ野郎はバニーガール先輩の夢を見ない ---
+    { year: 2018, title: "君のせい", anime: "青春ブタ野郎はバニーガール先輩の夢を見ない", artist: "the peggies" },
 
-    // --- 2022年 ---
-    { year: 2022, title: "残響散歌", anime: "鬼滅の刃 遊郭編", artist: "Aimer" },
-    { year: 2022, title: "ミックスナッツ", anime: "SPY×FAMILY", artist: "Official髭男dism" },
-    { year: 2022, title: "喜劇", anime: "SPY×FAMILY", artist: "星野源" },
-    { year: 2022, title: "SOUVENIR", anime: "SPY×FAMILY", artist: "BUMP OF CHICKEN" },
-    { year: 2022, title: "色彩", anime: "SPY×FAMILY", artist: "yama" },
-    { year: 2022, title: "KICK BACK", anime: "チェンソーマン", artist: "米津玄師" },
-    { year: 2022, title: "CHAINSAW BLOOD", anime: "チェンソーマン", artist: "Vaundy" },
-    { year: 2022, title: "ちゅ、多様性。", anime: "チェンソーマン", artist: "ano" },
-    { year: 2022, title: "祝福", anime: "機動戦士ガンダム 水星の魔女", artist: "YOASOBI" },
-    { year: 2022, title: "君よ 気高くあれ", anime: "機動戦士ガンダム 水星の魔女", artist: "シユイ" },
-    { year: 2022, title: "新時代", anime: "ONE PIECE FILM RED", artist: "Ado" },
-    { year: 2022, title: "私は最強", anime: "ONE PIECE FILM RED", artist: "Ado" },
-    { year: 2022, title: "青春コンプレックス", anime: "ぼっち・ざ・ろっく！", artist: "結束バンド" },
-    { year: 2022, title: "花の塔", anime: "リコリス・リコイル", artist: "さユり" },
-    { year: 2022, title: "悪魔の子", anime: "進撃の巨人 The Final Season Part 2", artist: "ヒグチアイ" },
+    // --- 宇宙よりも遠い場所 ---
+    { year: 2018, title: "Heartyにしてよ", anime: "宇宙よりも遠い場所", artist: "saya" },
 
-  // --- 2023年 ---
-    { year: 2023, title: "アイドル", anime: "【推しの子】", artist: "YOASOBI" },
-    { year: 2023, title: "青のすみか", anime: "呪術廻戦 懐玉・玉折", artist: "キタニタツヤ" },
-    { year: 2023, title: "SPECIALZ", anime: "呪術廻戦 渋谷事変", artist: "King Gnu" },
-    { year: 2023, title: "勇者", anime: "葬送のフリーレン", artist: "YOASOBI" },
-    { year: 2023, title: "絆ノ奇跡", anime: "鬼滅の刃 刀鍛冶の里編", artist: "MAN WITH A MISSION × milet" },
-    { year: 2023, title: "花になって", anime: "薬屋のひとりごと", artist: "緑黄色社会" },
-    { year: 2023, title: "メフィスト", anime: "【推しの子】", artist: "女王蜂" },
-    { year: 2023, title: "燈", anime: "呪術廻戦 懐玉・玉折", artist: "崎山蒼志" },
-    { year: 2023, title: "more than words", anime: "呪術廻戦 渋谷事変", artist: "羊文学" },
-    { year: 2023, title: "Anytime Anywhere", anime: "葬送のフリーレン", artist: "milet" },
-    { year: 2023, title: "コイコガレ", anime: "鬼滅の刃 刀鍛冶の里編", artist: "milet × MAN WITH A MISSION" },
-    { year: 2023, title: "アイコトバ", anime: "薬屋のひとりごと", artist: "アイナ・ジ・エンド" },
-    { year: 2023, title: "slash", anime: "機動戦士ガンダム 水星の魔女", artist: "yama" },
-    { year: 2023, title: "W●RK", anime: "地獄楽", artist: "millennium parade × 椎名林檎" },
-    { year: 2023, title: "ホワイトノイズ", anime: "東京リベンジャーズ 聖夜決戦編", artist: "Official髭男dism" },
+    // --- ゆるキャン△ ---
+    { year: 2018, title: "SHINY DAYS", anime: "ゆるキャン△", artist: "亜咲花" },
 
-    // --- 2024年 ---
-    { year: 2024, title: "Bling-Bang-Bang-Born", anime: "マッシュル-MASHLE- 神覚者候補選抜試験編", artist: "Creepy Nuts" },
-    { year: 2024, title: "ライラック", anime: "忘却バッテリー", artist: "Mrs. GREEN APPLE" },
-    { year: 2024, title: "オトノケ", anime: "ダンダダン", artist: "Creepy Nuts" },
-    { year: 2024, title: "ファタール", anime: "【推しの子】 第2期", artist: "GEMN" },
-    { year: 2024, title: "晴る", anime: "葬送のフリーレン", artist: "ヨルシカ" },
-    { year: 2024, title: "オレンジ", anime: "劇場版ハイキュー!! ゴミ捨て場の決戦", artist: "SPYAIR" },
-    { year: 2024, title: "アンビバレント", anime: "薬屋のひとりごと", artist: "Uru" },
-    { year: 2024, title: "夢幻", anime: "鬼滅の刃 柱稽古編", artist: "MY FIRST STORY × HYDE" },
-    { year: 2024, title: "シカ色デイズ", anime: "しかのこのこのここしたんたん", artist: "シカ部" },
-    { year: 2024, title: "忘レナ唄", anime: "忘却バッテリー", artist: "マカロニえんぴつ" },
-    { year: 2024, title: "TAIDADA", anime: "ダンダダン", artist: "ZUTOMAYO" },
-    { year: 2024, title: "Burning", anime: "【推しの子】 第2期", artist: "羊文学" },
-    { year: 2024, title: "愛は薬", anime: "薬屋のひとりごと", artist: "wacci" },
-    { year: 2024, title: "永久 -トコシエ-", anime: "鬼滅の刃 柱稽古編", artist: "HYDE × MY FIRST STORY" },
-    { year: 2024, title: "FREEDOM", anime: "機動戦士ガンダムSEED FREEDOM", artist: "西川貴教 with t.komuro" },
-    { year: 2024, title: "PEACEKEEPER", anime: "転生したらスライムだった件 第3期", artist: "TRUE" },
-    { year: 2024, title: "レナセールセレナーデ", anime: "転生したらスライムだった件 第3期", artist: "ももいろクローバーZ" },
-    { year: 2024, title: "Miracle Soup", anime: "転生したらスライムだった件 第3期", artist: "岡咲美保" },
-    { year: 2024, title: "Same Blue", anime: "アオのハコ", artist: "Official髭男dism" },
-    { year: 2024, title: "カーテンコール", anime: "僕のヒーローアカデミア", artist: "優里" },
-    { year: 2024, title: "絶対零度", anime: "WIND BREAKER", artist: "なとり" },
-    { year: 2024, title: "プランA", anime: "逃げ上手の若君", artist: "DISH//" },
-    { year: 2024, title: "UNDEAD", anime: "〈物語〉シリーズ オフ&モンスターシーズン", artist: "YOASOBI" },
-    { year: 2024, title: "ホムンクルス", anime: "僕のヒーローアカデミア THE MOVIE ユアネクスト", artist: "Vaundy" },
+    // --- ノーゲーム・ノーライフ ---
+    { year: 2014, title: "This game", anime: "ノーゲーム・ノーライフ", artist: "鈴木このみ" },
 
-    // --- 2025年 ---
-    { year: 2025, title: "BOW AND ARROW", anime: "メダリスト", artist: "米津玄師" },
-    { year: 2025, title: "走れSAKAMOTO", anime: "SAKAMOTO DAYS", artist: "Vaundy" },
-    { year: 2025, title: "斬撃", anime: "炎炎ノ消防隊 参ノ章", artist: "Mrs. GREEN APPLE" },
-    { year: 2025, title: "ネバーランド", anime: "薬屋のひとりごと 第2期", artist: "Uru" },
-    { year: 2025, title: "サイレン", anime: "劇場版チェンソーマン レゼ篇", artist: "米津玄師" },
-    { year: 2025, title: "アポリア", anime: "チ。 —地球の運動について—", artist: "ヨルシカ" },
+    // --- 金色のガッシュベル!! ---
+    { year: 2003, title: "カサブタ", anime: "金色のガッシュベル!!", artist: "千綿ヒロシ" },
+
+    // --- ポケットモンスター ---
+    { year: 1997, title: "めざせポケモンマスター", anime: "ポケットモンスター", artist: "松本梨香" },
+
+    // --- ポケットモンスター アドバンスジェネレーション ---
+    { year: 2002, title: "ADVANCED ADVENTURE", anime: "ポケットモンスター アドバンスジェネレーション", artist: "GARDEN" }
+
         ];
 
         let peer = null, myId = "", myName = "", roomCode = "";
@@ -1033,7 +1127,7 @@ const ANISON_DATABASE = [
         function addLog(msg) {
             if (!roomData.logs) roomData.logs = [];
             roomData.logs.unshift(msg);
-            if (roomData.logs.length > 40) roomData.logs.pop();
+            if (roomData.logs.length > 30) roomData.logs.pop();
         }
 
         function handleCreateRoom() {
@@ -1045,22 +1139,18 @@ const ANISON_DATABASE = [
             if (!roomCode) { alert("合言葉を入力してください"); return; }
 
             isHost = true;
-            try {
-                peer = new Peer(`${PREFIX}${roomCode}-host`);
-            } catch (e) {
-                peer = new Peer();
-            }
+            peer = new Peer(`${PREFIX}${roomCode}-host`);
 
             peer.on('open', (id) => {
                 myId = id;
                 roomData.hostId = myId;
-                roomData.players = { [myId]: { id: myId, name: myName, life: 2, isAlive: true, rank: 0, hasSkipped: false } };
+                roomData.players = { [myId]: { id: myId, name: myName, life: 2, isAlive: true, rank: 0 } };
                 setupLobbyUI();
                 renderRoomState();
             });
 
             peer.on('error', (err) => {
-                alert("接続エラーが発生しました。別の合言葉をお試しいただくか、数秒後に再度お試しください。");
+                alert("その合言葉は既に使用されています。別の合言葉をお使いください。");
             });
 
             peer.on('connection', (conn) => {
@@ -1127,12 +1217,10 @@ const ANISON_DATABASE = [
             if (data.type === 'JOIN') {
                 if (roomData.status !== 'LOBBY') return;
                 connections[conn.peer] = conn;
-                roomData.players[data.id] = { id: data.id, name: data.name, life: roomData.initialLife, isAlive: true, rank: 0, hasSkipped: false };
+                roomData.players[data.id] = { id: data.id, name: data.name, life: roomData.initialLife, isAlive: true, rank: 0 };
                 broadcastState();
             } else if (data.type === 'PLACE_CARD') {
                 processPlaceCard(data.insertIndex);
-            } else if (data.type === 'SKIP_TURN') {
-                processSkipTurn();
             } else if (data.type === 'NEXT_TURN') {
                 processNextTurn();
             } else if (data.type === 'RECOVER_RETRY') {
@@ -1160,7 +1248,6 @@ const ANISON_DATABASE = [
                 p.life = roomData.initialLife;
                 p.isAlive = true;
                 p.rank = 0;
-                p.hasSkipped = false;
             });
 
             roomData.eliminatedOrder = [];
@@ -1174,7 +1261,7 @@ const ANISON_DATABASE = [
             startSong.previewUrl = await fetchAudioPreview(startSong);
             roomData.timeline.push(startSong);
 
-            addLog(`ゲーム開始！最初のカードは【${startSong.year}年 / ${startSong.title} (${startSong.anime})]`);
+            addLog(`ゲーム開始！最初のカードは【${startSong.year}年】`);
 
             await prepareNextSong();
 
@@ -1205,6 +1292,7 @@ const ANISON_DATABASE = [
                               (targetYear === leftYear) || 
                               (targetYear === rightYear);
 
+            // 生存プレイヤーのリストから現在の手番プレイヤーを取得
             const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
             const currentPlayerId = activePlayerIds[roomData.currentTurnIndex % activePlayerIds.length];
             const player = roomData.players[currentPlayerId];
@@ -1212,18 +1300,19 @@ const ANISON_DATABASE = [
             if (isCorrect) {
                 playSound('correct');
                 timeline.splice(insertIndex, 0, song);
-                addLog(`🎯 ${player.name} 正解！ [${song.title} / ${song.anime} / ${song.year}年]`);
+                addLog(`🎯 ${player.name} 正解！ [${song.title} (${song.year}年)]`);
                 roomData.lastResult = { isCorrect: true, song: song, playerName: player.name };
             } else {
                 playSound('wrong');
                 player.life -= 1;
-                addLog(`❌ ${player.name} 不正解... [${song.title} / ${song.anime} / 正解:${song.year}年] 残りライフ: ${player.life}`);
+                addLog(`❌ ${player.name} 不正解... [${song.title} (${song.year}年)] 残りライフ: ${player.life}`);
                 if (player.life <= 0) {
                     player.isAlive = false;
                     roomData.eliminatedOrder.unshift(player.id);
                     addLog(`💀 ${player.name} が脱落しました。`);
                 }
 
+                // 失敗した位置の文脈情報を作成
                 let positionDesc = "";
                 if (insertIndex === 0) {
                     positionDesc = `一番左端 (${timeline[0].title} / ${timeline[0].year}年 より前)`;
@@ -1256,42 +1345,6 @@ const ANISON_DATABASE = [
             broadcastState();
         }
 
-        window.handleSkipTurn = function() {
-            playSound('tap');
-            if (isHost) {
-                processSkipTurn();
-            } else {
-                hostConn.send({ type: 'SKIP_TURN' });
-            }
-        };
-
-        async function processSkipTurn() {
-            if (roomData.lastResult) return;
-
-            const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-            const currentPlayerId = activePlayerIds[roomData.currentTurnIndex % activePlayerIds.length];
-            const player = roomData.players[currentPlayerId];
-
-            if (!player || player.hasSkipped || !player.isAlive) return;
-
-            player.hasSkipped = true;
-            const song = roomData.currentSong;
-            
-            let insertIdx = 0;
-            for (let i = 0; i < roomData.timeline.length; i++) {
-                if (song.year >= roomData.timeline[i].year) {
-                    insertIdx = i + 1;
-                }
-            }
-            roomData.timeline.splice(insertIdx, 0, song);
-
-            addLog(`⏭️ ${player.name} がスキップ使用！ [${song.title} / ${song.anime} / ${song.year}年]`);
-            roomData.lastResult = { isCorrect: true, song: song, playerName: player.name, skipped: true };
-
-            await prepareNextSong();
-            broadcastState();
-        }
-
         window.proceedToNextTurn = function() {
             playSound('tap');
             if (!isHost) {
@@ -1308,6 +1361,7 @@ const ANISON_DATABASE = [
                 return;
             }
 
+            // 生存プレイヤー基準でインデックスを進める（脱落者飛ばし対策の完全な同期）
             const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
             if (activePlayerIds.length > 0) {
                 roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % activePlayerIds.length;
@@ -1320,7 +1374,7 @@ const ANISON_DATABASE = [
             playSound('tap');
             const display = document.getElementById('errorSongTitleDisplay');
             if (display && roomData.currentSong) {
-                display.innerText = `正解の楽曲情報: ${roomData.currentSong.title} (${roomData.currentSong.anime}) / アーティスト: ${roomData.currentSong.artist} / 年: ${roomData.currentSong.year}年`;
+                display.innerText = `正解の楽曲情報: ${roomData.currentSong.title} (${roomData.currentSong.anime}) / アーティスト: ${roomData.currentSong.artist}`;
                 display.classList.remove('hidden');
             }
         };
@@ -1335,11 +1389,12 @@ const ANISON_DATABASE = [
         };
 
         async function processRecoverAndRetry() {
-            const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id]);
+            const activePlayerIds = (roomData.turnOrder || Object.keys(roomData.players)).filter(id => roomData.players[id] && roomData.players[id].isAlive);
             const currentPlayerId = activePlayerIds[roomData.currentTurnIndex % activePlayerIds.length];
             const player = roomData.players[currentPlayerId];
 
             if (player) {
+                // AI選曲エラー・データ不備の補償としてライフを1回復
                 player.life = Math.min(roomData.initialLife, player.life + 1);
                 if (!player.isAlive) {
                     player.isAlive = true;
@@ -1379,7 +1434,6 @@ const ANISON_DATABASE = [
                 p.life = roomData.initialLife;
                 p.isAlive = true;
                 p.rank = 0;
-                p.hasSkipped = false;
             });
 
             const audioPlayer = document.getElementById('audioPlayer');
@@ -1404,8 +1458,8 @@ const ANISON_DATABASE = [
                     playerList.innerHTML = '';
                     Object.values(roomData.players).forEach(p => {
                         const div = document.createElement('div');
-                        div.className = "flex items-center justify-between bg-slate-950/90 border border-purple-500/30 p-4 rounded-2xl shadow";
-                        div.innerHTML = `<span class="font-bold text-lg text-white">${escapeHtml(p.name)}</span>`;
+                        div.className = "flex items-center justify-between bg-slate-950/80 border border-purple-500/20 p-4 rounded-2xl";
+                        div.innerHTML = `<span class="font-bold text-white">${escapeHtml(p.name)}</span>`;
                         playerList.appendChild(div);
                     });
                 }
@@ -1422,17 +1476,6 @@ const ANISON_DATABASE = [
                 
                 const isMyTurn = (currentTurnPlayerId === myId) && !roomData.lastResult;
 
-                const myPlayer = roomData.players[myId];
-                const btnSkip = document.getElementById('btnSkipTurn');
-                if (btnSkip) {
-                    if (isMyTurn && myPlayer && myPlayer.isAlive && !myPlayer.hasSkipped) {
-                        btnSkip.classList.remove('hidden');
-                        document.getElementById('skipButtonText').innerText = "スキップする (残り1回)";
-                    } else {
-                        btnSkip.classList.add('hidden');
-                    }
-                }
-
                 const pStatusList = document.getElementById('gamePlayerStatusList');
                 pStatusList.innerHTML = '';
                 
@@ -1443,7 +1486,7 @@ const ANISON_DATABASE = [
                     const isTurn = p.id === currentTurnPlayerId;
                     const card = document.createElement('div');
                     
-                    card.className = `p-4 rounded-2xl border-2 flex items-center justify-between shadow-xl transition ${isTurn ? 'bg-gradient-to-r from-purple-900/90 to-indigo-900/90 border-amber-400 ring-2 ring-amber-400/60' : 'bg-slate-900/90 border-purple-500/30'} ${!p.isAlive ? 'opacity-40 grayscale line-through' : ''}`;
+                    card.className = `p-4 rounded-2xl border-2 flex items-center justify-between shadow-lg transition ${isTurn ? 'bg-gradient-to-r from-purple-900/80 to-indigo-900/80 border-amber-400 ring-2 ring-amber-400/50' : 'bg-slate-900/90 border-purple-500/20'} ${!p.isAlive ? 'opacity-40 grayscale line-through' : ''}`;
                     
                     let hearts = '';
                     for (let i = 0; i < p.life; i++) hearts += '❤️';
@@ -1451,10 +1494,10 @@ const ANISON_DATABASE = [
 
                     card.innerHTML = `
                         <div class="flex items-center space-x-3">
-                            <span class="text-xs md:text-sm font-black px-2.5 py-1 rounded-lg ${isTurn ? 'bg-amber-400 text-slate-950' : 'bg-purple-950 text-purple-300'}">${isTurn ? '手番' : '待機'}</span>
-                            <span class="font-black text-lg text-white truncate max-w-[120px]">${escapeHtml(p.name)}</span>
+                            <span class="text-xs ${isTurn ? 'bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded' : 'text-purple-400'}">${isTurn ? '手番' : '待機'}</span>
+                            <span class="font-black text-base text-white truncate max-w-[110px]">${escapeHtml(p.name)}</span>
                         </div>
-                        <div class="text-xl font-black tracking-wider text-rose-400">${hearts}</div>
+                        <div class="text-lg font-black tracking-wider text-rose-400">${hearts}</div>
                     `;
                     pStatusList.appendChild(card);
                 });
@@ -1488,27 +1531,27 @@ const ANISON_DATABASE = [
 
                 roomData.timeline.forEach((song, idx) => {
                     const btnInsert = document.createElement('button');
-                    btnInsert.className = `flex-shrink-0 px-3 py-6 rounded-2xl border-2 border-dashed transition flex flex-col items-center justify-center font-black text-xs ${isMyTurn ? 'bg-purple-500/30 border-purple-400 hover:bg-purple-500/50 text-white shadow-md active:scale-95' : 'bg-slate-900/30 border-slate-700 text-slate-600 cursor-not-allowed opacity-40'}`;
-                    btnInsert.innerText = '挟む';
+                    btnInsert.className = `flex-shrink-0 px-4 py-8 rounded-2xl border-2 border-dashed transition flex flex-col items-center justify-center font-black text-sm ${isMyTurn ? 'bg-purple-500/30 border-purple-400 hover:bg-purple-500/50 text-white shadow-lg active:scale-95' : 'bg-slate-900/30 border-slate-700 text-slate-600 cursor-not-allowed opacity-50'}`;
+                    btnInsert.innerText = 'ここに\n挟む';
                     btnInsert.disabled = !isMyTurn;
                     btnInsert.onclick = () => { playSound('tap'); submitCardPlacement(idx); };
                     timelineContainer.appendChild(btnInsert);
 
                     const card = document.createElement('div');
-                    card.className = "flex-shrink-0 w-40 h-52 bg-gradient-to-b from-slate-900 to-indigo-950 border-2 border-purple-400/60 rounded-2xl p-3.5 flex flex-col justify-between items-center text-center shadow-xl";
+                    card.className = "flex-shrink-0 w-36 h-48 bg-gradient-to-b from-slate-900 to-indigo-950 border-2 border-purple-400/50 rounded-2xl p-3 flex flex-col justify-between items-center text-center shadow-xl";
                     card.innerHTML = `
-                        <span class="text-2xl font-black font-mono text-amber-300 mt-1">${song.year}年</span>
-                        <div class="space-y-1.5 w-full overflow-hidden">
-                            <div class="text-sm font-black text-white leading-tight line-clamp-2">${escapeHtml(song.title)}</div>
-                            <div class="text-xs font-bold text-purple-300 tracking-wide line-clamp-1 bg-purple-950/60 px-2 py-0.5 rounded-md border border-purple-500/30">${escapeHtml(song.anime)}</div>
+                        <span class="text-2xl font-black font-mono text-amber-300 mt-2">${song.year}年</span>
+                        <div class="space-y-1">
+                            <div class="text-xs font-bold text-white line-clamp-2">${escapeHtml(song.title)}</div>
+                            <div class="text-[10px] text-purple-300/80 line-clamp-1">${escapeHtml(song.anime)}</div>
                         </div>
                     `;
                     timelineContainer.appendChild(card);
                 });
 
                 const btnLastInsert = document.createElement('button');
-                btnLastInsert.className = `flex-shrink-0 px-3 py-6 rounded-2xl border-2 border-dashed transition flex flex-col items-center justify-center font-black text-xs ${isMyTurn ? 'bg-purple-500/30 border-purple-400 hover:bg-purple-500/50 text-white shadow-md active:scale-95' : 'bg-slate-900/30 border-slate-700 text-slate-600 cursor-not-allowed opacity-40'}`;
-                btnLastInsert.innerText = '挟む';
+                btnLastInsert.className = `flex-shrink-0 px-4 py-8 rounded-2xl border-2 border-dashed transition flex flex-col items-center justify-center font-black text-sm ${isMyTurn ? 'bg-purple-500/30 border-purple-400 hover:bg-purple-500/50 text-white shadow-lg active:scale-95' : 'bg-slate-900/30 border-slate-700 text-slate-600 cursor-not-allowed opacity-50'}`;
+                btnLastInsert.innerText = 'ここに\n挟む';
                 btnLastInsert.disabled = !isMyTurn;
                 btnLastInsert.onclick = () => { playSound('tap'); submitCardPlacement(roomData.timeline.length); };
                 timelineContainer.appendChild(btnLastInsert);
@@ -1521,19 +1564,19 @@ const ANISON_DATABASE = [
                     resultBox.classList.remove('hidden');
                     const res = roomData.lastResult;
                     if (res.isCorrect) {
-                        resultBox.className = "glass-panel p-6 rounded-3xl border-2 border-emerald-400 text-center space-y-3 bg-emerald-950/40 shadow-2xl";
+                        resultBox.className = "glass-panel p-5 rounded-3xl border-2 border-emerald-400 text-center space-y-2 bg-emerald-950/30";
                         resultContent.innerHTML = `
-                            <h4 class="text-3xl font-black text-emerald-300">${res.skipped ? '⏭️ スキップ成功！' : '🎯 正解！！'}</h4>
-                            <p class="text-base font-bold text-white">曲名: 「${escapeHtml(res.song.title)}」 (${res.song.anime})</p>
-                            <p class="text-sm text-emerald-200">リリース年: <strong class="text-amber-300 text-lg font-mono">${res.song.year}年</strong></p>
+                            <h4 class="text-2xl font-black text-emerald-300">🎯 正解！！</h4>
+                            <p class="text-sm font-bold text-white">曲名: 「${escapeHtml(res.song.title)}」 (${res.song.anime})</p>
+                            <p class="text-xs text-emerald-200">リリース年: <strong class="text-amber-300 text-base font-mono">${res.song.year}年</strong></p>
                         `;
                     } else {
-                        resultBox.className = "glass-panel p-6 rounded-3xl border-2 border-rose-500 text-center space-y-3 bg-rose-950/40 shadow-2xl";
+                        resultBox.className = "glass-panel p-5 rounded-3xl border-2 border-rose-500 text-center space-y-2 bg-rose-950/30";
                         resultContent.innerHTML = `
-                            <h4 class="text-3xl font-black text-rose-400">❌ 不正解...</h4>
-                            <p class="text-xs md:text-sm font-bold text-rose-200">失敗した挿入場所: <span class="text-amber-300 font-mono">${escapeHtml(res.failedPositionDesc)}</span></p>
-                            <p class="text-base font-bold text-white">曲名: 「${escapeHtml(res.song.title)}」 (${res.song.anime})</p>
-                            <p class="text-sm text-rose-200">正しいリリース年: <strong class="text-amber-300 text-lg font-mono">${res.song.year}年</strong></p>
+                            <h4 class="text-2xl font-black text-rose-400">❌ 不正解...</h4>
+                            <p class="text-xs font-bold text-rose-200">失敗した挿入場所: <span class="text-amber-300 font-mono">${escapeHtml(res.failedPositionDesc)}</span></p>
+                            <p class="text-sm font-bold text-white">曲名: 「${escapeHtml(res.song.title)}」 (${res.song.anime})</p>
+                            <p class="text-xs text-rose-200">正しいリリース年: <strong class="text-amber-300 text-base font-mono">${res.song.year}年</strong></p>
                         `;
                     }
                     if (btnNextTurn) {
@@ -1567,13 +1610,13 @@ const ANISON_DATABASE = [
                         if (!player) return;
 
                         const item = document.createElement('div');
-                        item.className = `flex justify-between items-center p-4 rounded-2xl border ${idx === 0 ? 'bg-amber-500/20 border-amber-400/70 font-black' : 'bg-slate-900 border-purple-500/30'} shadow`;
+                        item.className = `flex justify-between items-center p-4 rounded-2xl border ${idx === 0 ? 'bg-amber-500/20 border-amber-400/60 font-black' : 'bg-slate-900 border-purple-500/20'}`;
                         item.innerHTML = `
                             <div class="flex items-center space-x-3">
-                                <span class="font-black text-xl ${idx === 0 ? 'text-amber-300' : 'text-purple-300'}">#${idx + 1}</span>
-                                <span class="font-bold text-lg text-white">${escapeHtml(player.name)}</span>
+                                <span class="font-black text-lg ${idx === 0 ? 'text-amber-300' : 'text-purple-300'}">#${idx + 1}</span>
+                                <span class="font-bold text-white">${escapeHtml(player.name)}</span>
                             </div>
-                            <span class="text-sm font-bold ${idx === 0 ? 'text-amber-300' : 'text-purple-300/70'}">${idx === 0 ? '👑 勝者' : '💀 脱落'}</span>
+                            <span class="text-xs font-bold ${idx === 0 ? 'text-amber-300' : 'text-purple-300/60'}">${idx === 0 ? '👑 勝者' : '💀 脱落'}</span>
                         `;
                         rankingList.appendChild(item);
                     });
