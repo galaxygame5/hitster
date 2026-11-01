@@ -215,7 +215,7 @@
                 
                 <audio id="audioPlayer" preload="auto" loop></audio>
 
-                <!-- AI選曲エラー補償システム（年代非表示で曲名・アニメ・アーティストのみ表示に修正） -->
+                <!-- AI選曲エラー補償システム（年代非表示で検索用情報のみ表示） -->
                 <div class="mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-5 rounded-2xl border border-rose-500/40 shadow-md">
                     <p class="text-xs md:text-sm font-bold text-rose-300">⚠️ AI選曲ゴミ・音源エラー補償システム</p>
                     <p class="text-xs text-rose-200/90 font-medium">※流れた曲が「カバー曲」「別曲」「選曲ミス」「再生不能」の場合に押してください。脱落後でもライフを1回復して手番をやり直せます。</p>
@@ -227,7 +227,7 @@
                             <i class="fa-solid fa-heart-circle-plus"></i> 【補償】ライフを1回復して手番をやり直す
                         </button>
                     </div>
-                    <!-- 年代を一切出さず、曲名・アニメ名・アーティスト名のみ表示するボックス -->
+                    <!-- 年代を一切出さず、検索用情報のみ表示するボックス -->
                     <div id="errorSongTitleDisplay" class="hidden text-sm md:text-base font-bold text-yellow-300 bg-slate-900 p-4 rounded-xl border border-yellow-500/40 mt-2 shadow-inner leading-relaxed"></div>
                 </div>
             </div>
@@ -283,7 +283,7 @@
     </main>
 
     <script>
-        const PREFIX = "anison-hitster-online-v36-";
+        const PREFIX = "anison-hitster-online-v38-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -346,12 +346,10 @@
         }
 
         // =========================================================================
-        // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）を記述してください】
-        // ご自身が所有・編集したいカスタム曲リストをここに書き換えてください。
-        // フォーマット例: { year: 1995, title: "残酷な天使のテーゼ", anime: "新世紀エヴァンゲリオン", artist: "高橋洋子" }
+        // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）をコピペしてください】
+        // ご自身でお持ちの曲リスト（オブジェクトの配列）をここに直接上書き・コピペしてください。
         // =========================================================================
-
-const ANISON_DATABASE = [
+ const ANISON_DATABASE = [
     // --- 1980年 (3曲) ---
     { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
     { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
@@ -948,6 +946,7 @@ const ANISON_DATABASE = [
     { year: 2025, title: "ネバーランド", anime: "薬屋のひとりごと 第2期", artist: "Uru" },
     { year: 2025, title: "サイレン", anime: "劇場版チェンソーマン レゼ篇", artist: "米津玄師" },
     { year: 2025, title: "アポリア", anime: "チ。 —地球の運動について—", artist: "ヨルシカ" },
+
 { year: 2015, title: "かくしん的☆めたまるふょ〜ぜっ!", anime: "干物妹！うまるちゃん", artist: "土間うまる（田中あいみ）" },
     { year: 2016, title: "fantastic dreamer", anime: "この素晴らしい世界に祝福を！", artist: "Machico" },
     { year: 2016, title: "HISTORY MAKER", anime: "ユーリ!!! on ICE", artist: "DEAN FUJIOKA" },
@@ -959,13 +958,13 @@ const ANISON_DATABASE = [
     { year: 2019, title: "Touch off", anime: "約束のネバーランド", artist: "UVERworld" },
     { year: 2018, title: "Sincerely", anime: "ヴァイオレット・エヴァーガーデン", artist: "TRUE" },
     { year: 2018, title: "君のせい", anime: "青春ブタ野郎はバニーガール先輩の夢を見ない", artist: "the peggies" },
-    { year: 2018, title: "The Girls Are Alright!", anime: "宇宙よりも遠い場所", artist: "saya" },
+    { year: 2018, title: "Heartyにしてよ", anime: "宇宙よりも遠い場所", artist: "saya" },
     { year: 2018, title: "SHINY DAYS", anime: "ゆるキャン△", artist: "亜咲花" },
     { year: 2014, title: "This game", anime: "ノーゲーム・ノーライフ", artist: "鈴木このみ" },
     { year: 2003, title: "カサブタ", anime: "金色のガッシュベル!!", artist: "千綿ヒロシ" },
     { year: 1997, title: "めざせポケモンマスター", anime: "ポケットモンスター", artist: "松本梨香" },
-    { year: 2002, title: "ADVANCED ADVENTURE", anime: "ポケットモンスター アドバンスジェネレーション", artist: "GARDEN" },
-    { year: 2011, title: "Kuusou Mesorogiwi", anime: "未来日記", artist: "妖精帝國" },
+    { year: 2002, title: "ADVANCED ADVENTURE", anime: "ポケットモンスター アドバンスジェネレーション", artist: "GARDEN" }
+{ year: 2011, title: "Kuusou Mesorogiwi", anime: "未来日記", artist: "妖精帝國" },
     { year: 2012, title: "abnormalize", anime: "PSYCHO-PASS サイコパス", artist: "凛として時雨" },
     { year: 2012, title: "Sparkling Daydream", anime: "中二病でも恋がしたい！", artist: "ZAQ" },
     { year: 2012, title: "DreamRiser", anime: "ガールズ＆パンツァー", artist: "ChouCho" },
@@ -978,8 +977,8 @@ const ANISON_DATABASE = [
     { year: 2015, title: "青春サツバツ論", anime: "暗殺教室", artist: "3年E組うた担" },
     { year: 2015, title: "Clattanoia", anime: "オーバーロード", artist: "OxT" },
     { year: 2015, title: "DREAM SOLISTER", anime: "響け！ユーフォニアム", artist: "TRUE" },
-    { year: 2015, title: "Hey World", anime: "ダンジョンに出会いを求めるのは間違っているだろうか", artist: "井口裕香" },
-    { year: 2007, title: "経験値上昇中☆", anime: "みなみけ", artist: "みなみけ3姉妹（佐藤利奈、井上麻里奈、茅原実里）" },
+    { year: 2015, title: "Hey World", anime: "ダンジョンに出会いを求めるのは間違っているだろうか", artist: "井口裕香" }
+{ year: 2007, title: "経験値上昇中☆", anime: "みなみけ", artist: "みなみけ3姉妹（佐藤利奈、井上麻里奈、茅原実里）" },
     { year: 2007, title: "人として軸がぶれている", anime: "さよなら絶望先生", artist: "大槻ケンヂと絶望少女達" },
     { year: 2008, title: "プレパレード", anime: "とらドラ！", artist: "逢坂大河（釘宮理恵）、櫛枝実乃梨（堀江由衣）、川嶋亜美（喜多村英梨）" },
     { year: 2008, title: "resonance", anime: "ソウルイーター", artist: "T.M.Revolution" },
@@ -1004,7 +1003,6 @@ const ANISON_DATABASE = [
     { year: 2006, title: "First Kiss", anime: "ゼロの使い魔", artist: "釘宮理恵" },
     { year: 2007, title: "INNOCENT SORROW", anime: "D.Gray-man", artist: "abingdon boys school" },
     { year: 2007, title: "ドラマチック", anime: "おおきく振りかぶって", artist: "Base Ball Bear" }
-
         ];
 
         let peer = null, myId = "", myName = "", roomCode = "";
@@ -1269,6 +1267,18 @@ const ANISON_DATABASE = [
 
             if (isCorrect) {
                 playSound('correct');
+
+                // 【同一年代のカードが既に盤面にある場合、既存のカードを取り除く処理】
+                const existingIndex = timeline.findIndex(s => s.year === targetYear);
+                if (existingIndex !== -1) {
+                    const removed = timeline.splice(existingIndex, 1)[0];
+                    addLog(`🔄 同じ年代(${targetYear}年)の既存カード「${removed.title}」を盤面から除外しました。`);
+                    // 挿入位置のインデックスがずれる可能性があるため再調整
+                    if (insertIndex > existingIndex) {
+                        insertIndex = Math.max(0, insertIndex - 1);
+                    }
+                }
+
                 timeline.splice(insertIndex, 0, song);
                 addLog(`🎯 ${player.name} 正解！ [${song.title} / ${song.anime} / ${song.year}年]`);
                 roomData.lastResult = { isCorrect: true, song: song, playerName: player.name };
@@ -1335,6 +1345,12 @@ const ANISON_DATABASE = [
             player.hasSkipped = true;
             const song = roomData.currentSong;
             
+            // スキップ時も同一年代の重複があれば除外
+            const existingIndex = roomData.timeline.findIndex(s => s.year === song.year);
+            if (existingIndex !== -1) {
+                roomData.timeline.splice(existingIndex, 1);
+            }
+
             let insertIdx = 0;
             for (let i = 0; i < roomData.timeline.length; i++) {
                 if (song.year >= roomData.timeline[i].year) {
@@ -1374,7 +1390,7 @@ const ANISON_DATABASE = [
             broadcastState();
         }
 
-        // 年代（西暦）を完全に隠し、検索に役立つ曲名・アニメ名・アーティスト名のみを表示するよう修正
+        // 年代（西暦）を隠し、検索に役立つ曲名・アニメ名・アーティスト名のみを表示
         window.revealErrorSongTitle = function() {
             playSound('tap');
             const display = document.getElementById('errorSongTitleDisplay');
@@ -1559,6 +1575,7 @@ const ANISON_DATABASE = [
                     timelineContainer.appendChild(btnInsert);
 
                     const card = document.createElement('div');
+                    // 盤面のカードに西暦年（年代）を大きく表示
                     card.className = "flex-shrink-0 w-40 h-52 bg-gradient-to-b from-slate-900 to-indigo-950 border-2 border-purple-400/60 rounded-2xl p-3.5 flex flex-col justify-between items-center text-center shadow-xl";
                     card.innerHTML = `
                         <span class="text-2xl font-black font-mono text-amber-300 mt-1">${song.year}年</span>
