@@ -283,7 +283,7 @@
     </main>
 
     <script>
-        const PREFIX = "anison-hitster-online-v39-";
+        const PREFIX = "anison-hitster-online-v40-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -348,7 +348,7 @@
         // =========================================================================
         // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）をコピペしてください】
         // =========================================================================
- const ANISON_DATABASE = [
+const ANISON_DATABASE = [
     // --- 1980年 (3曲) ---
     { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
     { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
@@ -1025,40 +1025,49 @@
             pendingGameOver: false
         };
 
+        // ピアノ・オルゴール・カバー曲等を徹底排除し、オリジナル音源を厳密に取得する検索関数
         async function fetchAudioPreview(song) {
+            const cleanQuery = encodeURIComponent(`${song.artist} ${song.title}`);
             try {
-                const query = encodeURIComponent(`${song.artist} ${song.title} ${song.anime}`);
-                const res = await fetch(`https://itunes.apple.com/search?term=${query}&limit=10&entity=song&country=JP`);
+                const res = await fetch(`https://itunes.apple.com/search?term=${cleanQuery}&limit=15&entity=song&country=JP`);
                 const data = await res.json();
                 if (data.results && data.results.length > 0) {
-                    const exactMatch = data.results.find(r => {
-                        const name = (r.artistName || "").toLowerCase();
-                        const targetArtist = song.artist.toLowerCase();
-                        return !name.includes("cover") && !name.includes("オルゴール") && !name.includes("tribute") && 
-                               (name.includes(targetArtist) || targetArtist.includes(name));
-                    });
-                    if (exactMatch && exactMatch.previewUrl) return exactMatch.previewUrl;
+                    // 除外したいNGワードリスト（ピアノ、カバー、オルゴール等）
+                    const ngWords = ["cover", "カバー", "piano", "ピアノ", "orgol", "オルゴール", "tribute", "トリビュート", "remix", "remake", "instrumental", "karaoke", "カラオケ", "1chorus", "short"];
+                    
+                    const targetArtist = song.artist.toLowerCase();
 
-                    const original = data.results.find(r => {
-                        const name = (r.artistName || "").toLowerCase();
-                        return !name.includes("cover") && !name.includes("オルゴール") && !name.includes("tribute");
-                    });
-                    if (original && original.previewUrl) return original.previewUrl;
+                    // 1. NGワードが含まれておらず、アーティスト名が一致・または含まれる最適なオリジナル曲を探索
+                    const bestMatch = data.results.find(r => {
+                        const artistName = (r.artistName || "").toLowerCase();
+                        const trackName = (r.trackName || "").toLowerCase();
+                        const collectionName = (r.collectionName || "").toLowerCase();
+                        const combined = `${artistName} ${trackName} ${collectionName}`;
 
-                    return data.results[0].previewUrl;
+                        const hasNg = ngWords.some(ng => combined.includes(ng));
+                        if (hasNg) return false;
+
+                        // アーティスト名がマッチしているか確認
+                        const matchesArtist = artistName.includes(targetArtist) || targetArtist.includes(artistName);
+                        return matchesArtist && r.previewUrl;
+                    });
+
+                    if (bestMatch && bestMatch.previewUrl) return bestMatch.previewUrl;
+
+                    // 2. 見つからない場合でも、NGワードが入っていないもので最初のプレビューURLを返す
+                    const fallback = data.results.find(r => {
+                        const combined = `${r.artistName || ""} ${r.trackName || ""} ${r.collectionName || ""}`.toLowerCase();
+                        const hasNg = ngWords.some(ng => combined.includes(ng));
+                        return !hasNg && r.previewUrl;
+                    });
+
+                    if (fallback && fallback.previewUrl) return fallback.previewUrl;
+
+                    // 3. どうしても見つからない場合の最終保険
+                    return data.results[0].previewUrl || null;
                 }
             } catch (e) {
                 console.warn("Audio preview fetch error:", e);
-            }
-            try {
-                const query2 = encodeURIComponent(`${song.artist} ${song.title}`);
-                const res2 = await fetch(`https://itunes.apple.com/search?term=${query2}&limit=5&entity=song&country=JP`);
-                const data2 = await res2.json();
-                if (data2.results && data2.results.length > 0) {
-                    return data2.results[0].previewUrl;
-                }
-            } catch (e2) {
-                console.warn("Fallback audio preview fetch error:", e2);
             }
             return null;
         }
@@ -1374,7 +1383,6 @@
             processNextTurn();
         };
 
-        // 脱落者が出ても順番が飛ばされないよう修正した手番交代処理
         function processNextTurn() {
             if (roomData.pendingGameOver) {
                 roomData.status = 'GAMEOVER';
@@ -1384,7 +1392,6 @@
 
             const alivePlayerIds = (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
             if (alivePlayerIds.length > 0) {
-                // 手番を次の生存プレイヤーに繰り上げ
                 roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % alivePlayerIds.length;
             }
             roomData.lastResult = null;
