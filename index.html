@@ -283,7 +283,7 @@
     </main>
 
     <script>
-        const PREFIX = "anison-hitster-online-v40-";
+        const PREFIX = "anison-hitster-online-v42-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -348,7 +348,7 @@
         // =========================================================================
         // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）をコピペしてください】
         // =========================================================================
-const ANISON_DATABASE = [
+ const ANISON_DATABASE = [
     // --- 1980年 (3曲) ---
     { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
     { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
@@ -993,8 +993,7 @@ const ANISON_DATABASE = [
     { year: 2011, title: "ヒャダインのじょーじょーゆーじょー", anime: "日常", artist: "ヒャダイン" },
     { year: 2004, title: "月光花", anime: "ブラック・ジャック", artist: "Janne Da Arc" },
     { year: 2004, title: "pastel pure", anime: "マリア様がみてる", artist: "ALI PROJECT" },
-    { year: 2005, title: "INNOCENCE", anime: "アイシールド21", artist: "V6" },
-    { year: 2005, title: "いちごコンプリート", anime: "苺ましまろ", artist: "千葉紗子・折笠富美子・川澄綾子・能登麻美子" },
+    { year: 2005, title: "いちごコンプリート", anime: "苺ましまろ", artist: "Chika(CV:Saeko Chiba), Miu(CV:Fumiko Orikasa), Matsuri(CV:Ayako Kawasumi) & Ana(CV:Mamiko Noto)" },
     { year: 2006, title: "the WORLD", anime: "DEATH NOTE", artist: "ナイトメア" },
     { year: 2006, title: "Pray", anime: "銀魂", artist: "Tommy heavenly6" },
     { year: 2006, title: "First Kiss", anime: "ゼロの使い魔", artist: "釘宮理恵" },
@@ -1024,49 +1023,44 @@ const ANISON_DATABASE = [
             pendingGameOver: false
         };
 
-        // ピアノ・オルゴール・カバー曲等を徹底排除し、オリジナル音源を厳密に取得する検索関数
+        // 厳格なフォールバック検索（ピアノ・カバー等除外）
         async function fetchAudioPreview(song) {
-            const cleanQuery = encodeURIComponent(`${song.artist} ${song.title}`);
-            try {
-                const res = await fetch(`https://itunes.apple.com/search?term=${cleanQuery}&limit=15&entity=song&country=JP`);
-                const data = await res.json();
-                if (data.results && data.results.length > 0) {
-                    // 除外したいNGワードリスト（ピアノ、カバー、オルゴール等）
-                    const ngWords = ["cover", "カバー", "piano", "ピアノ", "orgol", "オルゴール", "tribute", "トリビュート", "remix", "remake", "instrumental", "karaoke", "カラオケ", "1chorus", "short"];
+            const ngWords = ["cover", "カバー", "piano", "ピアノ", "orgol", "オルゴール", "tribute", "トリビュート", "remix", "remake", "instrumental", "karaoke", "カラオケ", "1chorus", "short", "relax", "meditation", "sleep"];
+            const targetArtist = song.artist.toLowerCase();
+
+            const searchQueries = [
+                `${song.artist} ${song.title} ${song.anime}`,
+                `${song.artist} ${song.title}`
+            ];
+
+            for (const q of searchQueries) {
+                try {
+                    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&limit=15&entity=song&country=JP`);
+                    const data = await res.json();
                     
-                    const targetArtist = song.artist.toLowerCase();
+                    if (data.results && data.results.length > 0) {
+                        const perfectMatch = data.results.find(r => {
+                            const combined = `${r.artistName || ""} ${r.trackName || ""} ${r.collectionName || ""}`.toLowerCase();
+                            const hasNg = ngWords.some(ng => combined.includes(ng));
+                            if (hasNg) return false;
 
-                    // 1. NGワードが含まれておらず、アーティスト名が一致・または含まれる最適なオリジナル曲を探索
-                    const bestMatch = data.results.find(r => {
-                        const artistName = (r.artistName || "").toLowerCase();
-                        const trackName = (r.trackName || "").toLowerCase();
-                        const collectionName = (r.collectionName || "").toLowerCase();
-                        const combined = `${artistName} ${trackName} ${collectionName}`;
+                            const artistName = (r.artistName || "").toLowerCase();
+                            return (artistName.includes(targetArtist) || targetArtist.includes(artistName)) && r.previewUrl;
+                        });
 
-                        const hasNg = ngWords.some(ng => combined.includes(ng));
-                        if (hasNg) return false;
+                        if (perfectMatch && perfectMatch.previewUrl) return perfectMatch.previewUrl;
 
-                        // アーティスト名がマッチしているか確認
-                        const matchesArtist = artistName.includes(targetArtist) || targetArtist.includes(artistName);
-                        return matchesArtist && r.previewUrl;
-                    });
+                        const cleanMatch = data.results.find(r => {
+                            const combined = `${r.artistName || ""} ${r.trackName || ""} ${r.collectionName || ""}`.toLowerCase();
+                            const hasNg = ngWords.some(ng => combined.includes(ng));
+                            return !hasNg && r.previewUrl;
+                        });
 
-                    if (bestMatch && bestMatch.previewUrl) return bestMatch.previewUrl;
-
-                    // 2. 見つからない場合でも、NGワードが入っていないもので最初のプレビューURLを返す
-                    const fallback = data.results.find(r => {
-                        const combined = `${r.artistName || ""} ${r.trackName || ""} ${r.collectionName || ""}`.toLowerCase();
-                        const hasNg = ngWords.some(ng => combined.includes(ng));
-                        return !hasNg && r.previewUrl;
-                    });
-
-                    if (fallback && fallback.previewUrl) return fallback.previewUrl;
-
-                    // 3. どうしても見つからない場合の最終保険
-                    return data.results[0].previewUrl || null;
+                        if (cleanMatch && cleanMatch.previewUrl) return cleanMatch.previewUrl;
+                    }
+                } catch (e) {
+                    console.warn(`Search error for query [${q}]:`, e);
                 }
-            } catch (e) {
-                console.warn("Audio preview fetch error:", e);
             }
             return null;
         }
@@ -1253,10 +1247,15 @@ const ANISON_DATABASE = [
             roomData.currentSong = song;
         }
 
+        // 生存しているプレイヤーのIDリストを常に正確に取得
+        function getAlivePlayerIds() {
+            return (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
+        }
+
         function getCurrentPlayerId() {
-            const alivePlayerIds = (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-            if (alivePlayerIds.length === 0) return null;
-            return alivePlayerIds[roomData.currentTurnIndex % alivePlayerIds.length];
+            const aliveIds = getAlivePlayerIds();
+            if (aliveIds.length === 0) return null;
+            return aliveIds[roomData.currentTurnIndex % aliveIds.length];
         }
 
         async function processPlaceCard(insertIndex) {
@@ -1382,6 +1381,7 @@ const ANISON_DATABASE = [
             processNextTurn();
         };
 
+        // 脱落者が出ても絶対に順番が飛ばされないよう修正された手番交代処理
         function processNextTurn() {
             if (roomData.pendingGameOver) {
                 roomData.status = 'GAMEOVER';
@@ -1389,9 +1389,10 @@ const ANISON_DATABASE = [
                 return;
             }
 
-            const alivePlayerIds = (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-            if (alivePlayerIds.length > 0) {
-                roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % alivePlayerIds.length;
+            const aliveIds = getAlivePlayerIds();
+            if (aliveIds.length > 0) {
+                // インデックスを綺麗に1つ進める（余り計算で確実に次の生存者へ）
+                roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % aliveIds.length;
             }
             roomData.lastResult = null;
             broadcastState();
