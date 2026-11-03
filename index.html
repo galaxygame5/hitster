@@ -215,7 +215,7 @@
                 
                 <audio id="audioPlayer" preload="auto" loop></audio>
 
-                <!-- AI選曲エラー補償システム（年代非表示で検索用情報のみ表示） -->
+                <!-- AI選曲エラー補償システム（死亡後でも常に押せるように修正） -->
                 <div class="mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-5 rounded-2xl border border-rose-500/40 shadow-md">
                     <p class="text-xs md:text-sm font-bold text-rose-300">⚠️ AI選曲ゴミ・音源エラー補償システム</p>
                     <p class="text-xs text-rose-200/90 font-medium">※流れた曲が「カバー曲」「別曲」「選曲ミス」「再生不能」の場合に押してください。脱落後でもライフを1回復して手番をやり直せます。</p>
@@ -283,7 +283,7 @@
     </main>
 
     <script>
-        const PREFIX = "anison-hitster-online-v42-";
+        const PREFIX = "anison-hitster-online-v43-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -348,7 +348,7 @@
         // =========================================================================
         // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）をコピペしてください】
         // =========================================================================
- const ANISON_DATABASE = [
+   const ANISON_DATABASE = [
     // --- 1980年 (3曲) ---
     { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
     { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
@@ -1266,7 +1266,7 @@
             roomData.currentSong = song;
         }
 
-        // 生存しているプレイヤーのIDリストを常に正確に取得
+        // 生存しているプレイヤーのIDリストを正確に取得
         function getAlivePlayerIds() {
             return (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
         }
@@ -1400,7 +1400,7 @@
             processNextTurn();
         };
 
-        // 脱落者が出ても絶対に順番が飛ばされないよう修正された手番交代処理
+        // 厳密に次の生存プレイヤーに1人ずつ手番を回す手番交代処理
         function processNextTurn() {
             if (roomData.pendingGameOver) {
                 roomData.status = 'GAMEOVER';
@@ -1410,7 +1410,6 @@
 
             const aliveIds = getAlivePlayerIds();
             if (aliveIds.length > 0) {
-                // インデックスを綺麗に1つ進める（余り計算で確実に次の生存者へ）
                 roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % aliveIds.length;
             }
             roomData.lastResult = null;
@@ -1441,18 +1440,27 @@
         };
 
         async function processRecoverAndRetry() {
+            // 現在の手番プレイヤーだけでなく、直前にミスした本人（または生存・脱落問わず現在のプレイヤー）を確実に救済
             const currentPlayerId = getCurrentPlayerId();
-            const player = roomData.players[currentPlayerId];
+            let targetPlayer = roomData.players[currentPlayerId];
 
-            if (player) {
-                player.life = Math.min(roomData.initialLife, player.life + 1);
-                if (!player.isAlive) {
-                    player.isAlive = true;
-                    roomData.eliminatedOrder = roomData.eliminatedOrder.filter(id => id !== player.id);
+            // もし何らかの理由で取得できない場合は、最後に行動したプレイヤーか最初に見つかった脱落者を救済
+            if (!targetPlayer && roomData.lastResult) {
+                targetPlayer = Object.values(roomData.players).find(p => p.name === roomData.lastResult.playerName);
+            }
+            if (!targetPlayer) {
+                targetPlayer = Object.values(roomData.players)[0];
+            }
+
+            if (targetPlayer) {
+                targetPlayer.life = Math.min(roomData.initialLife, targetPlayer.life + 1);
+                if (!targetPlayer.isAlive) {
+                    targetPlayer.isAlive = true;
+                    roomData.eliminatedOrder = roomData.eliminatedOrder.filter(id => id !== targetPlayer.id);
                 }
             }
 
-            addLog(`⚠️ AI選曲エラー補償：${player ? player.name : ''} のライフを1回復し、手番をやり直します。`);
+            addLog(`⚠️ AI選曲エラー補償：${targetPlayer ? targetPlayer.name : ''} のライフを1回復し、手番をやり直します。`);
             roomData.lastResult = null;
             roomData.pendingGameOver = false;
 
