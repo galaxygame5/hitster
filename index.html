@@ -215,7 +215,7 @@
                 
                 <audio id="audioPlayer" preload="auto" loop></audio>
 
-                <!-- AI選曲エラー補償システム（死亡後でも常に押せるように修正） -->
+                <!-- AI選曲エラー補償システム（年代非表示で検索用情報のみ表示） -->
                 <div class="mt-4 pt-4 border-t border-rose-500/30 space-y-3 bg-rose-950/30 p-5 rounded-2xl border border-rose-500/40 shadow-md">
                     <p class="text-xs md:text-sm font-bold text-rose-300">⚠️ AI選曲ゴミ・音源エラー補償システム</p>
                     <p class="text-xs text-rose-200/90 font-medium">※流れた曲が「カバー曲」「別曲」「選曲ミス」「再生不能」の場合に押してください。脱落後でもライフを1回復して手番をやり直せます。</p>
@@ -283,7 +283,7 @@
     </main>
 
     <script>
-        const PREFIX = "anison-hitster-online-v43-";
+        const PREFIX = "anison-hitster-online-v41-";
 
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -348,7 +348,7 @@
         // =========================================================================
         // 🏹 【ここにカスタム曲コード（ANISON_DATABASE）をコピペしてください】
         // =========================================================================
-   const ANISON_DATABASE = [
+  const ANISON_DATABASE = [
     // --- 1980年 (3曲) ---
     { year: 1980, title: "復活のイデオン", anime: "伝説巨神イデオン", artist: "たいらいさお" },
     { year: 1980, title: "ユカイ・ツーカイ・怪物くん", anime: "怪物くん", artist: "野沢雅子" },
@@ -1042,11 +1042,12 @@
             pendingGameOver: false
         };
 
-        // 厳格なフォールバック検索（ピアノ・カバー等除外）
+        // 段階的（フォールバック付き）＆厳格フィルタリングでオリジナル音源を確実取得する関数
         async function fetchAudioPreview(song) {
             const ngWords = ["cover", "カバー", "piano", "ピアノ", "orgol", "オルゴール", "tribute", "トリビュート", "remix", "remake", "instrumental", "karaoke", "カラオケ", "1chorus", "short", "relax", "meditation", "sleep"];
             const targetArtist = song.artist.toLowerCase();
 
+            // 検索候補クエリの優先順リスト（1: 精密検索, 2: アーティスト+曲名）
             const searchQueries = [
                 `${song.artist} ${song.title} ${song.anime}`,
                 `${song.artist} ${song.title}`
@@ -1058,6 +1059,7 @@
                     const data = await res.json();
                     
                     if (data.results && data.results.length > 0) {
+                        // 1. 完全無傷（NGワードなし）かつアーティスト名一致の最高クオリティ音源を探索
                         const perfectMatch = data.results.find(r => {
                             const combined = `${r.artistName || ""} ${r.trackName || ""} ${r.collectionName || ""}`.toLowerCase();
                             const hasNg = ngWords.some(ng => combined.includes(ng));
@@ -1069,6 +1071,7 @@
 
                         if (perfectMatch && perfectMatch.previewUrl) return perfectMatch.previewUrl;
 
+                        // 2. アーティスト名部分完全一致が難しくても、NGワードが入っていないトラックを採用
                         const cleanMatch = data.results.find(r => {
                             const combined = `${r.artistName || ""} ${r.trackName || ""} ${r.collectionName || ""}`.toLowerCase();
                             const hasNg = ngWords.some(ng => combined.includes(ng));
@@ -1266,15 +1269,10 @@
             roomData.currentSong = song;
         }
 
-        // 生存しているプレイヤーのIDリストを正確に取得
-        function getAlivePlayerIds() {
-            return (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
-        }
-
         function getCurrentPlayerId() {
-            const aliveIds = getAlivePlayerIds();
-            if (aliveIds.length === 0) return null;
-            return aliveIds[roomData.currentTurnIndex % aliveIds.length];
+            const alivePlayerIds = (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
+            if (alivePlayerIds.length === 0) return null;
+            return alivePlayerIds[roomData.currentTurnIndex % alivePlayerIds.length];
         }
 
         async function processPlaceCard(insertIndex) {
@@ -1400,7 +1398,6 @@
             processNextTurn();
         };
 
-        // 厳密に次の生存プレイヤーに1人ずつ手番を回す手番交代処理
         function processNextTurn() {
             if (roomData.pendingGameOver) {
                 roomData.status = 'GAMEOVER';
@@ -1408,9 +1405,9 @@
                 return;
             }
 
-            const aliveIds = getAlivePlayerIds();
-            if (aliveIds.length > 0) {
-                roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % aliveIds.length;
+            const alivePlayerIds = (roomData.turnOrder || []).filter(id => roomData.players[id] && roomData.players[id].isAlive);
+            if (alivePlayerIds.length > 0) {
+                roomData.currentTurnIndex = (roomData.currentTurnIndex + 1) % alivePlayerIds.length;
             }
             roomData.lastResult = null;
             broadcastState();
@@ -1440,27 +1437,18 @@
         };
 
         async function processRecoverAndRetry() {
-            // 現在の手番プレイヤーだけでなく、直前にミスした本人（または生存・脱落問わず現在のプレイヤー）を確実に救済
             const currentPlayerId = getCurrentPlayerId();
-            let targetPlayer = roomData.players[currentPlayerId];
+            const player = roomData.players[currentPlayerId];
 
-            // もし何らかの理由で取得できない場合は、最後に行動したプレイヤーか最初に見つかった脱落者を救済
-            if (!targetPlayer && roomData.lastResult) {
-                targetPlayer = Object.values(roomData.players).find(p => p.name === roomData.lastResult.playerName);
-            }
-            if (!targetPlayer) {
-                targetPlayer = Object.values(roomData.players)[0];
-            }
-
-            if (targetPlayer) {
-                targetPlayer.life = Math.min(roomData.initialLife, targetPlayer.life + 1);
-                if (!targetPlayer.isAlive) {
-                    targetPlayer.isAlive = true;
-                    roomData.eliminatedOrder = roomData.eliminatedOrder.filter(id => id !== targetPlayer.id);
+            if (player) {
+                player.life = Math.min(roomData.initialLife, player.life + 1);
+                if (!player.isAlive) {
+                    player.isAlive = true;
+                    roomData.eliminatedOrder = roomData.eliminatedOrder.filter(id => id !== player.id);
                 }
             }
 
-            addLog(`⚠️ AI選曲エラー補償：${targetPlayer ? targetPlayer.name : ''} のライフを1回復し、手番をやり直します。`);
+            addLog(`⚠️ AI選曲エラー補償：${player ? player.name : ''} のライフを1回復し、手番をやり直します。`);
             roomData.lastResult = null;
             roomData.pendingGameOver = false;
 
@@ -1525,7 +1513,7 @@
                 const startBtn = document.getElementById('startGameBtn');
                 const waitMsg = document.getElementById('waitingForHostMsg');
                 if (isHost) { startBtn.classList.remove('hidden'); waitMsg.classList.add('hidden'); }
-                else { startBtn.classList.add('hidden'); waitMsg.classList.remove('hidden'); }
+                else { startBtn.classList.add('hidden'); waitMsg.remove('hidden'); }
 
             } else if (roomData.status === 'PLAYING') {
                 showView('viewGame');
